@@ -1,0 +1,18 @@
+[project]
+name = "naxoresuelve"
+version = "0.1.0"
+description = "Naxoresuelve monolithic FastAPI backend"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "asyncpg",
+    "pydantic[email]",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
