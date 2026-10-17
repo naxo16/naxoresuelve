@@ -38,3 +38,11 @@ Thumbs.db
 .pytest_cache/
 htmlcov/
 .coverage
+
+# Context & Spec files
+context.md
+*context*.md
+*maestro*.md
+*MAESTRO*.md
+ESPECIFICACION_MAESTRA*.md
+
