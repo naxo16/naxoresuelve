@@ -516,7 +516,7 @@ export function ModernCanvasVideoPlayer() {
   return (
     <div className="w-full space-y-8">
       {/* Selector de Video Tracks */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-2 rounded-2xl bg-[#ece6eb] border border-[#b8acb5]">
+      <div className="flex flex-wrap items-center justify-between gap-4 p-2 rounded-2xl bg-[#423943] border border-[#615362]">
         <div className="flex flex-wrap gap-2">
           {VIDEO_TRACKS.map((track, idx) => (
             <button
@@ -525,10 +525,10 @@ export function ModernCanvasVideoPlayer() {
               className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
                 activeTrackIndex === idx
                   ? "bg-gradient-to-r from-[#721828] to-[#9e233b] text-white shadow-md border border-[#cba135]/50 scale-[1.01]"
-                  : "bg-[#d6d0d5] text-[#423e47] hover:text-[#181a22] border border-[#b8acb5]"
+                  : "bg-[#362f37] text-[#c29da5] hover:text-[#f5dade] border border-[#615362]"
               }`}
             >
-              <FileSpreadsheet size={15} className={activeTrackIndex === idx ? "text-[#7a580e]" : "text-[#6e6875]"} />
+              <FileSpreadsheet size={15} className={activeTrackIndex === idx ? "text-[#f2cf6b]" : "text-[#9e8e97]"} />
               <span>Video 0{idx + 1}: {track.title.split(":")[0]}</span>
             </button>
           ))}
@@ -538,10 +538,10 @@ export function ModernCanvasVideoPlayer() {
         <div className="flex items-center gap-2 px-2">
           <button
             onClick={() => setHudMode(hudMode === "cyber" ? "clean" : "cyber")}
-            className="px-3 py-1.5 rounded-lg text-[11px] font-mono font-semibold bg-[#d6d0d5] hover:bg-[#e2dce1] text-[#423e47] hover:text-[#7a580e] border border-[#b8acb5] transition flex items-center gap-1.5"
+            className="px-3 py-1.5 rounded-lg text-[11px] font-mono font-semibold bg-[#362f37] hover:bg-[#362f37] text-[#c29da5] hover:text-[#f2cf6b] border border-[#615362] transition flex items-center gap-1.5"
             title="Alternar gráficos HUD futuristas sobre el canvas"
           >
-            <Sliders size={13} className="text-[#7a580e]" />
+            <Sliders size={13} className="text-[#f2cf6b]" />
             <span>HUD: {hudMode === "cyber" ? "Cyber" : "Limpio"}</span>
           </button>
 
@@ -549,11 +549,11 @@ export function ModernCanvasVideoPlayer() {
             onClick={toggleVoiceGuide}
             className={`px-3 py-1.5 rounded-lg text-[11px] font-mono font-bold border transition flex items-center gap-1.5 ${
               isVoiceActive
-                ? "bg-[#721828]/60 text-[#7a580e] border-[#cba135]/60 shadow-[0_0_12px_rgba(203,161,53,0.3)]"
-                : "bg-[#d6d0d5] text-[#6e6875] border-[#b8acb5]"
+                ? "bg-[#721828]/60 text-[#f2cf6b] border-[#cba135]/60 shadow-[0_0_12px_rgba(203,161,53,0.3)]"
+                : "bg-[#362f37] text-[#9e8e97] border-[#615362]"
             }`}
           >
-            {isVoiceActive ? <Mic size={13} className="text-[#7a580e]" /> : <MicOff size={13} />}
+            {isVoiceActive ? <Mic size={13} className="text-[#f2cf6b]" /> : <MicOff size={13} />}
             <span>{isVoiceActive ? "Voz IA: Activa" : "Voz IA: Mute"}</span>
           </button>
         </div>
@@ -564,7 +564,7 @@ export function ModernCanvasVideoPlayer() {
         
         {/* Columna Izquierda: Canvas Renderer + Controles (7 cols) */}
         <div className="lg:col-span-7 space-y-4">
-          <div className="relative rounded-3xl overflow-hidden border border-[#b82d46]/70 bg-[#d6d0d5] shadow-[0_20px_50px_rgba(0,0,0,0.8)] group">
+          <div className="relative rounded-3xl overflow-hidden border border-[#b82d46]/70 bg-[#362f37] shadow-[0_20px_50px_rgba(0,0,0,0.8)] group">
             
             {/* Elemento de Video Oculto (Fuente de Datos para el Canvas) */}
             <video
@@ -621,11 +621,11 @@ export function ModernCanvasVideoPlayer() {
               </div>
 
               {/* Botones de Control */}
-              <div className="flex items-center justify-between text-xs font-mono text-[#181a22]">
+              <div className="flex items-center justify-between text-xs font-mono text-[#f5dade]">
                 <div className="flex items-center gap-3">
                   <button
                     onClick={togglePlay}
-                    className="p-2 rounded-xl bg-[#ece6eb] hover:bg-[#ded8de] border border-[#b8acb5] text-[#7a580e] transition cursor-pointer"
+                    className="p-2 rounded-xl bg-[#423943] hover:bg-[#4c424e] border border-[#615362] text-[#f2cf6b] transition cursor-pointer"
                     title={isPlaying ? "Pausar" : "Reproducir"}
                   >
                     {isPlaying ? <Pause size={15} /> : <Play size={15} />}
@@ -638,7 +638,7 @@ export function ModernCanvasVideoPlayer() {
                         videoRef.current.play();
                       }
                     }}
-                    className="p-2 rounded-xl bg-[#ece6eb] hover:bg-[#ded8de] border border-[#b8acb5] text-[#423e47] hover:text-[#181a22] transition cursor-pointer"
+                    className="p-2 rounded-xl bg-[#423943] hover:bg-[#4c424e] border border-[#615362] text-[#c29da5] hover:text-[#f5dade] transition cursor-pointer"
                     title="Reiniciar Video"
                   >
                     <RotateCcw size={15} />
@@ -646,13 +646,13 @@ export function ModernCanvasVideoPlayer() {
 
                   <button
                     onClick={toggleMute}
-                    className="p-2 rounded-xl bg-[#ece6eb] hover:bg-[#ded8de] border border-[#b8acb5] text-[#423e47] hover:text-[#181a22] transition cursor-pointer"
+                    className="p-2 rounded-xl bg-[#423943] hover:bg-[#4c424e] border border-[#615362] text-[#c29da5] hover:text-[#f5dade] transition cursor-pointer"
                     title={isMuted ? "Activar Audio Video" : "Silenciar Video"}
                   >
                     {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
                   </button>
 
-                  <span className="text-[11px] text-[#423e47]">
+                  <span className="text-[11px] text-[#c29da5]">
                     {Math.floor(currentTime / 60)}:
                     {Math.floor(currentTime % 60)
                       .toString()
@@ -667,12 +667,12 @@ export function ModernCanvasVideoPlayer() {
                 {/* Badge Indicador de Voz IA */}
                 <div className="flex items-center gap-2">
                   {voiceSpeaking && (
-                    <span className="flex items-center gap-1.5 text-[10px] text-[#7a580e] font-bold animate-pulse">
+                    <span className="flex items-center gap-1.5 text-[10px] text-[#f2cf6b] font-bold animate-pulse">
                       <span className="w-2 h-2 rounded-full bg-emerald-400" />
                       <span>IA NARRANDO</span>
                     </span>
                   )}
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-[#721828]/60 text-[#7a580e] border border-[#721828]">
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-[#721828]/60 text-[#f2cf6b] border border-[#721828]">
                     Canvas 2D Hardware-Accelerated
                   </span>
                 </div>
@@ -681,8 +681,8 @@ export function ModernCanvasVideoPlayer() {
           </div>
 
           {/* Capítulos y Timestamps Interactivos */}
-          <div className="bg-[#ece6eb] border border-[#b8acb5] rounded-2xl p-4 space-y-2">
-            <span className="text-[11px] font-mono text-[#7a580e] font-bold uppercase tracking-wider block">
+          <div className="bg-[#423943] border border-[#615362] rounded-2xl p-4 space-y-2">
+            <span className="text-[11px] font-mono text-[#f2cf6b] font-bold uppercase tracking-wider block">
               Capítulos Interactivos con Guía Auditiva:
             </span>
             <div className="grid sm:grid-cols-3 gap-2">
@@ -692,14 +692,14 @@ export function ModernCanvasVideoPlayer() {
                   onClick={() => jumpToChapter(ch.time, idx)}
                   className={`text-left p-2.5 rounded-xl border text-xs transition cursor-pointer flex flex-col justify-between ${
                     currentChapterIdx === idx
-                      ? "bg-[#721828]/40 border-[#cba135] text-[#181a22] shadow-sm"
-                      : "bg-[#d6d0d5] border-[#b8acb5] text-[#423e47] hover:text-[#181a22] hover:border-[#721828]"
+                      ? "bg-[#721828]/40 border-[#cba135] text-[#f5dade] shadow-sm"
+                      : "bg-[#362f37] border-[#615362] text-[#c29da5] hover:text-[#f5dade] hover:border-[#721828]"
                   }`}
                 >
-                  <div className="font-bold font-mono text-[#660f1d] text-[11px] mb-1">
+                  <div className="font-bold font-mono text-[#ff6b85] text-[11px] mb-1">
                     {ch.title}
                   </div>
-                  <div className="text-[10px] text-[#423e47] line-clamp-1">
+                  <div className="text-[10px] text-[#c29da5] line-clamp-1">
                     {ch.persuasiveHighlight}
                   </div>
                 </button>
@@ -713,16 +713,16 @@ export function ModernCanvasVideoPlayer() {
           
           {/* Teleprompter / Subtítulos HUD de la Voz IA */}
           <div className="bg-gradient-to-br from-[#141824] via-[#0e111a] to-[#07080c] border border-[#b82d46]/60 rounded-3xl p-6 sm:p-7 shadow-xl relative overflow-hidden">
-            <div className="flex items-center justify-between pb-3 border-b border-[#b8acb5] mb-3">
+            <div className="flex items-center justify-between pb-3 border-b border-[#615362] mb-3">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#721828] to-[#cba135] flex items-center justify-center text-white">
                   <Mic size={14} />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-[#660f1d]">
+                  <h4 className="text-xs font-bold text-[#ff6b85]">
                     Guía Auditiva de Inteligencia Artificial
                   </h4>
-                  <span className="text-[10px] text-[#423e47] font-mono">
+                  <span className="text-[10px] text-[#c29da5] font-mono">
                     Síntesis Vocal en Tiempo Real (es-CL)
                   </span>
                 </div>
@@ -730,7 +730,7 @@ export function ModernCanvasVideoPlayer() {
 
               <button
                 onClick={toggleVoiceGuide}
-                className="text-[10px] font-mono px-2 py-1 rounded bg-[#721828]/50 text-[#7a580e] hover:bg-[#721828] transition border border-[#721828]"
+                className="text-[10px] font-mono px-2 py-1 rounded bg-[#721828]/50 text-[#f2cf6b] hover:bg-[#721828] transition border border-[#721828]"
               >
                 {isVoiceActive ? "Silenciar" : "Activar"}
               </button>
@@ -738,28 +738,28 @@ export function ModernCanvasVideoPlayer() {
 
             {/* Texto que la IA está diciendo */}
             <div className="min-h-[100px] flex flex-col justify-center">
-              <p className="text-xs sm:text-sm text-[#181a22] leading-relaxed italic">
+              <p className="text-xs sm:text-sm text-[#f5dade] leading-relaxed italic">
                 "{currentSubtitle}"
               </p>
             </div>
 
             {/* Fila de Valor Persuasivo */}
-            <div className="mt-4 pt-3 border-t border-[#b8acb5] flex items-center gap-2 text-xs">
-              <Sparkles size={14} className="text-[#7a580e] shrink-0" />
-              <span className="text-[#7a580e] font-semibold text-[11px]">
+            <div className="mt-4 pt-3 border-t border-[#615362] flex items-center gap-2 text-xs">
+              <Sparkles size={14} className="text-[#f2cf6b] shrink-0" />
+              <span className="text-[#f2cf6b] font-semibold text-[11px]">
                 {currentHighlight}
               </span>
             </div>
           </div>
 
           {/* Métricas de Implementación y Reducción de Errores */}
-          <div className="bg-[#ece6eb] border border-[#b8acb5] rounded-3xl p-6 space-y-4">
+          <div className="bg-[#423943] border border-[#615362] rounded-3xl p-6 space-y-4">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold text-[#7a580e] uppercase tracking-wider font-mono flex items-center gap-1.5">
-                <CheckCircle2 size={14} className="text-[#7a580e]" />
+              <h4 className="text-xs font-bold text-[#f2cf6b] uppercase tracking-wider font-mono flex items-center gap-1.5">
+                <CheckCircle2 size={14} className="text-[#f2cf6b]" />
                 <span>Resultados Comprobados en Producción</span>
               </h4>
-              <span className="text-[10px] text-[#423e47] font-mono">
+              <span className="text-[10px] text-[#c29da5] font-mono">
                 Métricas Reales
               </span>
             </div>
@@ -768,23 +768,23 @@ export function ModernCanvasVideoPlayer() {
               {activeTrack.metrics.map((m, idx) => (
                 <div
                   key={idx}
-                  className="p-3.5 rounded-xl bg-[#d6d0d5] border border-[#b8acb5] flex flex-col justify-between"
+                  className="p-3.5 rounded-xl bg-[#362f37] border border-[#615362] flex flex-col justify-between"
                 >
-                  <span className="text-[10px] text-[#423e47] uppercase font-mono tracking-tight">
+                  <span className="text-[10px] text-[#c29da5] uppercase font-mono tracking-tight">
                     {m.label}
                   </span>
-                  <div className="text-xl sm:text-2xl font-black font-mono text-[#660f1d] my-1">
+                  <div className="text-xl sm:text-2xl font-black font-mono text-[#ff6b85] my-1">
                     {m.value}
                   </div>
-                  <span className="text-[10px] text-[#7a580e] font-medium leading-tight">
+                  <span className="text-[10px] text-[#f2cf6b] font-medium leading-tight">
                     {m.desc}
                   </span>
                 </div>
               ))}
             </div>
 
-            <div className="p-3 rounded-xl bg-[#721828]/25 border border-[#721828] text-xs text-[#181a22] flex items-start gap-2.5">
-              <ShieldCheck size={16} className="text-[#7a580e] mt-0.5 shrink-0" />
+            <div className="p-3 rounded-xl bg-[#721828]/25 border border-[#721828] text-xs text-[#f5dade] flex items-start gap-2.5">
+              <ShieldCheck size={16} className="text-[#f2cf6b] mt-0.5 shrink-0" />
               <p className="text-[11px] leading-relaxed">
                 <strong>Garantía de Implementación:</strong> Si el sistema no elimina los cuellos de botella en la primera semana de despliegue, refactorizamos la arquitectura sin costo adicional.
               </p>

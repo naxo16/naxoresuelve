@@ -1,33 +1,34 @@
 @import "tailwindcss";
 
 :root {
-  /* Fondo 70% claro nada más (tono platino/alabastro suave con matiz cálido, HSL lightness ~70-72%) */
-  --bg-dark: #d6d0d5;
-  --bg-surface: #e2dce1;
-  --bg-card: #ece6eb;
-  --bg-card-hover: #f5f0f4;
+  /* Fondo 25% claro (charcoal aterciopelado con sutil matiz vino/borgoña de 25% de luminosidad) */
+  --bg-dark: #362f37;
+  --bg-surface: #423943;
+  --bg-card: #423943;
+  --bg-card-hover: #4c424e;
+  --bg-inner: #2a242c;
 
-  /* Tonos Vino Tinto, Rubí y Borgoña de alto contraste para tipografía */
-  --color-vino: #660f1d;
-  --color-vino-dark: #400912;
-  --color-vino-light: #80182a;
-  --color-vino-text: #6b1122;
-  --color-vino-text-bright: #7a1426;
-  --color-vino-text-soft: #4a0c16;
-  --color-vino-glow: rgba(107, 17, 34, 0.25);
+  /* Tonos Vino Tinto, Rubí y Borgoña de alta visibilidad */
+  --color-vino: #80182a;
+  --color-vino-dark: #4d0c17;
+  --color-vino-light: #b82d46;
+  --color-vino-text: #e2556e;
+  --color-vino-text-bright: #ff6b85;
+  --color-vino-text-soft: #f2cfd6;
+  --color-vino-glow: rgba(226, 85, 110, 0.35);
 
-  /* Acentos Dorado / Oro Noble */
-  --color-gold: #8c6716;
-  --color-gold-light: #a37a1f;
-  --color-gold-dark: #6e4e0d;
-  --color-gold-glow: rgba(140, 103, 22, 0.25);
+  /* Acentos Dorado / Oro Champagne */
+  --color-gold: #cba135;
+  --color-gold-light: #f2cf6b;
+  --color-gold-dark: #96741f;
+  --color-gold-glow: rgba(203, 161, 53, 0.35);
 
-  /* Texto base oscuro para contraste AAA sobre fondo 70% claro */
-  --color-text-main: #181a22;
-  --color-text-muted: #423e47;
-  --color-border: #b8acb5;
-  --color-border-gold: rgba(140, 103, 22, 0.45);
-  --color-border-vino: rgba(107, 17, 34, 0.35);
+  /* Texto base tintado cálido de alto contraste AAA */
+  --color-text-main: #f5dade;
+  --color-text-muted: #c29da5;
+  --color-border: #615362;
+  --color-border-gold: rgba(203, 161, 53, 0.45);
+  --color-border-vino: rgba(184, 45, 70, 0.5);
 }
 
 @theme inline {
@@ -64,14 +65,14 @@ body {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #d6d0d5;
+  background: #2a242c;
 }
 ::-webkit-scrollbar-thumb {
-  background: #80182a;
+  background: #721828;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #660f1d;
+  background: #9e233b;
 }
 
 /* ========================================================
@@ -164,23 +165,23 @@ body {
 .cyber-grid {
   background-size: 40px 40px;
   background-image: 
-    linear-gradient(to right, rgba(107, 17, 34, 0.08) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(107, 17, 34, 0.08) 1px, transparent 1px);
+    linear-gradient(to right, rgba(184, 45, 70, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(184, 45, 70, 0.08) 1px, transparent 1px);
 }
 
 /* Tipografía de Gradiente Vino Rubí y Dorado */
 .vino-gradient-text {
-  background: linear-gradient(135deg, #660f1d 0%, #80182a 40%, #8c6716 100%);
+  background: linear-gradient(135deg, #ff859b 0%, #e2556e 40%, #cba135 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .gold-gradient-text {
-  background: linear-gradient(135deg, #8c6716 0%, #80182a 50%, #660f1d 100%);
+  background: linear-gradient(135deg, #f2cf6b 0%, #e2556e 50%, #cba135 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .vino-bright-text {
-  color: #660f1d;
+  color: #ff6b85;
 }

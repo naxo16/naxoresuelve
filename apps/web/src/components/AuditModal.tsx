@@ -88,26 +88,26 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in"
     >
       <div
-        className="relative w-full max-w-lg bg-[#d6d0d5] border border-[#b82d46]/60 rounded-2xl p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.9)] text-[#181a22]"
+        className="relative w-full max-w-lg bg-[#362f37] border border-[#b82d46]/60 rounded-2xl p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.9)] text-[#f5dade]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-start justify-between border-b border-[#b8acb5] pb-4 mb-5">
+        <div className="flex items-start justify-between border-b border-[#615362] pb-4 mb-5">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="w-2 h-2 rounded-full bg-[#f2cf6b] animate-ping" />
-              <span className="text-xs font-bold uppercase tracking-wider text-[#7a580e]">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#f2cf6b]">
                 Auditoría & Diagnóstico Sin Costo
               </span>
             </div>
-            <h3 id="audit-modal-title" className="text-xl font-bold text-[#660f1d]">
+            <h3 id="audit-modal-title" className="text-xl font-bold text-[#ff6b85]">
               Cuéntame tu cuello de botella
             </h3>
           </div>
           <button
             onClick={onClose}
             aria-label="Cerrar modal"
-            className="p-2 text-[#423e47] hover:text-[#7a580e] bg-[#ece6eb] hover:bg-[#721828] rounded-xl transition-all"
+            className="p-2 text-[#c29da5] hover:text-[#f2cf6b] bg-[#423943] hover:bg-[#721828] rounded-xl transition-all"
           >
             <X size={18} />
           </button>
@@ -115,9 +115,9 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
 
         {success ? (
           <div className="py-8 text-center space-y-3">
-            <CheckCircle2 className="w-14 h-14 text-[#7a580e] mx-auto animate-bounce" />
-            <h4 className="text-lg font-bold text-[#660f1d]">¡Solicitud recibida exitosamente!</h4>
-            <p className="text-xs text-[#181a22] max-w-xs mx-auto">
+            <CheckCircle2 className="w-14 h-14 text-[#f2cf6b] mx-auto animate-bounce" />
+            <h4 className="text-lg font-bold text-[#ff6b85]">¡Solicitud recibida exitosamente!</h4>
+            <p className="text-xs text-[#f5dade] max-w-xs mx-auto">
               Pablo Valdés revisará la estructura de tu caso y te responderá en breve con un análisis técnico inicial.
             </p>
           </div>
@@ -131,7 +131,7 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
             )}
 
             <div>
-              <label htmlFor="audit-name" className="block text-xs font-semibold text-[#181a22] mb-1">
+              <label htmlFor="audit-name" className="block text-xs font-semibold text-[#f5dade] mb-1">
                 Tu Nombre o Empresa *
               </label>
               <input
@@ -141,12 +141,12 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
                 placeholder="Ej. Carlos Mendoza / Distribuidora Norte"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-[#ece6eb] border border-[#b8acb5] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#181a22] placeholder-[#78727e] text-sm transition"
+                className="w-full bg-[#423943] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#f5dade] placeholder-[#9e8e97] text-sm transition"
               />
             </div>
 
             <div>
-              <label htmlFor="audit-email" className="block text-xs font-semibold text-[#181a22] mb-1">
+              <label htmlFor="audit-email" className="block text-xs font-semibold text-[#f5dade] mb-1">
                 Correo Electrónico de Contacto *
               </label>
               <input
@@ -156,19 +156,19 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
                 placeholder="carlos@empresa.cl"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-[#ece6eb] border border-[#b8acb5] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#181a22] placeholder-[#78727e] text-sm transition"
+                className="w-full bg-[#423943] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#f5dade] placeholder-[#9e8e97] text-sm transition"
               />
             </div>
 
             <div>
-              <label htmlFor="audit-topic" className="block text-xs font-semibold text-[#181a22] mb-1">
+              <label htmlFor="audit-topic" className="block text-xs font-semibold text-[#f5dade] mb-1">
                 ¿Cuál es tu principal dolor actual?
               </label>
               <select
                 id="audit-topic"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
-                className="w-full bg-[#ece6eb] border border-[#b8acb5] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#181a22] text-sm transition"
+                className="w-full bg-[#423943] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#f5dade] text-sm transition"
               >
                 <option value="duplicidad">Duplicidad de datos y clientes repetidos</option>
                 <option value="excel">Excel colapsado / pérdida de horas manuales</option>
@@ -184,7 +184,7 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
             </div>
 
             <div>
-              <label htmlFor="audit-desc" className="block text-xs font-semibold text-[#181a22] mb-1">
+              <label htmlFor="audit-desc" className="block text-xs font-semibold text-[#f5dade] mb-1">
                 Detalles breves del problema *
               </label>
               <textarea
@@ -194,12 +194,12 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
                 placeholder="Ej. Manejamos 15 sucursales con Excels de 40.000 filas y se nos duplican los clientes al facturar..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full bg-[#ece6eb] border border-[#b8acb5] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2 text-[#181a22] placeholder-[#78727e] text-sm transition resize-none"
+                className="w-full bg-[#423943] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2 text-[#f5dade] placeholder-[#9e8e97] text-sm transition resize-none"
               />
             </div>
 
-            <div className="flex items-center gap-2 text-[11px] text-[#423e47]">
-              <ShieldCheck size={14} className="text-[#7a580e]" />
+            <div className="flex items-center gap-2 text-[11px] text-[#c29da5]">
+              <ShieldCheck size={14} className="text-[#f2cf6b]" />
               <span>Diagnóstico técnico directo por Pablo Valdés. Confidencialidad garantizada.</span>
             </div>
 

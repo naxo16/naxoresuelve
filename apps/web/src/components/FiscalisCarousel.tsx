@@ -121,28 +121,28 @@ export function FiscalisCarousel() {
     CRÍTICO: "bg-red-950/80 text-red-300 border-red-700/60",
     ALTO: "bg-amber-950/80 text-amber-300 border-amber-700/60",
     ARQUITECTURA: "bg-emerald-950/80 text-emerald-300 border-emerald-700/60",
-    RESUELTO: "bg-[#721828]/60 text-[#7a580e] border-[#cba135]/40",
+    RESUELTO: "bg-[#721828]/60 text-[#f2cf6b] border-[#cba135]/40",
   };
 
   return (
     <div
       onMouseEnter={() => setIsAutoPlaying(false)}
       onMouseLeave={() => setIsAutoPlaying(true)}
-      className="relative w-full max-w-5xl mx-auto bg-[#d6d0d5] border-2 border-[#b82d46]/60 rounded-3xl p-6 sm:p-10 shadow-[0_25px_60px_rgba(0,0,0,0.95)] overflow-hidden text-[#181a22]"
+      className="relative w-full max-w-5xl mx-auto bg-[#362f37] border-2 border-[#b82d46]/60 rounded-3xl p-6 sm:p-10 shadow-[0_25px_60px_rgba(0,0,0,0.95)] overflow-hidden text-[#f5dade]"
     >
       {/* Background accents */}
       <div className="absolute top-0 right-0 w-80 h-80 bg-[#721828]/25 blur-[100px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#cba135]/15 blur-[100px] pointer-events-none" />
 
       {/* Top Banner */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-6 border-b border-[#b8acb5] mb-6 relative z-10">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-6 border-b border-[#615362] mb-6 relative z-10">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-gradient-to-br from-[#721828] to-[#9e233b] text-[#7a580e] border border-[#cba135]/40 shadow-inner">
+          <div className="p-2.5 rounded-xl bg-gradient-to-br from-[#721828] to-[#9e233b] text-[#f2cf6b] border border-[#cba135]/40 shadow-inner">
             <Flame size={20} className="animate-pulse" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-bold tracking-widest text-[#7a580e] uppercase">
+              <span className="text-xs font-mono font-bold tracking-widest text-[#f2cf6b] uppercase">
                 Fiscalis SGF · Módulos & Hallazgos QA
               </span>
               <span
@@ -151,7 +151,7 @@ export function FiscalisCarousel() {
                 {slide.qaSeverity}
               </span>
             </div>
-            <span className="text-xs text-[#423e47] font-medium">
+            <span className="text-xs text-[#c29da5] font-medium">
               Aseguramiento de Calidad y Pruebas Extremas en Terreno
             </span>
           </div>
@@ -159,42 +159,42 @@ export function FiscalisCarousel() {
 
         {/* Counter */}
         <div className="flex items-center gap-2 text-xs font-mono">
-          <span className="text-[#7a580e] font-bold text-sm">
+          <span className="text-[#f2cf6b] font-bold text-sm">
             0{currentIndex + 1}
           </span>
           <span className="text-slate-500">/</span>
-          <span className="text-[#423e47]">0{total}</span>
+          <span className="text-[#c29da5]">0{total}</span>
         </div>
       </div>
 
       {/* Slide Content */}
       <div className="relative z-10 space-y-6 min-h-[300px] flex flex-col justify-between">
         <div>
-          <div className="flex items-center gap-2 text-xs text-[#7a580e] font-semibold mb-2">
+          <div className="flex items-center gap-2 text-xs text-[#f2cf6b] font-semibold mb-2">
             <Icon size={16} />
             <span>{slide.badge}</span>
           </div>
-          <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#660f1d] tracking-tight leading-snug drop-shadow-sm">
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#ff6b85] tracking-tight leading-snug drop-shadow-sm">
             {slide.title}
           </h3>
         </div>
 
         {/* Comparison Grid */}
         <div className="grid md:grid-cols-2 gap-4">
-          <div className="p-4 rounded-2xl bg-[#ece6eb] border border-red-900/50">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#660f1d] block mb-1">
+          <div className="p-4 rounded-2xl bg-[#423943] border border-red-900/50">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#ff6b85] block mb-1">
               Fallo de Sistema Detectado en QA:
             </span>
-            <p className="text-xs sm:text-sm text-[#181a22] leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#f5dade] leading-relaxed">
               {slide.problem}
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-[#ece6eb] border border-[#cba135]/50">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#7a580e] block mb-1">
+          <div className="p-4 rounded-2xl bg-[#423943] border border-[#cba135]/50">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#f2cf6b] block mb-1">
               Ingeniería Aplicada (Pablo Valdés):
             </span>
-            <p className="text-xs sm:text-sm text-[#181a22] leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#f5dade] leading-relaxed">
               {slide.solution}
             </p>
           </div>
@@ -210,7 +210,7 @@ export function FiscalisCarousel() {
               ✓ {slide.metrics}
             </span>
           </div>
-          <div className="font-mono text-[11px] px-2.5 py-1 rounded bg-[#0a0c10] text-[#7a580e] border border-[#cba135]/30">
+          <div className="font-mono text-[11px] px-2.5 py-1 rounded bg-[#0a0c10] text-[#f2cf6b] border border-[#cba135]/30">
             {slide.highlight}
           </div>
         </div>
