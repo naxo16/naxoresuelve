@@ -45,4 +45,6 @@ context.md
 *maestro*.md
 *MAESTRO*.md
 ESPECIFICACION_MAESTRA*.md
-
+# Media binaries
+*.mp4
+*.mov

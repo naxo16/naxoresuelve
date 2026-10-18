@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
 import {
   FileSpreadsheet,
   UploadCloud,
@@ -32,6 +33,13 @@ import {
   Flame,
   ShieldAlert,
   Boxes,
+  ShoppingBag,
+  Tag,
+  Percent,
+  Zap,
+  Lock,
+  Gift,
+  UserCheck,
 } from "lucide-react";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { CaseStudyModal, type CaseStudyData } from "@/components/CaseStudyModal";
@@ -293,6 +301,9 @@ export default function Home() {
         {/* Servicios Orientados a Problemas Reales */}
         <ServicesSection onOpenAudit={openAudit} />
 
+        {/* Promociones In-Web, Captura Email/WhatsApp Marketing & Preventa Tienda Multi-SaaS */}
+        <PromotionsAndStoreSection onOpenAudit={openAudit} />
+
         {/* El Manifiesto de Pruebas Rudas */}
         <TestingPhilosophySection />
 
@@ -353,7 +364,7 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
         </a>
 
         {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold uppercase tracking-wider text-[#f5dade]">
+        <nav className="hidden lg:flex items-center gap-5 text-xs font-semibold uppercase tracking-wider text-[#f5dade]">
           <a
             href="#fiscalis-spotlight"
             className="hover:text-[#f2cf6b] transition-colors flex items-center gap-1 text-[#ff6b85]"
@@ -374,6 +385,16 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
             <span>Casos de Estudio</span>
             <span className="px-1.5 py-0.2 text-[9px] bg-[#cba135]/20 text-[#f2cf6b] rounded border border-[#cba135]/40">
               Testing Rudo
+            </span>
+          </a>
+          <a
+            href="#promociones"
+            className="hover:text-[#f2cf6b] transition-colors flex items-center gap-1 text-[#ff758f]"
+          >
+            <Tag size={13} className="text-[#cba135]" />
+            <span>Promociones & Tienda</span>
+            <span className="px-1.5 py-0.2 text-[9px] bg-[#721828] text-[#f2cf6b] rounded border border-[#cba135]/40 font-bold">
+              Preventa
             </span>
           </a>
           <a
@@ -403,7 +424,14 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
         </nav>
 
         {/* Actions */}
-        <div className="hidden sm:flex items-center gap-3">
+        <div className="hidden sm:flex items-center gap-2.5">
+          <Link
+            href="/login"
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#f5dade] hover:text-[#f2cf6b] bg-[#141824] hover:bg-[#1f2438] border border-[#281a24] flex items-center gap-1.5 transition"
+          >
+            <Lock size={13} className="text-[#f2cf6b]" />
+            <span>Portal Clientes</span>
+          </Link>
           <a
             href={CV_URL}
             target="_blank"
@@ -456,6 +484,27 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
           >
             Casos de Estudio (Testing Rudo)
           </a>
+          <a
+            href="#promociones"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-sm font-semibold text-[#ff6b85] flex items-center justify-between"
+          >
+            <div className="flex items-center gap-1.5">
+              <Tag size={14} className="text-[#cba135]" />
+              <span>Promociones & Tienda</span>
+            </div>
+            <span className="px-1.5 py-0.2 text-[9px] bg-[#721828] text-[#f2cf6b] rounded border border-[#cba135]/40 font-bold">
+              Preventa
+            </span>
+          </a>
+          <Link
+            href="/login"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-sm font-semibold text-[#f2cf6b] flex items-center gap-1.5"
+          >
+            <Lock size={14} className="text-[#f2cf6b]" />
+            <span>Portal Clientes / Admin</span>
+          </Link>
           <a
             href="#filosofia-testing"
             onClick={() => setMobileMenuOpen(false)}
@@ -846,6 +895,476 @@ function ServicesSection({
             </div>
           );
         })}
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Promociones In-Web, Captura Email/WhatsApp & Tienda Multi-SaaS    */
+/* ------------------------------------------------------------------ */
+
+function PromotionsAndStoreSection({
+  onOpenAudit,
+}: {
+  onOpenAudit: (topic: string) => void;
+}) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("+56 9 ");
+  const [selectedPromo, setSelectedPromo] = useState("Diagnóstico Forense 100% Bonificado");
+  const [subscribedMarketing, setSubscribedMarketing] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const PROMO_OPTIONS = [
+    {
+      id: "diagnostico",
+      title: "Diagnóstico Forense de Base de Datos & Procesos",
+      value: "Diagnóstico Forense 100% Bonificado",
+      badge: "100% Bonificado · Este Mes",
+      valText: "Valor regular: $150.000 CLP",
+      icon: FlaskConical,
+      benefit:
+        "Informe confidencial de 3 páginas en <24 horas identificando por qué colapsan tus consultas o dónde se duplican tus registros.",
+      targetChannel: "Email + Sesión 20 min WhatsApp",
+    },
+    {
+      id: "kit-python",
+      title: "Kit Python Automatización Excel Anti-Duplicados",
+      value: "Kit Python Automatización Excel Anti-Duplicados",
+      badge: "Descarga Inmediata para Suscriptores",
+      valText: "Valor regular: $60.000 CLP",
+      icon: FileSpreadsheet,
+      benefit:
+        "Script productivo listo para ejecutar que limpia planillas masivas, valida RUTs y elimina registros clonados sin fórmulas rotas.",
+      targetChannel: "Entrega Inmediata a tu Email Corporativo",
+    },
+    {
+      id: "preventa-tienda",
+      title: "Pase Fundador 30% OFF en la Próxima Tienda Digital",
+      value: "Pase Fundador 30% OFF Próxima Tienda Multi-SaaS",
+      badge: "Descuento Vitalicio",
+      valText: "Válido para todo el catálogo multi-producto",
+      icon: Percent,
+      benefit:
+        "Asegura un 30% de descuento vitalicio en paquetes de software en arriendo mensual, sincronizadores y módulos listos para desplegar.",
+      targetChannel: "Aviso Prioritario por WhatsApp y Correo",
+    },
+  ];
+
+  const UPCOMING_PRODUCTS = [
+    {
+      name: "Fiscalis Cloud Lite",
+      category: "SaaS en Arriendo Mensual",
+      badge: "Inspección & Seguridad",
+      price: "$29.990 CLP / mes",
+      discountPrice: "$20.990 CLP / mes (Preventa)",
+      desc: "App móvil offline-first y panel web para digitalización de actas, fiscalización en terreno y trazabilidad sin papel.",
+      features: ["Sincronización Offline", "Georreferenciación GPS", "MFA TOTP", "Reportes PDF"],
+    },
+    {
+      name: "Deduplicator Pro Engine",
+      category: "Microservicio Docker / Script",
+      badge: "Base de Datos & Ingesta",
+      price: "$49.990 CLP",
+      discountPrice: "$34.990 CLP (Preventa)",
+      desc: "Motor de carga masiva de archivos pesados con algoritmos de deduplicación difusa y consistencia transaccional PostgreSQL.",
+      features: ["Pipeline Asíncrono", "Fuzzy Matching", "Validación RUT/PPU", "0 Memory Leaks"],
+    },
+    {
+      name: "Executive BI Live Dashboard",
+      category: "SaaS Analytics & Telemetría",
+      badge: "Toma de Decisiones",
+      price: "$39.990 CLP / mes",
+      discountPrice: "$27.990 CLP / mes (Preventa)",
+      desc: "Tablero de control ejecutivo en tiempo real conectado a bases de datos operativas y mapas de posicionamiento local.",
+      features: ["KPIs en Tiempo Real", "Alertas por WhatsApp", "Google Maps Sync", "Exportación 1-clic"],
+    },
+    {
+      name: "Multi-Store Digital Core",
+      category: "Arquitectura E-Commerce",
+      badge: "Tienda Virtual Multi-Producto",
+      price: "$89.990 CLP",
+      discountPrice: "$62.990 CLP (Preventa)",
+      desc: "Arquitectura moderna y de máxima velocidad para tiendas online con pasarelas chilenas de pago, catálogo dinámico y panel admin.",
+      features: ["Checkout Rápido", "Control de Stock", "Integración Webpay", "SEO Técnico 98+"],
+    },
+  ];
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setErrorMsg("");
+
+    const marketingMessage = `[CAMPAÑA_IN_WEB: PROMOCIONES & PREVENTA TIENDA VIRTUAL]
+Beneficio Solicitado: ${selectedPromo}
+Nombre / Razón Social: ${name}
+Email Corporativo: ${email}
+WhatsApp Contacto: ${phone}
+Suscripción Email Marketing & WhatsApp Marketing: ${subscribedMarketing ? "SÍ (Aceptada)" : "NO"}
+Fecha Solicitud: 2026`;
+
+    try {
+      const res = await fetch(`${API_URL}/leads`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          message: marketingMessage,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(
+          "No fue posible registrar tu promoción en la base de datos. Puedes escribirnos directo al WhatsApp."
+        );
+      }
+
+      setSuccess(true);
+    } catch (err: unknown) {
+      const msg =
+        err instanceof Error
+          ? err.message
+          : "Error de red al procesar tu solicitud promocional.";
+      setErrorMsg(msg);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const whatsappPromoLink = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(
+    `Hola Pablo, acabo de registrarme en la promoción de naxoresuelve para asegurar mi beneficio de "${selectedPromo}". Mi nombre es ${name || "Cliente"} y mi correo es ${email || "mi correo"}.`
+  )}`;
+
+  return (
+    <section id="promociones" className="py-24 px-4 sm:px-6 max-w-7xl mx-auto w-full relative">
+      {/* Glow ambiental vino y oro */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[350px] bg-[#721828]/20 blur-[160px] pointer-events-none -z-10" />
+
+      {/* Header de la Sección */}
+      <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#721828]/60 border border-[#cba135]/50 text-xs font-bold text-[#f2cf6b] uppercase tracking-wider shadow-lg">
+          <Tag size={13} className="text-[#cba135]" />
+          <span>Promociones In-Web & Estrategia de Lanzamiento</span>
+        </div>
+        <h2 className="text-3xl sm:text-5xl font-black text-[#ff6b85] tracking-tight leading-tight">
+          Acelera tu Empresa con Soluciones Reales y Asegura Tu Cupo en Nuestra Próxima Tienda Virtual
+        </h2>
+        <p className="text-sm sm:text-base text-[#f5dade] leading-relaxed">
+          El costo de convivir con planillas rotas, sistemas caídos y registros duplicados supera con creces el valor de implementar ingeniería profesional. Suscríbete a nuestro canal de inteligencia técnica: te entregamos herramientas gratuitas hoy y te aseguramos descuentos de preventa en nuestra próxima tienda de soluciones de software.
+        </p>
+      </div>
+
+      {/* Grid de 3 Lead Magnets Persuasivos */}
+      <div className="grid md:grid-cols-3 gap-6 mb-16">
+        {PROMO_OPTIONS.map((promo) => {
+          const Icon = promo.icon;
+          const isSelected = selectedPromo === promo.value;
+          return (
+            <div
+              key={promo.id}
+              onClick={() => setSelectedPromo(promo.value)}
+              className={`rounded-2xl p-6 sm:p-7 border transition-all duration-300 cursor-pointer flex flex-col justify-between relative overflow-hidden ${
+                isSelected
+                  ? "bg-gradient-to-b from-[#181c28] to-[#0e111a] border-[#cba135] shadow-[0_0_25px_rgba(203,161,53,0.25)] scale-[1.02]"
+                  : "bg-[#0e111a] border-[#281a24] hover:border-[#721828]/80 hover:bg-[#141824]"
+              }`}
+            >
+              {isSelected && (
+                <div className="absolute top-0 right-0 bg-gradient-to-l from-[#cba135] to-[#721828] text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider flex items-center gap-1 shadow-md">
+                  <CheckCircle2 size={11} />
+                  <span>Seleccionado</span>
+                </div>
+              )}
+
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#721828] to-[#07080c] border border-[#cba135]/40 flex items-center justify-center text-[#f2cf6b]">
+                    <Icon size={24} />
+                  </div>
+                  <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-[#721828]/60 text-[#f2cf6b] border border-[#721828] font-bold">
+                    {promo.badge}
+                  </span>
+                </div>
+
+                <h3 className="text-lg font-bold text-[#ff6b85] mb-1.5 leading-snug">
+                  {promo.title}
+                </h3>
+                <div className="text-xs text-[#cba135] font-mono font-semibold mb-3">
+                  {promo.valText}
+                </div>
+                <p className="text-xs text-[#f5dade] leading-relaxed mb-4">
+                  {promo.benefit}
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-[#281a24] flex items-center justify-between text-xs">
+                <span className="text-[#c29da5] text-[11px]">
+                  Canal: <strong className="text-[#f5dade]">{promo.targetChannel}</strong>
+                </span>
+                <span className="text-[#f2cf6b] font-bold flex items-center gap-1">
+                  <span>Reclamar</span>
+                  <ChevronRight size={14} />
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Contenedor Dual: Formulario de Captura Omnicanal & Preview de la Tienda Virtual */}
+      <div className="grid lg:grid-cols-12 gap-8 items-stretch">
+        
+        {/* Formulario de Captura Omnicanal (Email Marketing + WhatsApp Marketing) (6 cols) */}
+        <div className="lg:col-span-6 bg-gradient-to-br from-[#0e111a] via-[#141824] to-[#07080c] border border-[#b82d46]/60 rounded-3xl p-6 sm:p-10 shadow-2xl flex flex-col justify-between">
+          {success ? (
+            <div className="my-auto py-8 text-center space-y-5">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#721828] to-[#cba135] border border-[#cba135] flex items-center justify-center mx-auto text-white shadow-xl animate-bounce">
+                <CheckCircle2 size={36} />
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#721828]/80 text-[#f2cf6b] text-xs font-mono font-bold">
+                <Sparkles size={13} />
+                <span>BENEFICIO ACTIVADO EXITOSAMENTE</span>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-black text-[#ff6b85]">
+                ¡Tu Solicitud Ha Sido Priorizada!
+              </h3>
+              <p className="text-sm text-[#f5dade] max-w-md mx-auto leading-relaxed">
+                Excelente, <strong className="text-[#f2cf6b]">{name}</strong>. Hemos registrado tu interés por <strong className="text-[#ff758f]">"{selectedPromo}"</strong>.
+                Recibirás el material en tu correo y quedas inscrito en la lista VIP de lanzamiento de nuestra tienda virtual.
+              </p>
+
+              {/* Botón Inmediato a WhatsApp */}
+              <div className="pt-4 space-y-3">
+                <a
+                  href={whatsappPromoLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-4 px-6 rounded-2xl font-bold text-sm text-white bg-gradient-to-r from-emerald-600 via-emerald-700 to-[#721828] hover:opacity-95 transition-all flex items-center justify-center gap-2 shadow-[0_4px_25px_rgba(16,185,129,0.3)] border border-emerald-400/40"
+                >
+                  <Smartphone size={18} />
+                  <span>Validar Beneficio Inmediato por WhatsApp (+56 9 5728 6145)</span>
+                </a>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSuccess(false);
+                    setName("");
+                    setEmail("");
+                    setPhone("+56 9 ");
+                  }}
+                  className="text-xs text-[#c29da5] hover:text-[#f2cf6b] underline underline-offset-4"
+                >
+                  Registrar otro correo o solicitar otra promoción
+                </button>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div>
+                <span className="text-xs font-mono font-bold text-[#f2cf6b] uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
+                  <Gift size={14} className="text-[#cba135]" />
+                  <span>Captura de Beneficio Directo</span>
+                </span>
+                <h3 className="text-2xl font-extrabold text-[#ff6b85]">
+                  Asegura tus Datos para Activación Inmediata
+                </h3>
+                <p className="text-xs text-[#c29da5] mt-1 leading-relaxed">
+                  Completa tus datos para enviarte los kits por correo y coordinar alertas de nuevos lanzamientos vía WhatsApp. Cero spam, 100% valor técnico aplicable.
+                </p>
+              </div>
+
+              {errorMsg && (
+                <div className="p-3.5 rounded-xl bg-red-950/80 border border-red-800 text-red-200 text-xs flex items-center gap-2">
+                  <AlertCircle size={16} className="shrink-0 text-red-400" />
+                  <span>{errorMsg}</span>
+                </div>
+              )}
+
+              {/* Selector de Promoción */}
+              <div>
+                <label className="block text-xs font-semibold text-[#f5dade] mb-1.5">
+                  Promoción o Beneficio a Reclamar:
+                </label>
+                <select
+                  value={selectedPromo}
+                  onChange={(e) => setSelectedPromo(e.target.value)}
+                  className="w-full bg-[#07080c] border border-[#281a24] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-3 text-[#f5dade] text-xs font-medium transition"
+                >
+                  {PROMO_OPTIONS.map((p) => (
+                    <option key={p.id} value={p.value}>
+                      {p.title} ({p.badge})
+                    </option>
+                  ))}
+                  <option value="Acceso Total VIP (Diagnóstico + Kit + Pase Preventa)">
+                    ⭐️ Acceso Total VIP (Diagnóstico + Kit Python + Pase Preventa Tienda)
+                  </option>
+                </select>
+              </div>
+
+              {/* Nombre */}
+              <div>
+                <label htmlFor="promo-name" className="block text-xs font-semibold text-[#f5dade] mb-1.5">
+                  Nombre Completo o Empresa *
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7d5e65]">
+                    <UserCheck size={16} />
+                  </div>
+                  <input
+                    id="promo-name"
+                    required
+                    type="text"
+                    placeholder="Ej. Rodrigo San Martín / Transportes del Sur"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full bg-[#07080c] border border-[#281a24] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-2.5 text-[#f5dade] placeholder-[#7d5e65] text-sm transition"
+                  />
+                </div>
+              </div>
+
+              {/* Email (Email Marketing) */}
+              <div>
+                <label htmlFor="promo-email" className="block text-xs font-semibold text-[#f5dade] mb-1.5">
+                  Correo Electrónico Corporativo * (Para entrega de informes y kits)
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7d5e65]">
+                    <Mail size={16} />
+                  </div>
+                  <input
+                    id="promo-email"
+                    required
+                    type="email"
+                    placeholder="contacto@tuempresa.cl"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full bg-[#07080c] border border-[#281a24] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-2.5 text-[#f5dade] placeholder-[#7d5e65] text-sm transition"
+                  />
+                </div>
+              </div>
+
+              {/* WhatsApp (WhatsApp Marketing) */}
+              <div>
+                <label htmlFor="promo-phone" className="block text-xs font-semibold text-[#f5dade] mb-1.5">
+                  WhatsApp Móvil * (Para alertas preventa y soporte técnico directo)
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7d5e65]">
+                    <Smartphone size={16} />
+                  </div>
+                  <input
+                    id="promo-phone"
+                    required
+                    type="text"
+                    placeholder="+56 9 1234 5678"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full bg-[#07080c] border border-[#281a24] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-2.5 text-[#f5dade] placeholder-[#7d5e65] text-sm font-mono transition"
+                  />
+                </div>
+              </div>
+
+              {/* Consentimiento de Marketing */}
+              <div className="flex items-start gap-2.5 pt-1">
+                <input
+                  id="promo-consent"
+                  type="checkbox"
+                  checked={subscribedMarketing}
+                  onChange={(e) => setSubscribedMarketing(e.target.checked)}
+                  className="mt-1 w-4 h-4 rounded border-[#281a24] bg-[#07080c] text-[#721828] focus:ring-[#b82d46] cursor-pointer"
+                />
+                <label htmlFor="promo-consent" className="text-[11px] text-[#c29da5] leading-snug cursor-pointer">
+                  Acepto recibir el diagnóstico o material solicitado, análisis de casos de éxito y notificaciones preferenciales por Email y WhatsApp sobre el lanzamiento de la tienda virtual multi-producto.
+                </label>
+              </div>
+
+              {/* Botón de Enviar */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-4 px-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] hover:opacity-95 active:scale-[0.99] transition shadow-[0_4px_25px_rgba(184,45,70,0.5)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              >
+                {loading ? (
+                  <span>Registrando tu beneficio en PostgreSQL...</span>
+                ) : (
+                  <>
+                    <Zap size={16} className="text-[#f2cf6b]" />
+                    <span>Activar Promoción & Reservar Cupo Preventa</span>
+                  </>
+                )}
+              </button>
+            </form>
+          )}
+        </div>
+
+        {/* Anticipación / Preview de la Futura Tienda Virtual Multi-Productos (6 cols) */}
+        <div className="lg:col-span-6 bg-[#0e111a] border border-[#281a24] rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-3 pb-3 border-b border-[#281a24]">
+              <div className="flex items-center gap-2">
+                <ShoppingBag size={18} className="text-[#f2cf6b]" />
+                <span className="text-xs font-mono font-bold text-[#f2cf6b] uppercase">
+                  Próximo Lanzamiento Oficial
+                </span>
+              </div>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#721828]/60 text-[#f2cf6b] border border-[#721828] font-bold">
+                Tienda Virtual Multi-SaaS
+              </span>
+            </div>
+
+            <h3 className="text-xl sm:text-2xl font-bold text-[#ff6b85] mb-2">
+              Catálogo de Productos y Soluciones Listas para Conectar
+            </h3>
+            <p className="text-xs text-[#c29da5] leading-relaxed mb-6">
+              Estamos consolidando nuestras herramientas más exitosas en paquetes modulares de software accesible para PYMEs chilenas. Al contratar servicios hoy o registrarte en la preventa, aseguras <strong>tarifas congeladas con hasta 30% OFF vitalicio</strong>.
+            </p>
+
+            {/* Listado de 4 Productos de la Tienda */}
+            <div className="grid sm:grid-cols-2 gap-3.5">
+              {UPCOMING_PRODUCTS.map((prod, pIdx) => (
+                <div
+                  key={pIdx}
+                  className="p-3.5 rounded-xl bg-[#07080c] border border-[#281a24] hover:border-[#b82d46]/50 transition flex flex-col justify-between space-y-2"
+                >
+                  <div>
+                    <div className="flex items-center justify-between text-[10px] font-mono text-[#f2cf6b] mb-1">
+                      <span>{prod.badge}</span>
+                      <span className="text-emerald-400 font-bold">Preventa</span>
+                    </div>
+                    <h4 className="text-xs font-bold text-[#f5dade]">{prod.name}</h4>
+                    <p className="text-[11px] text-[#c29da5] line-clamp-2 mt-1 leading-snug">
+                      {prod.desc}
+                    </p>
+                  </div>
+
+                  <div className="pt-2 border-t border-[#281a24]">
+                    <div className="text-[10px] text-[#7d5e65] line-through font-mono">
+                      {prod.price}
+                    </div>
+                    <div className="text-xs font-bold font-mono text-[#f2cf6b]">
+                      {prod.discountPrice}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Banner de Visión y Reinversión */}
+          <div className="mt-6 p-4 rounded-2xl bg-gradient-to-r from-[#721828]/30 via-[#141824] to-[#07080c] border border-[#721828] text-xs space-y-2">
+            <div className="flex items-center gap-2 text-[#f2cf6b] font-bold font-mono text-[11px]">
+              <Sparkles size={14} />
+              <span>Modelo de Reinversión & Escalamiento</span>
+            </div>
+            <p className="text-[#f5dade] text-[11px] leading-relaxed">
+              Cada consultoría, automatización y reserva de preventa financia directamente la infraestructura, pasarelas de pago y servidores de nuestra tienda virtual chilena, garantizando un ecosistema digital soberano y de máxima velocidad.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );

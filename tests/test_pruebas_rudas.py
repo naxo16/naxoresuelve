@@ -8,7 +8,7 @@ Filosofía:
 import pytest
 from fastapi.testclient import TestClient
 
-from apps.api.main import app
+from apps.api.main import app, hash_password, verify_password, create_access_token
 
 client = TestClient(app)
 
@@ -131,3 +131,50 @@ class TestPruebasRudasConcurrencia:
         for _ in range(100):
             res = client.get("/health/live")
             assert res.status_code == 200
+
+
+class TestPruebasRudasAuth:
+    """Pruebas de seguridad criptográfica, hashing y JWT según ADR-002."""
+
+    def test_hashing_password_y_verificacion_correcta(self):
+        """Verifica que el hash PBKDF2 coincida exactamente con la contraseña correcta."""
+        pwd = "ContrasenaSegura2026!"
+        hsh, salt = hash_password(pwd)
+        assert verify_password(pwd, salt, hsh) is True
+        assert verify_password("ContrasenaIncorrecta", salt, hsh) is False
+
+    def test_login_rechaza_campos_invalidos_422(self):
+        """Rechaza logins con email malformado o password vacía."""
+        res = client.post("/auth/login", json={"email": "no-es-email", "password": "123"})
+        assert res.status_code == 422
+
+    def test_login_controla_503_sin_db(self):
+        """Intento de login sin base de datos viva responde 503 sin crashear."""
+        res = client.post("/auth/login", json={"email": "admin@naxoresuelve.cl", "password": "password123"})
+        assert res.status_code == 503
+
+    def test_endpoint_protegido_sin_token_retorna_401(self):
+        """Acceso a /auth/me sin header Authorization es rechazado con 401."""
+        res = client.get("/auth/me")
+        assert res.status_code == 401
+
+    def test_endpoint_protegido_con_token_invalido_retorna_401(self):
+        """Acceso con token JWT manipulado es rechazado con 401."""
+        res = client.get("/auth/me", headers={"Authorization": "Bearer token.falso.invalido"})
+        assert res.status_code == 401
+
+    def test_endpoint_protegido_con_token_valido_retorna_claims(self):
+        """Token generado legítimamente permite acceder a /auth/me."""
+        token = create_access_token({"sub": "1", "email": "pablo@naxoresuelve.cl", "role": "admin"})
+        res = client.get("/auth/me", headers={"Authorization": f"Bearer {token}"})
+        assert res.status_code == 200
+        data = res.json()
+        assert data["email"] == "pablo@naxoresuelve.cl"
+        assert data["role"] == "admin"
+
+    def test_acceso_admin_bloquea_rol_cliente_con_403(self):
+        """Un usuario con rol 'client' es bloqueado de /admin/leads con 403."""
+        token_cliente = create_access_token({"sub": "2", "email": "cliente@empresa.com", "role": "client"})
+        res = client.get("/admin/leads", headers={"Authorization": f"Bearer {token_cliente}"})
+        assert res.status_code == 403
+        assert "requiere privilegios de Administrador" in res.json().get("detail", "")
