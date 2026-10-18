@@ -1,27 +1,33 @@
 @import "tailwindcss";
 
 :root {
-  /* Color Palette: Blanco, Color Vino, Negro más clarito, y Dorado */
-  --bg-dark: #0d0f14;
-  --bg-surface: #141821;
-  --bg-card: #1b202c;
-  --bg-card-hover: #222938;
+  /* Fondo oscuro elegante y profundo (NADA claro) */
+  --bg-dark: #07080c;
+  --bg-surface: #0e1119;
+  --bg-card: #141824;
+  --bg-card-hover: #1c2233;
 
-  --color-vino: #721828;
+  /* Tonos Vino Tinto, Rubí y Borgoña para tipografía y acentos */
+  --color-vino: #80182a;
   --color-vino-dark: #4d0c17;
-  --color-vino-light: #9e233b;
-  --color-vino-glow: rgba(114, 24, 40, 0.45);
+  --color-vino-light: #b82d46;
+  --color-vino-text: #e2556e;
+  --color-vino-text-bright: #ff6b85;
+  --color-vino-text-soft: #f2cfd6;
+  --color-vino-glow: rgba(226, 85, 110, 0.45);
 
+  /* Acentos Dorado / Oro Champagne */
   --color-gold: #cba135;
   --color-gold-light: #f2cf6b;
   --color-gold-dark: #96741f;
   --color-gold-glow: rgba(203, 161, 53, 0.35);
 
-  --color-white: #ffffff;
-  --color-text-dim: #9aa3b2;
-  --color-border: #272f3f;
-  --color-border-gold: rgba(203, 161, 53, 0.35);
-  --color-border-vino: rgba(114, 24, 40, 0.45);
+  /* Texto base tintado cálido (evita el blanco plano sin vida) */
+  --color-text-main: #f5dade;
+  --color-text-muted: #c29da5;
+  --color-border: #281a24;
+  --color-border-gold: rgba(203, 161, 53, 0.4);
+  --color-border-vino: rgba(184, 45, 70, 0.5);
 }
 
 @theme inline {
@@ -31,17 +37,19 @@
   --color-vino: var(--color-vino);
   --color-vino-dark: var(--color-vino-dark);
   --color-vino-light: var(--color-vino-light);
+  --color-vino-text: var(--color-vino-text);
+  --color-vino-text-bright: var(--color-vino-text-bright);
+  --color-vino-text-soft: var(--color-vino-text-soft);
   --color-gold: var(--color-gold);
   --color-gold-light: var(--color-gold-light);
   --color-gold-dark: var(--color-gold-dark);
-  --color-white: var(--color-white);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
   background-color: var(--bg-dark);
-  color: var(--color-white);
+  color: var(--color-text-main);
   font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
 }
@@ -56,14 +64,14 @@ body {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #0d0f14;
+  background: #07080c;
 }
 ::-webkit-scrollbar-thumb {
-  background: #272f3f;
+  background: #4d0c17;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-vino);
+  background: #80182a;
 }
 
 /* ========================================================
@@ -72,27 +80,27 @@ body {
 
 @keyframes glitch-anim {
   0% {
-    text-shadow: 2px 0 var(--color-vino-light), -2px 0 var(--color-gold);
+    text-shadow: 2px 0 var(--color-vino-text-bright), -2px 0 var(--color-gold-light);
     transform: translate(0);
   }
   20% {
-    text-shadow: -2px 0 var(--color-vino-light), 2px 0 var(--color-gold);
+    text-shadow: -2px 0 var(--color-vino-text-bright), 2px 0 var(--color-gold-light);
     transform: translate(-1px, 1px);
   }
   40% {
-    text-shadow: 2px 0 var(--color-gold), -2px 0 var(--color-vino-light);
+    text-shadow: 2px 0 var(--color-gold-light), -2px 0 var(--color-vino-text-bright);
     transform: translate(1px, -1px);
   }
   60% {
-    text-shadow: -1px 0 var(--color-vino-light), 1px 0 var(--color-gold);
+    text-shadow: -1px 0 var(--color-vino-text-bright), 1px 0 var(--color-gold-light);
     transform: translate(0);
   }
   80% {
-    text-shadow: 1px 0 var(--color-gold), -1px 0 var(--color-vino-light);
+    text-shadow: 1px 0 var(--color-gold-light), -1px 0 var(--color-vino-text-bright);
     transform: translate(-1px, 0);
   }
   100% {
-    text-shadow: 2px 0 var(--color-vino-light), -2px 0 var(--color-gold);
+    text-shadow: 2px 0 var(--color-vino-text-bright), -2px 0 var(--color-gold-light);
     transform: translate(0);
   }
 }
@@ -132,7 +140,7 @@ body {
   animation: float-reverse 9s ease-in-out infinite;
 }
 
-/* Pulse animation for WhatsApp & Gold CTAs */
+/* Pulse animation for WhatsApp & CTAs */
 @keyframes pulse-ring {
   0% {
     transform: scale(0.95);
@@ -152,22 +160,27 @@ body {
   animation: pulse-ring 2.2s infinite;
 }
 
-/* Matrix / Cyber Grid Background */
+/* Matrix / Cyber Grid Background con matiz vino tenue */
 .cyber-grid {
   background-size: 40px 40px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(184, 45, 70, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(184, 45, 70, 0.05) 1px, transparent 1px);
+}
+
+/* Tipografía de Gradiente Vino Rubí y Dorado */
+.vino-gradient-text {
+  background: linear-gradient(135deg, #ff859b 0%, #e2556e 40%, #cba135 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .gold-gradient-text {
-  background: linear-gradient(135deg, #ffffff 0%, #f2cf6b 50%, #cba135 100%);
+  background: linear-gradient(135deg, #f2cf6b 0%, #e2556e 50%, #cba135 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.vino-gradient-text {
-  background: linear-gradient(135deg, #ffffff 0%, #d84562 50%, #9e233b 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.vino-bright-text {
+  color: #ff6b85;
 }

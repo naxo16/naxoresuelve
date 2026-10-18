@@ -128,14 +128,14 @@ export function FiscalisCarousel() {
     <div
       onMouseEnter={() => setIsAutoPlaying(false)}
       onMouseLeave={() => setIsAutoPlaying(true)}
-      className="relative w-full max-w-5xl mx-auto bg-[#0a0c10] border-2 border-[#cba135]/50 rounded-3xl p-6 sm:p-10 shadow-[0_25px_60px_rgba(0,0,0,0.95)] overflow-hidden text-white"
+      className="relative w-full max-w-5xl mx-auto bg-[#07080c] border-2 border-[#b82d46]/60 rounded-3xl p-6 sm:p-10 shadow-[0_25px_60px_rgba(0,0,0,0.95)] overflow-hidden text-[#f5dade]"
     >
       {/* Background accents */}
-      <div className="absolute top-0 right-0 w-80 h-80 bg-[#721828]/20 blur-[100px] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-80 h-80 bg-[#721828]/25 blur-[100px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#cba135]/15 blur-[100px] pointer-events-none" />
 
       {/* Top Banner */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-6 border-b border-[#232a3b] mb-6 relative z-10">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-6 border-b border-[#281a24] mb-6 relative z-10">
         <div className="flex items-center gap-3">
           <div className="p-2.5 rounded-xl bg-gradient-to-br from-[#721828] to-[#9e233b] text-[#f2cf6b] border border-[#cba135]/40 shadow-inner">
             <Flame size={20} className="animate-pulse" />
@@ -151,7 +151,7 @@ export function FiscalisCarousel() {
                 {slide.qaSeverity}
               </span>
             </div>
-            <span className="text-xs text-slate-300 font-medium">
+            <span className="text-xs text-[#c29da5] font-medium">
               Aseguramiento de Calidad y Pruebas Extremas en Terreno
             </span>
           </div>
@@ -163,38 +163,38 @@ export function FiscalisCarousel() {
             0{currentIndex + 1}
           </span>
           <span className="text-slate-500">/</span>
-          <span className="text-slate-400">0{total}</span>
+          <span className="text-[#c29da5]">0{total}</span>
         </div>
       </div>
 
       {/* Slide Content */}
       <div className="relative z-10 space-y-6 min-h-[300px] flex flex-col justify-between">
         <div>
-          <div className="flex items-center gap-2 text-xs text-[#cba135] font-semibold mb-2">
+          <div className="flex items-center gap-2 text-xs text-[#f2cf6b] font-semibold mb-2">
             <Icon size={16} />
             <span>{slide.badge}</span>
           </div>
-          <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-snug drop-shadow-sm">
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#ff6b85] tracking-tight leading-snug drop-shadow-sm">
             {slide.title}
           </h3>
         </div>
 
         {/* Comparison Grid */}
         <div className="grid md:grid-cols-2 gap-4">
-          <div className="p-4 rounded-2xl bg-[#141822] border border-red-900/40">
-            <span className="text-xs font-bold uppercase tracking-wider text-red-400 block mb-1">
+          <div className="p-4 rounded-2xl bg-[#0e111a] border border-red-900/50">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#ff758f] block mb-1">
               Fallo de Sistema Detectado en QA:
             </span>
-            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#f5dade] leading-relaxed">
               {slide.problem}
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-[#141822] border border-[#cba135]/40">
+          <div className="p-4 rounded-2xl bg-[#0e111a] border border-[#cba135]/50">
             <span className="text-xs font-bold uppercase tracking-wider text-[#f2cf6b] block mb-1">
               Ingeniería Aplicada (Pablo Valdés):
             </span>
-            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#f5dade] leading-relaxed">
               {slide.solution}
             </p>
           </div>

@@ -51,7 +51,7 @@ export default function RootLayout({
       lang="es"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
     >
-      <body className="min-h-full flex flex-col bg-[#0d0f14] text-white selection:bg-[#721828] selection:text-[#f2cf6b]">
+      <body className="min-h-full flex flex-col bg-[#07080c] text-[#f5dade] selection:bg-[#80182a] selection:text-[#f2cf6b]">
         {children}
       </body>
     </html>

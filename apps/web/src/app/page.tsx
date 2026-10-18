@@ -265,19 +265,19 @@ export default function Home() {
   return (
     <>
       {/* Background Decorativo con Objetos Flotantes Seguros */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        {/* Cyber grid */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#07080c]">
+        {/* Cyber grid matizada en vino tenue */}
         <div className="absolute inset-0 cyber-grid opacity-60" />
-        {/* Orbes flotantes de gradiente (vino y dorado) */}
-        <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-[#721828]/25 blur-[120px] animate-float-slow" />
+        {/* Orbes flotantes de gradiente (vino profundo y dorado) */}
+        <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-[#721828]/30 blur-[130px] animate-float-slow" />
         <div className="absolute top-1/3 -right-40 w-96 h-96 rounded-full bg-[#cba135]/15 blur-[130px] animate-float-reverse" />
-        <div className="absolute -bottom-40 left-1/3 w-96 h-96 rounded-full bg-[#721828]/20 blur-[140px] animate-float-slow" />
+        <div className="absolute -bottom-40 left-1/3 w-96 h-96 rounded-full bg-[#721828]/25 blur-[140px] animate-float-slow" />
       </div>
 
       {/* Navbar Superior Formal */}
       <Navbar onOpenAudit={() => openAudit("general")} />
 
-      <main className="relative z-10 flex-1 flex flex-col">
+      <main className="relative z-10 flex-1 flex flex-col text-[#f5dade]">
         {/* Hero Section con Three.js 3D Interactivo */}
         <HeroSection onOpenAudit={() => openAudit("general")} />
 
@@ -332,7 +332,7 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 bg-[#0a0c10]/95 backdrop-blur-md border-b border-[#232a3b]">
+    <header className="sticky top-0 z-40 bg-[#07080c]/95 backdrop-blur-md border-b border-[#281a24]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3.5">
         {/* Brand */}
         <a href="#" className="flex items-center gap-2.5 group">
@@ -340,36 +340,36 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
             PV
           </div>
           <div className="flex flex-col">
-            <span className="text-base font-bold tracking-tight text-white flex items-center gap-1.5">
+            <span className="text-base font-bold tracking-tight text-[#ff758f] flex items-center gap-1.5">
               Pablo Valdés
               <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#721828]/70 text-[#f2cf6b] border border-[#721828]">
                 naxoresuelve
               </span>
             </span>
-            <span className="text-[11px] text-slate-300 font-medium">
+            <span className="text-[11px] text-[#c29da5] font-medium">
               Analista Programador · Backend & Arquitectura
             </span>
           </div>
         </a>
 
         {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold uppercase tracking-wider text-slate-200">
+        <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold uppercase tracking-wider text-[#f5dade]">
           <a
             href="#fiscalis-spotlight"
-            className="hover:text-[#f2cf6b] transition-colors flex items-center gap-1 text-[#f2cf6b]"
+            className="hover:text-[#f2cf6b] transition-colors flex items-center gap-1 text-[#ff6b85]"
           >
             <Flame size={13} className="text-[#cba135]" />
             <span>Fiscalis</span>
           </a>
           <a
             href="#soluciones"
-            className="hover:text-[#f2cf6b] transition-colors"
+            className="hover:text-[#ff758f] transition-colors"
           >
             Soluciones
           </a>
           <a
             href="#casos-de-estudio"
-            className="hover:text-[#f2cf6b] transition-colors flex items-center gap-1"
+            className="hover:text-[#ff758f] transition-colors flex items-center gap-1"
           >
             <span>Casos de Estudio</span>
             <span className="px-1.5 py-0.2 text-[9px] bg-[#cba135]/20 text-[#f2cf6b] rounded border border-[#cba135]/40">
@@ -378,7 +378,7 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
           </a>
           <a
             href="#filosofia-testing"
-            className="hover:text-[#f2cf6b] transition-colors"
+            className="hover:text-[#ff758f] transition-colors"
           >
             Metodología
           </a>
@@ -386,7 +386,7 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
             href={PORTFOLIO_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[#f2cf6b] transition-colors flex items-center gap-1"
+            className="hover:text-[#f2cf6b] transition-colors flex items-center gap-1 text-[#f2cf6b]"
           >
             <span>renkaidev</span>
             <ExternalLink size={12} />
@@ -395,7 +395,7 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
             href={LINKEDIN_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-slate-300 hover:text-white flex items-center gap-1 transition-colors"
+            className="text-[#c29da5] hover:text-[#ff758f] flex items-center gap-1 transition-colors"
           >
             <span>LinkedIn</span>
             <ExternalLink size={12} />
@@ -408,14 +408,14 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
             href={CV_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:text-white bg-[#141822] hover:bg-[#1b202c] border border-[#232a3b] flex items-center gap-1.5 transition"
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#f5dade] hover:text-white bg-[#0e111a] hover:bg-[#181c28] border border-[#281a24] flex items-center gap-1.5 transition"
           >
             <Download size={13} className="text-[#f2cf6b]" />
             <span>Descargar CV</span>
           </a>
           <button
             onClick={onOpenAudit}
-            className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#721828] to-[#9e233b] hover:from-[#9e233b] hover:to-[#cba135] border border-[#cba135]/30 shadow-md hover:shadow-[0_0_15px_rgba(203,161,53,0.3)] transition-all cursor-pointer"
+            className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#721828] to-[#9e233b] hover:from-[#9e233b] hover:to-[#cba135] border border-[#cba135]/40 shadow-md hover:shadow-[0_0_15px_rgba(184,45,70,0.4)] transition-all cursor-pointer"
           >
             Solicitar Auditoría
           </button>
@@ -425,7 +425,7 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Abrir menú de navegación"
-          className="lg:hidden p-2 text-slate-300 hover:text-white rounded-lg bg-[#141822] border border-[#232a3b]"
+          className="lg:hidden p-2 text-[#c29da5] hover:text-[#f2cf6b] rounded-lg bg-[#0e111a] border border-[#281a24]"
         >
           {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
@@ -433,33 +433,33 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-b border-[#232a3b] bg-[#10141d] px-4 py-4 space-y-3">
+        <div className="lg:hidden border-b border-[#281a24] bg-[#07080c] px-4 py-4 space-y-3">
           <a
             href="#fiscalis-spotlight"
             onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-[#f2cf6b] flex items-center gap-1"
+            className="block text-sm font-semibold text-[#ff6b85] flex items-center gap-1"
           >
-            <Flame size={14} />
+            <Flame size={14} className="text-[#cba135]" />
             <span>Fiscalis (Demo & QA)</span>
           </a>
           <a
             href="#soluciones"
             onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-slate-200 hover:text-[#f2cf6b]"
+            className="block text-sm font-semibold text-[#f5dade] hover:text-[#ff758f]"
           >
             Soluciones
           </a>
           <a
             href="#casos-de-estudio"
             onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-slate-200 hover:text-[#f2cf6b]"
+            className="block text-sm font-semibold text-[#f5dade] hover:text-[#ff758f]"
           >
             Casos de Estudio (Testing Rudo)
           </a>
           <a
             href="#filosofia-testing"
             onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-slate-200 hover:text-[#f2cf6b]"
+            className="block text-sm font-semibold text-[#f5dade] hover:text-[#ff758f]"
           >
             Metodología de Pruebas
           </a>
@@ -476,7 +476,7 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
             href={CV_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-sm font-semibold text-slate-200 flex items-center gap-1"
+            className="block text-sm font-semibold text-[#f5dade] flex items-center gap-1"
           >
             <span>Descargar CV Oficial</span>
             <Download size={13} />
@@ -485,7 +485,7 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
             href={LINKEDIN_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-sm font-semibold text-slate-200 flex items-center gap-1"
+            className="block text-sm font-semibold text-[#c29da5] flex items-center gap-1"
           >
             <span>Perfil LinkedIn</span>
             <ExternalLink size={13} />
@@ -516,30 +516,30 @@ function HeroSection({ onOpenAudit }: { onOpenAudit: () => void }) {
         {/* Columna Izquierda: Mensaje y CTA */}
         <div className="lg:col-span-7 space-y-6 text-left">
           {/* Badge Formal con micro-glitch */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#10141d] border border-[#cba135]/50 shadow-inner">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0e111a] border border-[#b82d46]/50 shadow-inner">
             <Terminal size={14} className="text-[#f2cf6b]" />
-            <span className="text-xs font-mono font-medium text-slate-200">
+            <span className="text-xs font-mono font-medium text-[#f5dade]">
               Pablo Valdés · Analista Programador & Backend Engineer
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           </div>
 
-          {/* Título Principal con Efecto Glitch y Alto Contraste */}
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-tight drop-shadow-sm">
+          {/* Título Principal con Tipografía Rojo Vino y Efecto Glitch */}
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[#f5dade] leading-tight drop-shadow-sm">
             Cero papel. Cero duplicidad. Resuelvo problemas críticos con{" "}
-            <span className="glitch-hover inline-block gold-gradient-text cursor-default font-black">
+            <span className="glitch-hover inline-block vino-gradient-text cursor-default font-black">
               arquitectura de software rigurosa
             </span>
           </h1>
 
           {/* Subtítulo de propuesta de valor con fondo de contraste */}
-          <div className="p-4 rounded-2xl bg-[#10141d]/90 border border-[#232a3b] backdrop-blur-md">
-            <p className="text-sm sm:text-base text-slate-100 leading-relaxed font-normal">
-              Especializado en <strong>Python, FastAPI y PostgreSQL</strong>. Creador de{" "}
+          <div className="p-4 rounded-2xl bg-[#0e111a]/95 border border-[#281a24] backdrop-blur-md">
+            <p className="text-sm sm:text-base text-[#f5dade] leading-relaxed font-normal">
+              Especializado en <strong className="text-[#ff6b85]">Python, FastAPI y PostgreSQL</strong>. Creador de{" "}
               <strong className="text-[#f2cf6b]">Fiscalis</strong> (digitalización municipal con
               georreferenciación GPS y resiliencia offline-first). Resuelvo cuellos de botella en
               planillas Excel colapsadas, bases de datos lentas y software SaaS en arriendo.{" "}
-              <span className="text-white font-bold underline decoration-[#cba135] underline-offset-4">
+              <span className="text-[#ff758f] font-bold underline decoration-[#cba135] underline-offset-4">
                 No es un caso de éxito si no aprueba el testing riguroso.
               </span>
             </p>
@@ -557,7 +557,7 @@ function HeroSection({ onOpenAudit }: { onOpenAudit: () => void }) {
 
             <button
               onClick={onOpenAudit}
-              className="px-6 py-3.5 rounded-xl font-bold text-sm text-white bg-[#141822] hover:bg-[#1b202c] border border-[#232a3b] hover:border-[#cba135]/70 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+              className="px-6 py-3.5 rounded-xl font-bold text-sm text-[#f5dade] hover:text-[#f2cf6b] bg-[#0e111a] hover:bg-[#181c28] border border-[#281a24] hover:border-[#b82d46]/70 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
             >
               <Sparkles size={18} className="text-[#cba135]" />
               <span>Diagnóstico Rápido de tu Caso</span>
@@ -566,30 +566,30 @@ function HeroSection({ onOpenAudit }: { onOpenAudit: () => void }) {
 
           {/* Métricas / Badges de Confiabilidad */}
           <div className="pt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
-            <div className="bg-[#10141d] border border-[#232a3b] rounded-xl p-3.5 shadow-md">
+            <div className="bg-[#0e111a] border border-[#281a24] rounded-xl p-3.5 shadow-md">
               <div className="text-xl font-mono font-bold text-[#f2cf6b]">72h → &lt;90s</div>
-              <div className="text-xs text-slate-300">En terreno con Fiscalis</div>
+              <div className="text-xs text-[#c29da5]">En terreno con Fiscalis</div>
             </div>
-            <div className="bg-[#10141d] border border-[#232a3b] rounded-xl p-3.5 shadow-md">
-              <div className="text-xl font-mono font-bold text-white">0%</div>
-              <div className="text-xs text-slate-300">Tolerancia a duplicidad</div>
+            <div className="bg-[#0e111a] border border-[#281a24] rounded-xl p-3.5 shadow-md">
+              <div className="text-xl font-mono font-bold text-[#ff6b85]">0%</div>
+              <div className="text-xs text-[#c29da5]">Tolerancia a duplicidad</div>
             </div>
-            <div className="bg-[#10141d] border border-[#232a3b] rounded-xl p-3.5 shadow-md">
+            <div className="bg-[#0e111a] border border-[#281a24] rounded-xl p-3.5 shadow-md">
               <div className="text-xl font-mono font-bold text-[#f2cf6b]">3FN / GIN</div>
-              <div className="text-xs text-slate-300">PostgreSQL relacional</div>
+              <div className="text-xs text-[#c29da5]">PostgreSQL relacional</div>
             </div>
-            <div className="bg-[#10141d] border border-[#232a3b] rounded-xl p-3.5 shadow-md">
-              <div className="text-xl font-mono font-bold text-white">100% Pass</div>
-              <div className="text-xs text-slate-300">Suite de pruebas rudas</div>
+            <div className="bg-[#0e111a] border border-[#281a24] rounded-xl p-3.5 shadow-md">
+              <div className="text-xl font-mono font-bold text-emerald-400">100% Pass</div>
+              <div className="text-xs text-[#c29da5]">Suite de pruebas rudas</div>
             </div>
           </div>
         </div>
 
         {/* Columna Derecha: Three.js 3D Interactive Canvas */}
         <div className="lg:col-span-5 relative flex flex-col items-center justify-center">
-          <div className="relative w-full rounded-3xl bg-[#0a0c10]/80 border-2 border-[#cba135]/40 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.85)] overflow-hidden">
+          <div className="relative w-full rounded-3xl bg-[#07080c] border-2 border-[#b82d46]/50 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.9)] overflow-hidden">
             {/* 3D Header Tag */}
-            <div className="absolute top-4 left-4 z-10 flex items-center gap-2 bg-[#141822]/90 border border-[#cba135]/40 px-3 py-1 rounded-full text-[11px] font-mono text-[#f2cf6b] backdrop-blur">
+            <div className="absolute top-4 left-4 z-10 flex items-center gap-2 bg-[#0e111a]/95 border border-[#cba135]/40 px-3 py-1 rounded-full text-[11px] font-mono text-[#f2cf6b] backdrop-blur">
               <Boxes size={13} className="text-[#cba135]" />
               <span>Three.js 3D Architecture Node</span>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
@@ -599,7 +599,7 @@ function HeroSection({ onOpenAudit }: { onOpenAudit: () => void }) {
             <ThreeArchitectureNode />
 
             {/* 3D Footer Descriptor */}
-            <div className="mt-2 text-center text-xs font-mono text-slate-300 bg-[#10141d] py-1.5 px-3 rounded-xl border border-[#232a3b]">
+            <div className="mt-2 text-center text-xs font-mono text-[#c29da5] bg-[#0e111a] py-1.5 px-3 rounded-xl border border-[#281a24]">
               <span>Malla geométrica interactiva · Pasa el cursor para rotar</span>
             </div>
           </div>
@@ -615,7 +615,7 @@ function HeroSection({ onOpenAudit }: { onOpenAudit: () => void }) {
 
 function TestingRudoBanner() {
   return (
-    <div className="w-full bg-gradient-to-r from-[#4d0c17] via-[#10141d] to-[#10141d] border-y border-[#cba135]/40 py-4 px-4 sm:px-6">
+    <div className="w-full bg-gradient-to-r from-[#4d0c17] via-[#0e111a] to-[#0e111a] border-y border-[#b82d46]/40 py-4 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-left">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-[#721828] text-[#f2cf6b] border border-[#cba135]/40 shadow-inner">
@@ -625,7 +625,7 @@ function TestingRudoBanner() {
             <span className="text-xs font-bold uppercase tracking-widest text-[#f2cf6b] block">
               Regla de Oro en Cada Entrega
             </span>
-            <p className="text-sm font-semibold text-white">
+            <p className="text-sm font-semibold text-[#f5dade]">
               &ldquo;No es un caso de éxito si no aprueba el testing riguroso.&rdquo;
             </p>
           </div>
@@ -658,10 +658,10 @@ function FiscalisSpotlightSection({
           <Flame size={14} className="text-[#cba135]" />
           Proyecto Insignia de Ingeniería & Terreno
         </div>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#ff6b85] tracking-tight">
           Fiscalis: El Sistema de Gestión Operativa que Erradicó el Papel
         </h2>
-        <p className="text-sm sm:text-base text-slate-200 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-base text-[#f5dade] max-w-2xl mx-auto leading-relaxed">
           Diseñado, probado y documentado para fiscalización municipal y seguridad pública. De 72
           horas analógicas a menos de 90 segundos digitalizados con georreferenciación GPS y
           persistencia asíncrona.
@@ -684,7 +684,7 @@ function FiscalisSpotlightSection({
         </a>
         <button
           onClick={onSelectFiscalis}
-          className="px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-slate-200 hover:text-white bg-[#10141d] hover:bg-[#181d28] border border-[#232a3b] hover:border-[#cba135]/60 transition-all flex items-center gap-2 cursor-pointer"
+          className="px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#f5dade] hover:text-[#f2cf6b] bg-[#0e111a] hover:bg-[#181c28] border border-[#281a24] hover:border-[#cba135]/60 transition-all flex items-center gap-2 cursor-pointer"
         >
           <FileCheck2 size={14} className="text-[#f2cf6b]" />
           <span>Ver Expediente Técnico Modal</span>
@@ -706,14 +706,14 @@ function CaseStudiesSection({
   return (
     <section id="casos-de-estudio" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full">
       <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#721828]/40 border border-[#cba135]/40 text-xs font-bold text-[#f2cf6b] uppercase tracking-wider">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#721828]/50 border border-[#cba135]/40 text-xs font-bold text-[#f2cf6b] uppercase tracking-wider">
           <FlaskConical size={13} />
           Casos de Estudio Reales de Pablo Valdés
         </div>
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-[#ff758f]">
           Sistemas sometidos a pruebas rudas antes de tocar producción
         </h2>
-        <p className="text-sm sm:text-base text-slate-300">
+        <p className="text-sm sm:text-base text-[#c29da5]">
           Haz clic en cualquier caso para abrir el expediente técnico, métricas de estrés y enlace directo a la documentación en vivo.
         </p>
       </div>
@@ -723,26 +723,26 @@ function CaseStudiesSection({
           <div
             key={c.id}
             onClick={() => onSelectCase(c)}
-            className="group relative bg-[#10141d] hover:bg-[#181d28] border border-[#232a3b] hover:border-[#cba135]/70 rounded-2xl p-6 transition-all duration-300 shadow-lg hover:shadow-[0_10px_35px_rgba(114,24,40,0.35)] cursor-pointer flex flex-col justify-between"
+            className="group relative bg-[#0e111a] hover:bg-[#141824] border border-[#281a24] hover:border-[#b82d46]/70 rounded-2xl p-6 transition-all duration-300 shadow-lg hover:shadow-[0_10px_35px_rgba(114,24,40,0.4)] cursor-pointer flex flex-col justify-between"
           >
             {/* Header Card */}
             <div>
-              <div className="flex items-center justify-between text-xs text-slate-400 mb-3">
+              <div className="flex items-center justify-between text-xs text-[#c29da5] mb-3">
                 <span className="font-mono text-[#f2cf6b]">PROYECTO #{c.id.toUpperCase()}</span>
-                <span className="px-2 py-0.5 rounded bg-[#721828]/50 text-white text-[10px] font-bold">
+                <span className="px-2 py-0.5 rounded bg-[#721828]/70 text-[#f2cf6b] text-[10px] font-bold">
                   TESTING CERTIFICADO
                 </span>
               </div>
-              <h3 className="text-lg font-bold text-white group-hover:text-[#f2cf6b] transition-colors mb-2">
+              <h3 className="text-lg font-bold text-[#ff6b85] group-hover:text-[#f2cf6b] transition-colors mb-2">
                 {c.title}
               </h3>
-              <p className="text-xs text-slate-300 mb-4 line-clamp-3 leading-relaxed">
+              <p className="text-xs text-[#f5dade] mb-4 line-clamp-3 leading-relaxed">
                 {c.problem}
               </p>
 
               {/* Batería resumida */}
-              <div className="space-y-2 mb-4 bg-[#0a0c10] p-3 rounded-xl border border-[#232a3b]">
-                <div className="text-[11px] font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+              <div className="space-y-2 mb-4 bg-[#07080c] p-3 rounded-xl border border-[#281a24]">
+                <div className="text-[11px] font-bold text-[#ff758f] uppercase tracking-wider flex items-center gap-1.5">
                   <CheckCircle2 size={13} className="text-emerald-400" />
                   Prueba de Estrés Superada:
                 </div>
@@ -753,12 +753,12 @@ function CaseStudiesSection({
             </div>
 
             {/* Footer Card */}
-            <div className="pt-3 border-t border-[#232a3b] flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-200 group-hover:text-white flex items-center gap-1">
+            <div className="pt-3 border-t border-[#281a24] flex items-center justify-between">
+              <span className="text-xs font-semibold text-[#f5dade] group-hover:text-[#f2cf6b] flex items-center gap-1">
                 Ver expediente y demo
                 <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </span>
-              <span className="text-xs text-slate-400 font-mono">
+              <span className="text-xs text-[#c29da5] font-mono">
                 {c.technologies.slice(0, 2).join(" · ")}
               </span>
             </div>
@@ -784,10 +784,10 @@ function ServicesSection({
         <span className="text-xs font-bold uppercase tracking-widest text-[#f2cf6b]">
           Capacidades & Especialización
         </span>
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-[#ff758f]">
           No vendo líneas de código: resuelvo los cuellos de botella que frenan tu negocio
         </h2>
-        <p className="text-sm sm:text-base text-slate-300">
+        <p className="text-sm sm:text-base text-[#c29da5]">
           Compara el dolor operativo habitual frente a la solución de ingeniería definitiva que implemento.
         </p>
       </div>
@@ -798,46 +798,46 @@ function ServicesSection({
           return (
             <div
               key={idx}
-              className="bg-[#10141d] border border-[#232a3b] hover:border-[#cba135]/50 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-[0_10px_30px_rgba(0,0,0,0.6)] flex flex-col justify-between"
+              className="bg-[#0e111a] border border-[#281a24] hover:border-[#b82d46]/60 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-[0_10px_30px_rgba(0,0,0,0.7)] flex flex-col justify-between"
             >
               <div>
                 {/* Header */}
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 rounded-xl bg-gradient-to-br from-[#721828] to-[#141822] text-[#f2cf6b] border border-[#cba135]/30">
+                  <div className="p-3 rounded-xl bg-gradient-to-br from-[#721828] to-[#0e111a] text-[#f2cf6b] border border-[#cba135]/40">
                     <Icon size={22} />
                   </div>
-                  <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#181d28] text-[#f2cf6b] border border-[#232a3b]">
+                  <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#181c28] text-[#f2cf6b] border border-[#281a24]">
                     {s.badge}
                   </span>
                 </div>
 
-                <h3 className="text-lg font-bold text-white mb-1">{s.title}</h3>
-                <span className="text-xs text-[#cba135] font-semibold block mb-4">
+                <h3 className="text-lg font-bold text-[#ff6b85] mb-1">{s.title}</h3>
+                <span className="text-xs text-[#f2cf6b] font-semibold block mb-4">
                   {s.tag}
                 </span>
 
                 {/* El Dolor (Pain Point) */}
-                <div className="mb-3 p-3 rounded-xl bg-red-950/40 border border-red-900/50 text-xs">
-                  <span className="font-bold text-red-300 block mb-1">
+                <div className="mb-3 p-3 rounded-xl bg-red-950/30 border border-red-900/40 text-xs">
+                  <span className="font-bold text-[#ff758f] block mb-1">
                     El Dolor Real:
                   </span>
-                  <p className="text-slate-200 leading-relaxed">{s.problem}</p>
+                  <p className="text-[#f5dade] leading-relaxed">{s.problem}</p>
                 </div>
 
                 {/* La Solución */}
-                <div className="p-3 rounded-xl bg-emerald-950/40 border border-emerald-900/50 text-xs">
+                <div className="p-3 rounded-xl bg-emerald-950/30 border border-emerald-900/40 text-xs">
                   <span className="font-bold text-emerald-300 block mb-1">
                     Solución de Ingeniería:
                   </span>
-                  <p className="text-slate-200 leading-relaxed">{s.solution}</p>
+                  <p className="text-[#f5dade] leading-relaxed">{s.solution}</p>
                 </div>
               </div>
 
               {/* Botón rápido de cotizar */}
-              <div className="pt-4 mt-4 border-t border-[#232a3b] flex items-center justify-between">
+              <div className="pt-4 mt-4 border-t border-[#281a24] flex items-center justify-between">
                 <button
                   onClick={() => onOpenAudit(s.title)}
-                  className="text-xs font-bold text-[#f2cf6b] hover:text-white flex items-center gap-1 transition-colors cursor-pointer"
+                  className="text-xs font-bold text-[#f2cf6b] hover:text-[#ff758f] flex items-center gap-1 transition-colors cursor-pointer"
                 >
                   <span>Diagnosticar mi caso</span>
                   <ChevronRight size={14} />
@@ -880,17 +880,17 @@ function TestingPhilosophySection() {
   ];
 
   return (
-    <section id="filosofia-testing" className="py-20 px-4 sm:px-6 bg-[#08090d] border-y border-[#232a3b]">
+    <section id="filosofia-testing" className="py-20 px-4 sm:px-6 bg-[#07080c] border-y border-[#281a24]">
       <div className="max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#721828]/50 border border-[#cba135]/40 text-xs font-bold text-[#f2cf6b] uppercase">
             <ShieldCheck size={14} />
             Metodología de Validación Extrema
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#ff758f]">
             ¿Por qué un sistema no es un éxito sin testing rudo?
           </h2>
-          <p className="text-sm sm:text-base text-slate-300">
+          <p className="text-sm sm:text-base text-[#c29da5]">
             En desarrollo de software, la mayoría de los problemas ocurren después de cobrar, cuando el cliente carga sus datos reales. Nosotros probamos bajo condiciones extremas antes de entregar.
           </p>
         </div>
@@ -899,13 +899,13 @@ function TestingPhilosophySection() {
           {steps.map((st) => (
             <div
               key={st.step}
-              className="bg-[#10141d] border border-[#232a3b] rounded-2xl p-6 relative overflow-hidden"
+              className="bg-[#0e111a] border border-[#281a24] rounded-2xl p-6 relative overflow-hidden"
             >
-              <div className="text-4xl font-black font-mono text-[#721828]/80 mb-3">
+              <div className="text-4xl font-black font-mono text-[#80182a]/70 mb-3">
                 {st.step}
               </div>
-              <h3 className="text-base font-bold text-white mb-2">{st.title}</h3>
-              <p className="text-xs text-slate-300 leading-relaxed">{st.desc}</p>
+              <h3 className="text-base font-bold text-[#ff6b85] mb-2">{st.title}</h3>
+              <p className="text-xs text-[#f5dade] leading-relaxed">{st.desc}</p>
             </div>
           ))}
         </div>
@@ -925,16 +925,16 @@ function PortfolioSection({
 }) {
   return (
     <section id="portafolio" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full">
-      <div className="bg-gradient-to-br from-[#10141d] via-[#181d28] to-[#0a0c10] border border-[#cba135]/40 rounded-3xl p-8 sm:p-12 shadow-2xl">
+      <div className="bg-gradient-to-br from-[#0e111a] via-[#141824] to-[#07080c] border border-[#b82d46]/50 rounded-3xl p-8 sm:p-12 shadow-2xl">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
           <div className="space-y-4 max-w-2xl">
             <span className="text-xs font-mono uppercase tracking-widest text-[#f2cf6b] font-bold">
               Portafolio Oficial & Trayectoria
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#ff6b85]">
               Pablo Valdés — Desarrollador Backend & Analista Programador
             </h2>
-            <p className="text-sm sm:text-base text-slate-200 leading-relaxed">
+            <p className="text-sm sm:text-base text-[#f5dade] leading-relaxed">
               Especializado en Python, FastAPI y PostgreSQL. Resuelvo problemas de lógica, persistencia y arquitectura limpia con un enfoque analítico riguroso. Puedes explorar mi portafolio completo en renkaidev, revisar el código en GitHub o descargar mi CV oficial.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
@@ -942,7 +942,7 @@ function PortfolioSection({
                 href={PORTFOLIO_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#721828] to-[#9e233b] hover:from-[#9e233b] hover:to-[#cba135] transition-all flex items-center gap-2 shadow-md border border-[#cba135]/30"
+                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#721828] to-[#9e233b] hover:from-[#9e233b] hover:to-[#cba135] transition-all flex items-center gap-2 shadow-md border border-[#cba135]/40"
               >
                 <span>Explorar renkaidev.workers.dev</span>
                 <ExternalLink size={14} />
@@ -951,7 +951,7 @@ function PortfolioSection({
                 href={CV_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-slate-200 hover:text-white bg-[#10141d] hover:bg-[#181d28] border border-[#232a3b] transition-colors flex items-center gap-2"
+                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#f5dade] hover:text-[#f2cf6b] bg-[#0e111a] hover:bg-[#181c28] border border-[#281a24] transition-colors flex items-center gap-2"
               >
                 <Download size={14} className="text-[#f2cf6b]" />
                 <span>Descargar CV</span>
@@ -969,7 +969,7 @@ function PortfolioSection({
                 href={GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-slate-200 hover:text-white bg-[#10141d] border border-[#232a3b] transition-colors flex items-center gap-2"
+                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#f5dade] hover:text-[#f2cf6b] bg-[#0e111a] border border-[#281a24] transition-colors flex items-center gap-2"
               >
                 <GithubIcon className="w-3.5 h-3.5" />
                 <span>GitHub (naxo16)</span>
@@ -978,33 +978,33 @@ function PortfolioSection({
           </div>
 
           {/* Tarjeta de Resumen Técnico */}
-          <div className="w-full lg:w-80 bg-[#0a0c10] border border-[#232a3b] rounded-2xl p-6 space-y-4 text-xs font-mono">
-            <div className="flex items-center justify-between pb-3 border-b border-[#232a3b]">
-              <span className="text-slate-400">Estado Profesional:</span>
+          <div className="w-full lg:w-80 bg-[#07080c] border border-[#281a24] rounded-2xl p-6 space-y-4 text-xs font-mono">
+            <div className="flex items-center justify-between pb-3 border-b border-[#281a24]">
+              <span className="text-[#c29da5]">Estado Profesional:</span>
               <span className="text-emerald-400 font-bold flex items-center gap-1">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-ping" />
                 Disponible
               </span>
             </div>
-            <div className="flex items-center justify-between pb-3 border-b border-[#232a3b]">
-              <span className="text-slate-400">Core Stack:</span>
+            <div className="flex items-center justify-between pb-3 border-b border-[#281a24]">
+              <span className="text-[#c29da5]">Core Stack:</span>
               <span className="text-[#f2cf6b]">FastAPI · Python · PostgreSQL</span>
             </div>
-            <div className="flex items-center justify-between pb-3 border-b border-[#232a3b]">
-              <span className="text-slate-400">Teléfono Directo:</span>
-              <a href={`tel:+${PHONE_NUMBER}`} className="text-white hover:text-[#f2cf6b] font-bold">
+            <div className="flex items-center justify-between pb-3 border-b border-[#281a24]">
+              <span className="text-[#c29da5]">Teléfono Directo:</span>
+              <a href={`tel:+${PHONE_NUMBER}`} className="text-[#ff6b85] hover:text-[#f2cf6b] font-bold">
                 +{PHONE_NUMBER}
               </a>
             </div>
-            <div className="flex items-center justify-between pb-3 border-b border-[#232a3b]">
-              <span className="text-slate-400">Contacto Directo:</span>
-              <a href={`mailto:${EMAIL_DIRECT}`} className="text-slate-200 hover:text-[#f2cf6b]">
+            <div className="flex items-center justify-between pb-3 border-b border-[#281a24]">
+              <span className="text-[#c29da5]">Contacto Directo:</span>
+              <a href={`mailto:${EMAIL_DIRECT}`} className="text-[#f5dade] hover:text-[#f2cf6b]">
                 {EMAIL_DIRECT}
               </a>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-400">Ubicación:</span>
-              <span className="text-slate-200">Chile (Remoto / Presencial)</span>
+              <span className="text-[#c29da5]">Ubicación:</span>
+              <span className="text-[#f5dade]">Chile (Remoto / Presencial)</span>
             </div>
           </div>
         </div>
@@ -1072,32 +1072,32 @@ function ContactSection({
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#721828]/50 border border-[#cba135]/40 text-xs font-bold text-[#f2cf6b] uppercase">
             Iniciemos con un análisis serio
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#ff758f]">
             Explícame tu cuello de botella y te entrego una solución técnica probada
           </h2>
-          <p className="text-slate-200 text-sm sm:text-base leading-relaxed">
+          <p className="text-[#f5dade] text-sm sm:text-base leading-relaxed">
             Ya sea una macro en Excel que no para de fallar, una base de datos que tarda una eternidad, o la necesidad de contar con un software propio en modalidad de arriendo: conversemos sin compromiso.
           </p>
 
           <div className="space-y-3 pt-2">
-            <div className="flex items-center gap-3 text-sm text-slate-200">
+            <div className="flex items-center gap-3 text-sm text-[#f5dade]">
               <CheckCircle2 size={18} className="text-[#f2cf6b]" />
               <span>Respuesta técnica directa por Pablo Valdés en menos de 24 horas.</span>
             </div>
-            <div className="flex items-center gap-3 text-sm text-slate-200">
+            <div className="flex items-center gap-3 text-sm text-[#f5dade]">
               <CheckCircle2 size={18} className="text-[#f2cf6b]" />
               <span>Propuesta con alcance claro, estimación y protocolo de testing riguroso.</span>
             </div>
-            <div className="flex items-center gap-3 text-sm text-slate-200">
+            <div className="flex items-center gap-3 text-sm text-[#f5dade]">
               <CheckCircle2 size={18} className="text-[#f2cf6b]" />
-              <span>Atención telefónica directa al: <strong className="text-white">+{PHONE_NUMBER}</strong></span>
+              <span>Atención telefónica directa al: <strong className="text-[#ff6b85]">+{PHONE_NUMBER}</strong></span>
             </div>
           </div>
 
           <div className="pt-4 flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => onOpenAudit("duplicidad")}
-              className="text-xs font-bold uppercase tracking-wider text-[#f2cf6b] hover:text-white underline underline-offset-4 cursor-pointer text-left"
+              className="text-xs font-bold uppercase tracking-wider text-[#f2cf6b] hover:text-[#ff758f] underline underline-offset-4 cursor-pointer text-left"
             >
               ¿Prefieres el asistente de diagnóstico rápido? Haz clic aquí.
             </button>
@@ -1105,27 +1105,27 @@ function ContactSection({
         </div>
 
         {/* Columna Derecha: Formulario */}
-        <div className="bg-[#10141d] border border-[#232a3b] rounded-2xl p-6 sm:p-8 shadow-xl">
+        <div className="bg-[#0e111a] border border-[#281a24] rounded-2xl p-6 sm:p-8 shadow-xl">
           {success ? (
             <div className="py-12 text-center space-y-4">
               <CheckCircle2 className="w-16 h-16 text-[#f2cf6b] mx-auto animate-bounce" />
-              <h3 className="text-2xl font-bold text-white">¡Mensaje Recibido!</h3>
-              <p className="text-sm text-slate-200 max-w-sm mx-auto">
+              <h3 className="text-2xl font-bold text-[#ff6b85]">¡Mensaje Recibido!</h3>
+              <p className="text-sm text-[#f5dade] max-w-sm mx-auto">
                 Tu requerimiento fue ingresado exitosamente en nuestra base de datos. Pablo Valdés lo revisará a la brevedad.
               </p>
               <button
                 onClick={() => setSuccess(false)}
-                className="mt-4 px-6 py-2.5 rounded-xl text-xs font-bold text-slate-200 hover:text-white bg-[#181d28] border border-[#232a3b]"
+                className="mt-4 px-6 py-2.5 rounded-xl text-xs font-bold text-[#f5dade] hover:text-[#f2cf6b] bg-[#141824] border border-[#281a24]"
               >
                 Enviar otro mensaje
               </button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4 text-sm">
-              <h3 className="text-xl font-bold text-white mb-1">
+              <h3 className="text-xl font-bold text-[#ff6b85] mb-1">
                 Formulario de Consulta Técnica
               </h3>
-              <p className="text-xs text-slate-400 mb-4">
+              <p className="text-xs text-[#c29da5] mb-4">
                 Todos los campos son procesados de forma confidencial.
               </p>
 
@@ -1137,7 +1137,7 @@ function ContactSection({
               )}
 
               <div>
-                <label htmlFor="contact-name" className="block text-xs font-semibold text-slate-300 mb-1">
+                <label htmlFor="contact-name" className="block text-xs font-semibold text-[#f5dade] mb-1">
                   Nombre o Empresa *
                 </label>
                 <input
@@ -1147,12 +1147,12 @@ function ContactSection({
                   placeholder="Tu nombre o empresa"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-[#0a0c10] border border-[#232a3b] focus:border-[#cba135] focus:outline-none rounded-xl px-3.5 py-2.5 text-white placeholder-slate-600 text-sm transition"
+                  className="w-full bg-[#07080c] border border-[#281a24] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#f5dade] placeholder-[#7d5e65] text-sm transition"
                 />
               </div>
 
               <div>
-                <label htmlFor="contact-email" className="block text-xs font-semibold text-slate-300 mb-1">
+                <label htmlFor="contact-email" className="block text-xs font-semibold text-[#f5dade] mb-1">
                   Correo Electrónico *
                 </label>
                 <input
@@ -1162,19 +1162,19 @@ function ContactSection({
                   placeholder="ejemplo@empresa.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-[#0a0c10] border border-[#232a3b] focus:border-[#cba135] focus:outline-none rounded-xl px-3.5 py-2.5 text-white placeholder-slate-600 text-sm transition"
+                  className="w-full bg-[#07080c] border border-[#281a24] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#f5dade] placeholder-[#7d5e65] text-sm transition"
                 />
               </div>
 
               <div>
-                <label htmlFor="contact-service" className="block text-xs font-semibold text-slate-300 mb-1">
+                <label htmlFor="contact-service" className="block text-xs font-semibold text-[#f5dade] mb-1">
                   Área de Interés Principal
                 </label>
                 <select
                   id="contact-service"
                   value={serviceType}
                   onChange={(e) => setServiceType(e.target.value)}
-                  className="w-full bg-[#0a0c10] border border-[#232a3b] focus:border-[#cba135] focus:outline-none rounded-xl px-3.5 py-2.5 text-white text-sm transition"
+                  className="w-full bg-[#07080c] border border-[#281a24] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#f5dade] text-sm transition"
                 >
                   <option value="Fiscalis / Terreno">Fiscalis (Inspección y Seguridad en Terreno)</option>
                   <option value="Automatizaciones / Excel">Automatización en Excel / Macros</option>
@@ -1189,7 +1189,7 @@ function ContactSection({
               </div>
 
               <div>
-                <label htmlFor="contact-message" className="block text-xs font-semibold text-slate-300 mb-1">
+                <label htmlFor="contact-message" className="block text-xs font-semibold text-[#f5dade] mb-1">
                   Describe tu necesidad o problema *
                 </label>
                 <textarea
@@ -1199,14 +1199,14 @@ function ContactSection({
                   placeholder="Detalla qué volumen manejas, cuántas personas sufren el problema o qué objetivo buscas cumplir..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="w-full bg-[#0a0c10] border border-[#232a3b] focus:border-[#cba135] focus:outline-none rounded-xl px-3.5 py-2 text-white placeholder-slate-600 text-sm transition resize-none"
+                  className="w-full bg-[#07080c] border border-[#281a24] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2 text-[#f5dade] placeholder-[#7d5e65] text-sm transition resize-none"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 px-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] hover:opacity-95 active:scale-[0.99] transition shadow-[0_4px_25px_rgba(114,24,40,0.5)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                className="w-full py-3.5 px-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] hover:opacity-95 active:scale-[0.99] transition shadow-[0_4px_25px_rgba(184,45,70,0.5)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {loading ? (
                   <span>Enviando requerimiento...</span>
@@ -1231,11 +1231,11 @@ function ContactSection({
 
 function Footer() {
   return (
-    <footer className="border-t border-[#232a3b] bg-[#08090d] py-10 px-4 sm:px-6 text-slate-300 text-xs">
+    <footer className="border-t border-[#281a24] bg-[#07080c] py-10 px-4 sm:px-6 text-[#c29da5] text-xs">
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
-          <span className="font-bold text-white tracking-tight">Pablo Valdés</span> · naxoresuelve / renkaidev
-          <div className="text-[11px] text-slate-400 mt-0.5">
+          <span className="font-bold text-[#ff6b85] tracking-tight">Pablo Valdés</span> · naxoresuelve / renkaidev
+          <div className="text-[11px] text-[#c29da5] mt-0.5">
             Ingeniería de software, persistencia en PostgreSQL, FastAPI y testing riguroso.
           </div>
         </div>
@@ -1254,14 +1254,14 @@ function Footer() {
             href={CV_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-white transition flex items-center gap-1"
+            className="hover:text-[#ff758f] transition flex items-center gap-1"
           >
             <span>CV</span>
             <Download size={11} />
           </a>
           <a
             href={`tel:+${PHONE_NUMBER}`}
-            className="hover:text-white transition flex items-center gap-1 text-slate-300"
+            className="hover:text-[#f2cf6b] transition flex items-center gap-1 text-[#f5dade]"
           >
             <span>+{PHONE_NUMBER}</span>
           </a>
@@ -1269,7 +1269,7 @@ function Footer() {
             href={LINKEDIN_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-white transition flex items-center gap-1"
+            className="hover:text-[#ff758f] transition flex items-center gap-1"
           >
             <span>LinkedIn</span>
             <ExternalLink size={11} />
@@ -1278,7 +1278,7 @@ function Footer() {
             href={GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-white transition flex items-center gap-1"
+            className="hover:text-[#ff758f] transition flex items-center gap-1"
           >
             <span>GitHub</span>
             <GithubIcon className="w-3 h-3" />
