@@ -7,7 +7,7 @@ export function FloatingWhatsApp() {
   const [showTooltip, setShowTooltip] = useState(true);
 
   // Mensaje preconfigurado profesional para WhatsApp
-  const phone = "56900000000"; // Configurable
+  const phone = "56957286145";
   const message = encodeURIComponent(
     "Hola Pablo, estuve revisando tu plataforma naxoresuelve y me gustaría cotizar una solución de software / automatización para mi negocio."
   );
