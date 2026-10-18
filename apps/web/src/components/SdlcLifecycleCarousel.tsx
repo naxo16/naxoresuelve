@@ -10,10 +10,6 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  Sparkles,
-  Zap,
-  Lock,
-  Layers,
   Award,
   ArrowRight,
   Cpu,
@@ -169,7 +165,7 @@ export function SdlcLifecycleCarousel() {
           <div className="flex items-center gap-2.5">
             <span className="w-2.5 h-2.5 rounded-full bg-[#f2cf6b] shadow-[0_0_10px_#f2cf6b] animate-ping" />
             <h2 className="text-xs sm:text-sm font-cyber font-bold uppercase tracking-widest text-[#f2cf6b] flex items-center gap-2">
-              <span>// CICLO DE VIDA DEL SOFTWARE COMPLETO &amp; RESULTADOS REALES</span>
+              <span>{"//"} CICLO DE VIDA DEL SOFTWARE COMPLETO &amp; RESULTADOS REALES</span>
               <span className="hidden sm:inline-block text-[10px] font-mono px-2 py-0.5 rounded bg-[#721828] text-white border border-[#cba135]/40">
                 SDLC CERTIFICADO
               </span>

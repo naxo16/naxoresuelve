@@ -22,7 +22,9 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
 
   useEffect(() => {
     if (preselectedTopic) {
-      setTopic(preselectedTopic);
+      queueMicrotask(() => {
+        setTopic(preselectedTopic);
+      });
     }
   }, [preselectedTopic]);
 

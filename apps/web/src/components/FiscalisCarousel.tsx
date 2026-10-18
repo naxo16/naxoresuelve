@@ -1,16 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   ChevronLeft,
   ChevronRight,
   ShieldCheck,
-  Cpu,
   Database,
   Camera,
   KeyRound,
   MapPin,
-  ExternalLink,
   Flame,
 } from "lucide-react";
 
@@ -100,9 +98,9 @@ export function FiscalisCarousel() {
 
   const total = FISCALIS_SLIDES.length;
 
-  const nextSlide = () => {
+  const nextSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % total);
-  };
+  }, [total]);
 
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev - 1 + total) % total);
@@ -112,7 +110,7 @@ export function FiscalisCarousel() {
     if (!isAutoPlaying) return;
     const interval = setInterval(nextSlide, 6500);
     return () => clearInterval(interval);
-  }, [isAutoPlaying]);
+  }, [isAutoPlaying, nextSlide]);
 
   const slide = FISCALIS_SLIDES[currentIndex];
   const Icon = slide.icon;

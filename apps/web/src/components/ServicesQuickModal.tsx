@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   Sparkles,
   ArrowRight,
@@ -17,7 +17,6 @@ import {
   Home,
   Video,
   Laptop,
-  Wrench,
   Tag,
 } from "lucide-react";
 

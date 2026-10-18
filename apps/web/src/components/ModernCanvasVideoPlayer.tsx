@@ -13,11 +13,6 @@ import {
   Sliders,
   CheckCircle2,
   Sparkles,
-  TrendingDown,
-  Clock,
-  Zap,
-  Layers,
-  ChevronRight,
   ShieldCheck,
   FileSpreadsheet,
 } from "lucide-react";
@@ -346,6 +341,8 @@ export function ModernCanvasVideoPlayer() {
   /*  Canvas HUD Overlay (Scanlines, Golden Brackets & Telemetría)       */
   /* ------------------------------------------------------------------ */
 
+  const renderCanvasFrameRef = useRef<() => void>(() => {});
+
   const renderCanvasFrame = useCallback(() => {
     const canvas = canvasRef.current;
     const video = videoRef.current;
@@ -459,8 +456,14 @@ export function ModernCanvasVideoPlayer() {
       }
     }
 
-    animationFrameRef.current = requestAnimationFrame(renderCanvasFrame);
+    animationFrameRef.current = requestAnimationFrame(() => {
+      renderCanvasFrameRef.current();
+    });
   }, [hudMode, voiceSpeaking]);
+
+  useEffect(() => {
+    renderCanvasFrameRef.current = renderCanvasFrame;
+  }, [renderCanvasFrame]);
 
   /* ------------------------------------------------------------------ */
   /*  Video Event Listeners & Time Sync                                  */
@@ -523,6 +526,7 @@ export function ModernCanvasVideoPlayer() {
 
   // Al cambiar de track o video
   const selectTrack = (index: number) => {
+    playCyberChime();
     stopVoice();
     setActiveTrackIndex(index);
     lastSpokenChapterRef.current = -1;
@@ -982,7 +986,7 @@ export function ModernCanvasVideoPlayer() {
             {/* Texto que la IA está diciendo */}
             <div className="min-h-[100px] flex flex-col justify-center">
               <p className="text-xs sm:text-sm text-[#f5dade] leading-relaxed italic">
-                "{currentSubtitle}"
+                &quot;{currentSubtitle}&quot;
               </p>
             </div>
 

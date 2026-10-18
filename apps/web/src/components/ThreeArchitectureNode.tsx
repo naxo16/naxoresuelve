@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { Cpu, Boxes } from "lucide-react";
+import { Boxes } from "lucide-react";
 
 export function ThreeArchitectureNode() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -153,7 +153,9 @@ export function ThreeArchitectureNode() {
       animate();
     } catch (err) {
       console.warn("Three.js WebGL no disponible o bloqueado por el navegador:", err);
-      setHasWebGLError(true);
+      queueMicrotask(() => {
+        setHasWebGLError(true);
+      });
     }
 
     return () => {

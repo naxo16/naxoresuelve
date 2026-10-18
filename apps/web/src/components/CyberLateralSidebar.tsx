@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
-  Menu,
   X,
   Globe2,
   Flame,
@@ -281,24 +280,42 @@ export function CyberLateralSidebar({
 
   const t = I18N_NAV[lang];
 
+  const closeSidebar = useCallback(() => {
+    document.body.style.overflow = "";
+    if (isControlled) {
+      onClose?.();
+    } else {
+      setInternalIsOpen(false);
+    }
+    setShowLangMenu(false);
+  }, [isControlled, onClose]);
+
   // Recuperar idioma guardado si existe
   useEffect(() => {
     try {
       const saved = localStorage.getItem("naxoresuelve_lang") as Language;
       if (saved && I18N_NAV[saved]) {
-        setLang(saved);
+        queueMicrotask(() => {
+          setLang(saved);
+        });
       }
     } catch {
       // LocalStorage fallback
     }
   }, []);
 
+  // Sincronizar atributo lang en el documento
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = lang;
+    }
+  }, [lang]);
+
   const handleSelectLang = (newLang: Language) => {
     setLang(newLang);
     setShowLangMenu(false);
     try {
       localStorage.setItem("naxoresuelve_lang", newLang);
-      document.documentElement.lang = newLang;
     } catch {
       // ignore
     }
@@ -313,7 +330,7 @@ export function CyberLateralSidebar({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen]);
+  }, [isOpen, closeSidebar]);
 
   // Prevenir scroll en body cuando está abierto pero garantizar restauración inmediata
   useEffect(() => {
@@ -326,16 +343,6 @@ export function CyberLateralSidebar({
       document.body.style.overflow = "";
     };
   }, [isOpen]);
-
-  const closeSidebar = useCallback(() => {
-    document.body.style.overflow = "";
-    if (isControlled) {
-      onClose?.();
-    } else {
-      setInternalIsOpen(false);
-    }
-    setShowLangMenu(false);
-  }, [isControlled, onClose]);
 
   // Manejador infalible de navegación suave por anclajes
   const handleNavAnchor = useCallback(
@@ -528,7 +535,7 @@ export function CyberLateralSidebar({
         {/* Lista de Navegación con Scroll Suave y sin bloqueo de overflow */}
         <div className="flex-1 overflow-y-auto overscroll-contain px-3 sm:px-4 py-3 space-y-1.5 scrollbar-thin">
           <div className="text-[10px] font-mono uppercase tracking-widest text-[#c29da5] px-3 pb-1">
-            // {t.menuTitle}
+            {"// "}{t.menuTitle}
           </div>
 
           {/* Enlace: Inicio */}
@@ -679,13 +686,13 @@ export function CyberLateralSidebar({
           {/* Divider */}
           <div className="pt-2 pb-1 border-t border-[#615362]/60">
             <span className="text-[10px] font-mono uppercase tracking-widest text-[#c29da5] px-3">
-              // {t.quickActions}
+              {"// "}{t.quickActions}
             </span>
           </div>
 
           {/* Portal Clientes */}
           <Link
-            href="/login"
+            href="/portal"
             onClick={closeSidebar}
             className="flex items-center gap-3 p-2.5 sm:p-3 rounded-2xl bg-[#423943] hover:bg-[#4c424e] border border-[#615362] text-xs font-bold text-[#f5dade] hover:text-[#f2cf6b] transition-all font-round"
           >

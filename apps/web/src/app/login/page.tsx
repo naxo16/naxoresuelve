@@ -198,8 +198,10 @@ export default function LoginPage() {
     }
   }
 
-  // 5. Autenticación Federada Social (Google, Facebook, Instagram)
-  async function handleSocialOAuth(provider: "google" | "facebook" | "instagram" | "microsoft") {
+  // 5. Autenticación Federada Social (Google, GitHub, Facebook, Instagram, Microsoft)
+  async function handleSocialOAuth(
+    provider: "google" | "github" | "facebook" | "instagram" | "microsoft"
+  ) {
     setLoading(true);
     setErrorMessage("");
 
@@ -393,8 +395,15 @@ export default function LoginPage() {
 
                 <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
                   <Link
+                    href="/portal"
+                    className="px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] hover:opacity-95 transition shadow-lg flex items-center justify-center gap-2"
+                  >
+                    <span>Ir al Portal de Clientes</span>
+                    <Sparkles size={14} className="text-[#f2cf6b]" />
+                  </Link>
+                  <Link
                     href="/"
-                    className="px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#721828] to-[#9e233b] hover:from-[#9e233b] hover:to-[#cba135] transition shadow-md"
+                    className="px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#f5dade] hover:text-white bg-[#362f37] border border-[#615362] transition flex items-center justify-center"
                   >
                     Ir al Panel de Servicios
                   </Link>
@@ -403,7 +412,7 @@ export default function LoginPage() {
                       setAuthSuccess(null);
                       setMode("login");
                     }}
-                    className="px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#f5dade] hover:text-[#f2cf6b] bg-[#362f37] border border-[#615362] transition"
+                    className="px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#f5dade] hover:text-[#f2cf6b] bg-[#362f37] border border-[#615362] transition cursor-pointer"
                   >
                     Cerrar Sesión
                   </button>
@@ -773,7 +782,7 @@ export default function LoginPage() {
                 </div>
 
                 {/* Botones de Social Login OIDC */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                   <button
                     type="button"
                     onClick={() => handleSocialOAuth("google")}
@@ -781,6 +790,15 @@ export default function LoginPage() {
                   >
                     <Globe size={14} className="text-[#f2cf6b]" />
                     <span>Google</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleSocialOAuth("github")}
+                    className="p-2.5 rounded-xl bg-[#362f37] hover:bg-[#554a57] border border-[#615362] text-xs font-bold text-[#f5dade] hover:text-[#f2cf6b] transition flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+                  >
+                    <GithubIcon className="w-3.5 h-3.5 text-[#f2cf6b]" />
+                    <span>GitHub</span>
                   </button>
 
                   <button
@@ -819,7 +837,7 @@ export default function LoginPage() {
                       <span>Atajo de Auditoría y Testing Rudo</span>
                     </div>
                     <span className="text-[10px] px-1.5 py-0.2 bg-[#721828]/50 text-white rounded">
-                      Demo Rápido
+                      Demo ({role.toUpperCase()})
                     </span>
                   </div>
                   <p className="text-[11px] text-[#c29da5] leading-relaxed mb-3">
@@ -863,5 +881,17 @@ export default function LoginPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+function GithubIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+      />
+    </svg>
   );
 }

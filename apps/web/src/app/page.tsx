@@ -20,18 +20,14 @@ import {
   Send,
   AlertCircle,
   FlaskConical,
-  Award,
   Sparkles,
   Terminal,
   Menu,
-  X,
   FileCheck2,
   Download,
   Mail,
   Smartphone,
-  CalendarCheck,
   Flame,
-  ShieldAlert,
   Boxes,
   ShoppingBag,
   Tag,
@@ -45,7 +41,6 @@ import {
   Home as HomeIcon,
   Video,
   Laptop,
-  Wrench,
 } from "lucide-react";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { CaseStudyModal, type CaseStudyData } from "@/components/CaseStudyModal";
@@ -350,7 +345,7 @@ export default function Home() {
         <FiscalisSpotlightSection onSelectFiscalis={() => setSelectedCase(CASE_STUDIES[0])} />
 
         {/* DEMOSTRACIÓN EN VIDEO CON CANVAS 2D & VOZ IA GUÍA */}
-        <CanvasVideoDemonstrationSection onOpenAudit={openAudit} />
+        <CanvasVideoDemonstrationSection />
 
         {/* Sección de Casos de Estudio Reales & Telemetría */}
         <CaseStudiesSection onSelectCase={setSelectedCase} />
@@ -359,13 +354,13 @@ export default function Home() {
         <ServicesSection onOpenAudit={openAudit} />
 
         {/* Promociones In-Web, Captura Email/WhatsApp Marketing & Preventa Tienda Multi-SaaS */}
-        <PromotionsAndStoreSection onOpenAudit={openAudit} />
+        <PromotionsAndStoreSection />
 
         {/* El Manifiesto de Pruebas Rudas */}
         <TestingPhilosophySection />
 
         {/* Portafolio Directo & Credenciales de Pablo Valdés */}
-        <PortfolioSection onSelectCase={setSelectedCase} />
+        <PortfolioSection />
 
         {/* Formulario de Contacto / Cotización */}
         <ContactSection onOpenAudit={openAudit} />
@@ -456,7 +451,7 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
           {/* Acciones Rápidas */}
           <div className="flex items-center gap-2 shrink-0">
             <Link
-              href="/login"
+              href="/portal"
               className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-[#f5dade] hover:text-[#f2cf6b] bg-[#362f37] hover:bg-[#423943] border border-[#615362] transition font-round"
             >
               <Lock size={12} className="text-[#f2cf6b]" />
@@ -656,11 +651,7 @@ function FiscalisSpotlightSection({
 /*  Demostración en Video con Renderizador Canvas 2D & Guía Voz IA    */
 /* ------------------------------------------------------------------ */
 
-function CanvasVideoDemonstrationSection({
-  onOpenAudit,
-}: {
-  onOpenAudit: (topic: string) => void;
-}) {
+function CanvasVideoDemonstrationSection() {
   return (
     <section id="video-preview" className="py-24 px-4 sm:px-6 max-w-7xl mx-auto w-full relative">
       {/* Glow ambiental cyberpunk multicapa */}
@@ -898,11 +889,7 @@ function ServicesSection({
 /*  Promociones In-Web, Captura Email/WhatsApp & Tienda Multi-SaaS    */
 /* ------------------------------------------------------------------ */
 
-function PromotionsAndStoreSection({
-  onOpenAudit,
-}: {
-  onOpenAudit: (topic: string) => void;
-}) {
+function PromotionsAndStoreSection() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("+56 9 ");
@@ -1147,7 +1134,7 @@ Fecha Solicitud: 2026`;
                 ¡Tu Solicitud Ha Sido Priorizada!
               </h3>
               <p className="text-sm text-[#f5dade] max-w-md mx-auto leading-relaxed">
-                Excelente, <strong className="text-[#f2cf6b]">{name}</strong>. Hemos registrado tu interés por <strong className="text-[#ff6b85]">"{selectedPromo}"</strong>.
+                Excelente, <strong className="text-[#f2cf6b]">{name}</strong>. Hemos registrado tu interés por <strong className="text-[#ff6b85]">&quot;{selectedPromo}&quot;</strong>.
                 Recibirás el material en tu correo y quedas inscrito en la lista VIP de lanzamiento de nuestra tienda virtual.
               </p>
 
@@ -1451,11 +1438,7 @@ function TestingPhilosophySection() {
 /*  Portafolio Directo & Credenciales                                 */
 /* ------------------------------------------------------------------ */
 
-function PortfolioSection({
-  onSelectCase,
-}: {
-  onSelectCase: (c: CaseStudyData) => void;
-}) {
+function PortfolioSection() {
   return (
     <section id="portafolio" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full">
       <div className="bg-gradient-to-br from-[#0e111a] via-[#141824] to-[#07080c] border border-[#b82d46]/50 rounded-3xl p-8 sm:p-12 shadow-2xl">
