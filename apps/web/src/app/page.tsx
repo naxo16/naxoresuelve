@@ -846,20 +846,36 @@ function CanvasVideoDemonstrationSection({
   onOpenAudit: (topic: string) => void;
 }) {
   return (
-    <section id="video-preview" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full relative">
-      {/* Glow ambiental */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-[#721828]/20 blur-[170px] pointer-events-none -z-10" />
+    <section id="video-preview" className="py-24 px-4 sm:px-6 max-w-7xl mx-auto w-full relative">
+      {/* Glow ambiental cyberpunk multicapa */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[450px] bg-[#721828]/25 blur-[180px] pointer-events-none -z-10" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[250px] bg-[#cba135]/15 blur-[140px] pointer-events-none -z-10" />
 
-      <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#721828]/60 border border-[#cba135]/50 text-xs font-bold text-[#f2cf6b] uppercase tracking-wider shadow-lg">
-          <Play size={13} className="text-[#f2cf6b] fill-[#f2cf6b]" />
-          <span>Renderizado en Canvas 2D · Guía Narrada por Voz IA</span>
+      <div className="text-center max-w-5xl mx-auto mb-16 space-y-6">
+        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#721828]/90 via-[#423943] to-[#721828]/90 border-2 border-[#cba135] text-xs sm:text-sm font-bold text-[#f2cf6b] uppercase tracking-widest shadow-[0_0_25px_rgba(203,161,53,0.35)]">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#f2cf6b] shadow-[0_0_10px_#f2cf6b] animate-ping" />
+          <Play size={15} className="text-[#f2cf6b] fill-[#f2cf6b]" />
+          <span>[ LIVE DEMO // RENDER CANVAS 2D & GUÍA VOZ IA SINTETIZADA ]</span>
         </div>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#ff6b85] tracking-tight">
+
+        <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#ff6b85] to-[#f2cf6b] tracking-tight leading-[1.08] drop-shadow-[0_4px_30px_rgba(184,45,70,0.5)] font-cyber">
           Demostración en Vivo: Dashboard Agrícola & Automatización de Contratistas
         </h2>
-        <p className="text-sm sm:text-base text-[#f5dade] max-w-2xl mx-auto leading-relaxed">
-          Examina cómo erradicamos el 100% de errores de duplicidad y rescatamos más de 38 horas semanales en faenas agrícolas. Haz clic en el botón superior del reproductor o en el teleprompter para escuchar la <strong className="text-[#f2cf6b]">Voz IA guiando la solución</strong> en tiempo real con voz natural en español.
+
+        <p className="text-lg sm:text-xl md:text-2xl text-[#f5dade] max-w-4xl mx-auto leading-relaxed font-medium">
+          Examina cómo erradicamos el{" "}
+          <strong className="text-[#f2cf6b] font-bold px-2 py-0.5 rounded bg-[#721828]/50 border border-[#cba135]/50 shadow-[0_0_12px_rgba(203,161,53,0.3)]">
+            100% de errores de duplicidad
+          </strong>{" "}
+          y rescatamos más de{" "}
+          <strong className="text-[#ff6b85] font-bold px-2 py-0.5 rounded bg-[#721828]/50 border border-[#b82d46]/50 shadow-[0_0_12px_rgba(184,45,70,0.3)]">
+            38 horas semanales
+          </strong>{" "}
+          en faenas agrícolas. Haz clic en el botón superior del reproductor o en el teleprompter para escuchar la{" "}
+          <strong className="text-[#f2cf6b] font-bold underline decoration-[#cba135] decoration-2 underline-offset-4">
+            Voz IA guiando la solución
+          </strong>{" "}
+          en tiempo real con voz natural en español.
         </p>
       </div>
 
