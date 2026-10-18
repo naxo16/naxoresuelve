@@ -41,6 +41,11 @@ import {
   Gift,
   UserCheck,
   Play,
+  Cpu,
+  Home as HomeIcon,
+  Video,
+  Laptop,
+  Wrench,
 } from "lucide-react";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { CaseStudyModal, type CaseStudyData } from "@/components/CaseStudyModal";
@@ -257,6 +262,46 @@ const SERVICES_DATA = [
       "Diagnóstico forense de arquitectura, refactorización limpia, documentación técnica y rescate de sistemas críticos para devolverles la vida y estabilidad.",
     badge: "Diagnóstico Forense",
   },
+  {
+    icon: Cpu,
+    title: "Electrónica General & Arduino IoT",
+    tag: "Automatización física y prototipado a medida",
+    problem:
+      "¿Necesitas automatizar un proceso físico en terreno, programar microcontroladores Arduino o ESP32 con sensores y relevadores y te falta el diseño electrónico?",
+    solution:
+      "Diseño de circuitos, ensamble, programación de firmware C++/Python, integración de sensores industriales y automatización física con pruebas de estrés en banco.",
+    badge: "Consultoría $15.000 CLP",
+  },
+  {
+    icon: HomeIcon,
+    title: "Domótica & Espacios Inteligentes",
+    tag: "Control total de luces, accesos y clima desde el celular",
+    problem:
+      "¿Consumo eléctrico disparado, cerraduras mecánicas vulnerables o deseos de modernizar tu hogar u oficina sin amarrarte a mensualidades abusivas?",
+    solution:
+      "Implementación de ecosistemas domóticos inteligentes (iluminación, enchufes de corte automático, cerraduras biométricas y sensores de movimiento) operados desde tu smartphone.",
+    badge: "Hogar/Oficina Smart",
+  },
+  {
+    icon: Video,
+    title: "Instalación de Cámaras de Seguridad (CCTV / IP)",
+    tag: "Monitoreo 24/7 en tu celular sin cuotas mensuales",
+    problem:
+      "¿Puntos ciegos de seguridad en tu empresa o propiedad, cámaras obsoletas o empresas de alarmas que cobran mensualidades eternas por ver tu propia grabación?",
+    solution:
+      "Instalación y configuración de cámaras cableadas e IP Wi-Fi de alta resolución con visión nocturna, detección inteligente y monitoreo directo en tu teléfono sin pagos mensuales.",
+    badge: "CCTV Sin Cuotas",
+  },
+  {
+    icon: Laptop,
+    title: "Servicio Técnico: Computadores, Notebooks & Celulares",
+    tag: "Mantenimiento, placas madre y cambio de componentes",
+    problem:
+      "¿Notebooks que hierven de temperatura, computadores lentos que no encienden, pantallas rotas de celulares o baterías degradadas que frenan tu productividad?",
+    solution:
+      "Diagnóstico inicial en taller por solo $15.000 CLP (abonable al total del arreglo). Cambio de pasta térmica, upgrades de SSD/RAM, reparación de placas y cambio de pantallas.",
+    badge: "Diagnóstico $15.000 CLP",
+  },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -397,9 +442,12 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
           </a>
           <a
             href="#soluciones"
-            className="hover:text-[#ff6b85] transition-colors"
+            className="hover:text-[#ff6b85] transition-colors flex items-center gap-1"
           >
-            Soluciones
+            <span>Soluciones & Hardware</span>
+            <span className="px-1.5 py-0.2 text-[9px] bg-[#cba135]/20 text-[#f2cf6b] rounded border border-[#cba135]/40 font-mono">
+              $15k
+            </span>
           </a>
           <a
             href="#casos-de-estudio"
@@ -504,9 +552,12 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
           <a
             href="#soluciones"
             onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-[#f5dade] hover:text-[#ff6b85]"
+            className="block text-sm font-semibold text-[#f5dade] hover:text-[#ff6b85] flex items-center justify-between"
           >
-            Soluciones
+            <span>Soluciones & Hardware Electrónica</span>
+            <span className="px-1.5 py-0.2 text-[9px] bg-[#cba135]/20 text-[#f2cf6b] rounded border border-[#cba135]/40 font-mono">
+              $15k
+            </span>
           </a>
           <a
             href="#casos-de-estudio"
@@ -808,7 +859,7 @@ function CanvasVideoDemonstrationSection({
           Demostración en Vivo: Dashboard Agrícola & Automatización de Contratistas
         </h2>
         <p className="text-sm sm:text-base text-[#f5dade] max-w-2xl mx-auto leading-relaxed">
-          Examina el caso real de ingeniería donde eliminamos el 100% de errores de duplicidad en jornadas laborales y consolidamos 14 planillas descalzadas. Activa la <strong className="text-[#f2cf6b]">Voz IA</strong> para escuchar la explicación técnica sincronizada con cada fotograma.
+          Examina cómo erradicamos el 100% de errores de duplicidad y rescatamos más de 38 horas semanales en faenas agrícolas. Haz clic en el botón superior del reproductor o en el teleprompter para escuchar la <strong className="text-[#f2cf6b]">Voz IA guiando la solución</strong> en tiempo real con voz natural en español.
         </p>
       </div>
 
@@ -916,6 +967,42 @@ function ServicesSection({
         </p>
       </div>
 
+      {/* Banner Destacado: Electrónica, Arduino, Domótica & Reparación de Hardware */}
+      <div className="mb-10 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#721828]/50 via-[#423943] to-[#362f37] border-2 border-[#cba135]/60 shadow-xl flex flex-col lg:flex-row items-center justify-between gap-6">
+        <div className="flex items-start gap-4">
+          <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#721828] to-[#cba135] text-white shadow-lg shrink-0">
+            <Cpu size={28} />
+          </div>
+          <div className="space-y-1.5">
+            <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-[#721828] text-[#f2cf6b] text-xs font-mono font-bold uppercase tracking-wider border border-[#cba135]/40">
+              <Zap size={13} />
+              <span>Nueva Especialidad en Hardware & Terreno</span>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-black text-[#ff6b85]">
+              Electrónica, Arduino, Domótica, Cámaras & Reparación de Dispositivos
+            </h3>
+            <p className="text-xs sm:text-sm text-[#f5dade] leading-relaxed max-w-3xl">
+              Cubrimos todo tipo de electrónica: automatización con microcontroladores Arduino/ESP32, casas y oficinas inteligentes, cámaras de seguridad CCTV sin pagos mensuales, y arreglo integral de notebooks, computadores y celulares.
+            </p>
+            <div className="pt-1 flex flex-wrap items-center gap-3 text-xs font-mono text-[#f2cf6b]">
+              <span className="bg-[#362f37] px-2.5 py-1 rounded-lg border border-[#615362]">
+                🔧 Consultoría & Diagnóstico Inicial: <strong>$15.000 CLP</strong>
+              </span>
+              <span className="text-[#c29da5]">
+                (El valor se descuenta del monto final al aprobar el arreglo o instalación)
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <button
+          onClick={() => onOpenAudit("electronica_arduino")}
+          className="w-full lg:w-auto px-6 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#721828] to-[#9e233b] hover:from-[#9e233b] hover:to-[#cba135] transition shadow-lg border border-[#cba135]/50 shrink-0 text-center cursor-pointer"
+        >
+          Agendar Diagnóstico ($15.000 CLP)
+        </button>
+      </div>
+
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {SERVICES_DATA.map((s, idx) => {
           const Icon = s.icon;
@@ -1006,6 +1093,17 @@ function PromotionsAndStoreSection({
       targetChannel: "Email + Sesión 20 min WhatsApp",
     },
     {
+      id: "consultoria-hardware",
+      title: "Diagnóstico Electrónica & Hardware por $15.000 CLP",
+      value: "Diagnóstico Hardware & Electrónica por $15.000 CLP",
+      badge: "Tarifa Fija Promocional",
+      valText: "Valor: $15.000 CLP (Abonable a Reparación)",
+      icon: Cpu,
+      benefit:
+        "Revisión técnica de circuitos Arduino, domótica, cámaras de seguridad, notebooks y celulares. Se abona al costo si se aprueba el trabajo.",
+      targetChannel: "Email + Coordinación WhatsApp",
+    },
+    {
       id: "kit-python",
       title: "Kit Python Automatización Excel Anti-Duplicados",
       value: "Kit Python Automatización Excel Anti-Duplicados",
@@ -1038,6 +1136,15 @@ function PromotionsAndStoreSection({
       discountPrice: "$20.990 CLP / mes (Preventa)",
       desc: "App móvil offline-first y panel web para digitalización de actas, fiscalización en terreno y trazabilidad sin papel.",
       features: ["Sincronización Offline", "Georreferenciación GPS", "MFA TOTP", "Reportes PDF"],
+    },
+    {
+      name: "IoT Sentinel Hub & Domótica",
+      category: "Hardware + Firmware IoT",
+      badge: "Domótica & CCTV",
+      price: "$49.990 CLP",
+      discountPrice: "$34.990 CLP (Preventa)",
+      desc: "Módulo ESP32/Arduino preconfigurado para control de reles, enlace con cámaras IP y alertas instantáneas a tu teléfono.",
+      features: ["Firmware C++/Python", "Sin Mensualidades", "Alertas WhatsApp", "Corte Remoto"],
     },
     {
       name: "Deduplicator Pro Engine",
@@ -1772,6 +1879,9 @@ function ContactSection({
                 >
                   <option value="Fiscalis / Terreno">Fiscalis (Inspección y Seguridad en Terreno)</option>
                   <option value="Automatizaciones / Excel">Automatización en Excel / Macros</option>
+                  <option value="Electronica / Arduino">Electrónica General & Arduino IoT (Consultoría $15.000 CLP)</option>
+                  <option value="Domotica / Camaras">Domótica & Cámaras de Seguridad CCTV/IP</option>
+                  <option value="Reparacion Hardware">Reparación Computadores, Notebooks & Celulares ($15.000 CLP)</option>
                   <option value="Carga Masiva">Carga Masiva de Archivos y Pipelines</option>
                   <option value="Duplicidad de Datos">Reducción de Duplicidad e Inconsistencias</option>
                   <option value="Base de Datos">Diseño & Optimización de Base de Datos</option>

@@ -13,6 +13,12 @@ import {
   ChevronRight,
   ShieldCheck,
   Zap,
+  Cpu,
+  Home,
+  Video,
+  Laptop,
+  Wrench,
+  Tag,
 } from "lucide-react";
 
 interface ServicesQuickModalProps {
@@ -79,6 +85,34 @@ export function ServicesQuickModal({
       topic: "Arrendamiento de Software SaaS",
     },
     {
+      icon: Cpu,
+      title: "Electrónica General, Arduino & Prototipado IoT",
+      result: "Diagnóstico inicial $15.000 CLP · Prototipado ágil",
+      desc: "Microcontroladores Arduino, ESP32, relevadores, sensores y automatización de procesos físicos o circuitos a medida.",
+      topic: "Electrónica / Arduino / IoT",
+    },
+    {
+      icon: Home,
+      title: "Domótica & Espacios Inteligentes",
+      result: "Control total desde tu smartphone · Cero cuotas",
+      desc: "Automatización de luces, cerraduras digitales, enchufes y circuitos programables para casas y oficinas.",
+      topic: "Domótica & Automatización de Espacios",
+    },
+    {
+      icon: Video,
+      title: "Instalación de Cámaras de Seguridad & CCTV",
+      result: "Monitoreo 24/7 en tu celular · Visión nocturna",
+      desc: "Sistemas cableados e IP Wi-Fi con detección de movimiento, alertas en tiempo real y almacenamiento seguro.",
+      topic: "Cámaras de Seguridad & CCTV",
+    },
+    {
+      icon: Laptop,
+      title: "Reparación de Computadores, Notebooks & Celulares",
+      result: "Diagnóstico $15.000 CLP abonable al arreglo",
+      desc: "Mantenimiento preventivo, cambio de pasta térmica, pantallas, baterías, upgrades de SSD/RAM y rescate de placas.",
+      topic: "Reparación de Computadores / Notebooks / Celulares",
+    },
+    {
       icon: Zap,
       title: "Fiscalis: Inspección & Actas en Terreno",
       result: "De 72 horas analógicas a <90s digitalizados",
@@ -130,8 +164,36 @@ export function ServicesQuickModal({
           </button>
         </div>
 
+        {/* Banner Especial: Consultoría y Diagnóstico Electrónica / Hardware por $15.000 CLP */}
+        <div className="p-3.5 rounded-2xl bg-gradient-to-r from-[#721828]/60 via-[#423943] to-[#2a242c] border border-[#cba135]/50 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-inner">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-[#721828] text-[#f2cf6b] border border-[#cba135]/40 shrink-0">
+              <Cpu size={18} />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-[#f2cf6b] uppercase tracking-wider font-mono flex items-center gap-1.5">
+                <Tag size={13} className="text-[#f2cf6b]" />
+                <span>Electrónica, Domótica & Soporte Técnico Hardware</span>
+              </div>
+              <p className="text-[11px] text-[#f5dade] leading-snug">
+                Revisión de circuitos, Arduino, domótica, cámaras, notebooks y celulares. <strong>Consultoría y diagnóstico inicial por solo $15.000 CLP</strong> (se descuenta del costo final si apruebas la reparación o instalación).
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              onClose();
+              onOpenAudit("Consultoría Electrónica ($15.000 CLP)");
+            }}
+            className="w-full sm:w-auto px-3.5 py-2 rounded-xl bg-[#cba135] hover:bg-[#dfb547] text-[#1c181f] text-xs font-bold whitespace-nowrap transition cursor-pointer shadow-sm shrink-0"
+          >
+            Agendar por $15.000 CLP
+          </button>
+        </div>
+
         {/* Grid de Servicios destacados */}
-        <div className="grid sm:grid-cols-2 gap-3.5 max-h-[55vh] overflow-y-auto pr-1">
+        <div className="grid sm:grid-cols-2 gap-3.5 max-h-[50vh] overflow-y-auto pr-1">
           {HIGHLIGHTED_SERVICES.map((srv, idx) => {
             const Icon = srv.icon;
             return (

@@ -96,9 +96,32 @@ Antes de reportar a Pablo Valdés (usuario) que una tarea está completada, el a
 - [ ] ¿Se mantuvieron las cabeceras de seguridad OWASP (HSTS, nosniff, DENY frame options)?
 - [ ] ¿Las consultas SQL están 100% parametrizadas sin interpolación de strings?
 - [ ] ¿Se mantuvieron los principios de diseño transaccional y normalización relacional?
-- [ ] ¿Se protegió la privacidad del usuario según la normativa de protección de datos personales?
+- [ ] ¿Se protegió la privacidad del usuario según la normativa de protección de datos personales (Ley 19.628 / 21.719)?
+- [ ] ¿Los flujos de autenticación cumplen con las pautas de ciberseguridad (tokens SHA-256 de 15 min, contraseñas PBKDF2, casillas sin pre-marcar)?
 - [ ] ¿Se conservaron los comentarios y docstrings existentes?
 - [ ] ¿Se evitó realizar `git push` al servidor remoto?
+
+---
+
+## 🔐 5. Protocolo de Identidad, Autenticación y Cumplimiento Normativo (Chile)
+
+Todo agente que implemente o modifique flujos de autenticación debe acatar estas directivas legales y técnicas:
+
+1. **Registro con Consentimiento Informado (Ley 19.628 y Ley 21.719 de Chile):**
+   - La casilla de Términos y Condiciones y Política de Privacidad es **obligatoria** y debe enviarse explícitamente (`accept_terms: true`).
+   - **PROHIBICIÓN ESTRICTA:** Queda terminantemente prohibido utilizar casillas de consentimiento pre-marcadas en el frontend o inferir aceptación tácita en el backend.
+   - Las comunicaciones comerciales son optativas: la casilla de marketing debe ser opcional y estar desmarcada por defecto.
+
+2. **Recuperación Segura de Contraseñas (OWASP A07 & Ley 21.663 Marco de Ciberseguridad):**
+   - Los tokens de recuperación se generan exclusivamente con `secrets.token_urlsafe(32)`.
+   - **NUNCA almacenar tokens en texto claro:** En la base de datos (`password_resets`) solo se almacena el hash SHA-256 (`token_hash`).
+   - Los tokens expiran estrictamente en **15 minutos** y son de un único uso (`is_used = TRUE` tras ser canjeados).
+   - Para prevenir la enumeración de usuarios registrados, el endpoint `POST /auth/forgot-password` debe retornar una respuesta uniforme y segura independientemente de si el correo existe o no.
+
+3. **Federación Social OAuth 2.0 / OIDC (Google/Gmail, Facebook, Instagram, Microsoft):**
+   - El almacenamiento de cuentas vinculadas se realiza en `external_accounts` enlazadas a `users.id`.
+   - Los registros creados vía OAuth adquieren únicamente el rol `client`. Ningún proveedor externo puede otorgar privilegios de `admin`.
+   - Los scopes solicitados deben limitarse al mínimo necesario (`openid`, `email`, `profile`).
 
 ---
 

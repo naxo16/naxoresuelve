@@ -172,6 +172,9 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
               >
                 <option value="duplicidad">Duplicidad de datos y clientes repetidos</option>
                 <option value="excel">Excel colapsado / pérdida de horas manuales</option>
+                <option value="electronica_arduino">Electrónica, Arduino & Prototipado IoT (Consultoría $15.000 CLP)</option>
+                <option value="domotica_camaras">Domótica & Cámaras de Seguridad CCTV/IP</option>
+                <option value="reparacion_hardware">Reparación Computadores, Notebooks & Celulares ($15.000 CLP)</option>
                 <option value="fiscalis">Fiscalis / Digitalización en terreno</option>
                 <option value="carga_masiva">Carga masiva de archivos que se cae o tarda horas</option>
                 <option value="perdida_info">Pérdida o desorden de información crítica</option>

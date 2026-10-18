@@ -80,22 +80,22 @@ const VIDEO_TRACKS: VideoTrack[] = [
         time: 0,
         title: "01. El Dolor: 14 Planillas Desfasadas",
         speechText:
-          "Bienvenidos al preview de ingeniería. Antes de esta solución, la empresa perdía 38 horas a la semana intentando cuadrar 14 planillas descalzadas entre correos y chats de WhatsApp, con graves errores de duplicidad en los pagos de contratistas.",
-        persuasiveHighlight: "Eliminación de la ceguera operativa y cruces manuales agotadores.",
+          "¿Cansado de perder dinero en planillas colapsadas y pagos duplicados? Antes de esta solución, la empresa perdía más de 38 horas semanales intentando cuadrar 14 planillas descalzadas entre correos y chats de WhatsApp, sufriendo graves errores en los pagos a contratistas y dolores de cabeza permanentes a fin de mes.",
+        persuasiveHighlight: "Eliminación total de la ceguera operativa, cruces manuales y fuga de dinero.",
       },
       {
         time: 5,
         title: "02. Arquitectura de Normalización & Cruces",
         speechText:
-          "Implementamos una capa de validación que unifica jornales, campos, faenas y cuadrillas con tolerancia cero a inconsistencias. Cada registro se audita al instante, evitando falsificaciones y dobles pagos.",
-        persuasiveHighlight: "Persistencia consistente y algoritmos de deduplicación matemática.",
+          "Con este centro de comando y motor rápido creado por naxo resuelve, unificamos jornales, faenas y cuadrillas con tolerancia cero a inconsistencias. Cada cálculo se valida en milisegundos, erradicando al cien por ciento los pagos dobles y las horas no autorizadas antes de girar un solo peso.",
+        persuasiveHighlight: "Algoritmos de deduplicación matemática y validación en tiempo real.",
       },
       {
         time: 12,
         title: "03. Resultados Reales & Retorno de Inversión",
         speechText:
-          "El resultado medible es contundente: reducción del cien por ciento de duplicados, reportes ejecutivos en menos de un segundo y un ahorro neto de más de cuatro millones y medio de pesos en la primera temporada agrícola.",
-        persuasiveHighlight: "Rentabilidad probada y control milimétrico del costo por hectárea.",
+          "El resultado es contundente: cero duplicados, reportes gerenciales en un parpadeo y más de cuatro millones y medio de pesos recuperados en la primera temporada. Menos calentamiento de cabeza, menos horas perdidas y control absoluto de la rentabilidad de tu negocio.",
+        persuasiveHighlight: "Rentabilidad probada, ahorro de tiempo y tranquilidad operativa.",
       },
     ],
   },
@@ -136,21 +136,21 @@ const VIDEO_TRACKS: VideoTrack[] = [
         time: 0,
         title: "01. Monitoreo Activo de Rendimiento",
         speechText:
-          "En este segundo módulo observamos el motor de filtros dinámicos. La dirección puede aislar el rendimiento por contratista, comparar kilos cosechados y contrastar el costo real por faena en tiempo real.",
+          "En este segundo módulo observamos el motor de filtros dinámicos. La administración puede auditar el costo exacto por contratista y contrastar el rendimiento por hectárea en tiempo real, respaldando cada decisión de negocio con números verificados y no con corazonadas.",
         persuasiveHighlight: "Toma de decisiones respaldada por números verificados, no suposiciones.",
       },
       {
         time: 6,
         title: "02. Filtros Dinámicos Sin Congelamiento",
         speechText:
-          "A diferencia de las macros tradicionales que se cuelgan o colapsan con bases de datos voluminosas, este pipeline procesa miles de filas en veinte milisegundos con fluidez absoluta.",
-        persuasiveHighlight: "Fluidez extrema sin los clásicos timeouts ni bloqueos de pantalla.",
+          "Olvídate de las macros lentas que se cuelgan o colapsan el computador. Este motor de alta velocidad procesa miles de registros en veinte milisegundos, entregando respuestas inmediatas sin bloqueos de pantalla ni pérdida de información.",
+        persuasiveHighlight: "Fluidez extrema sin los clásicos congelamientos de Excel.",
       },
       {
         time: 14,
         title: "03. Conclusión: De la Fricción a la Automatización",
         speechText:
-          "Esto no es simplemente un dashboard estético. Es una solución de ingeniería que rescata el tiempo de tu equipo y blinda el dinero de tu negocio frente a la desorganización operativa.",
+          "Esto no es solo un dashboard visual. Es una solución de ingeniería que rescata el tiempo de tu equipo, cuida tu dinero y te saca un tremendo dolor de cabeza de encima con naxo resuelve.",
         persuasiveHighlight: "Transformación digital con pruebas rudas de estrés y cero error humano.",
       },
     ],
@@ -187,13 +187,62 @@ export function ModernCanvasVideoPlayer() {
   const [currentChapterIdx, setCurrentChapterIdx] = useState(0);
   const lastSpokenChapterRef = useRef<number>(-1);
 
+  // Speech Synthesis Engine Refs & Voice Cache
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const activeUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const speechTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cargar y almacenar voces del navegador (gestión de asincronismo en Chromium)
+  useEffect(() => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+
+    const loadVoices = () => {
+      try {
+        const available = window.speechSynthesis.getVoices();
+        if (available && available.length > 0) {
+          setVoices(available);
+        }
+      } catch (err) {
+        console.warn("No fue posible cargar las voces del sistema", err);
+      }
+    };
+
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+
+    return () => {
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.onvoiceschanged = null;
+      }
+    };
+  }, []);
+
+  // Mitigación de congelamiento en Chromium (bug donde speech se pausa a los 15s)
+  useEffect(() => {
+    if (!voiceSpeaking) return;
+    const interval = setInterval(() => {
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+          window.speechSynthesis.pause();
+          window.speechSynthesis.resume();
+        }
+      }
+    }, 9000);
+    return () => clearInterval(interval);
+  }, [voiceSpeaking]);
+
   /* ------------------------------------------------------------------ */
-  /*  Speech Synthesis (Voz IA en Español)                              */
+  /*  Speech Synthesis (Voz IA en Español - Solución & Resultados)       */
   /* ------------------------------------------------------------------ */
 
   const stopVoice = useCallback(() => {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      if (speechTimeoutRef.current) {
+        clearTimeout(speechTimeoutRef.current);
+        speechTimeoutRef.current = null;
+      }
       window.speechSynthesis.cancel();
+      activeUtteranceRef.current = null;
       setVoiceSpeaking(false);
     }
   }, []);
@@ -204,33 +253,66 @@ export function ModernCanvasVideoPlayer() {
         return;
       }
 
-      window.speechSynthesis.cancel();
+      try {
+        if (speechTimeoutRef.current) {
+          clearTimeout(speechTimeoutRef.current);
+          speechTimeoutRef.current = null;
+        }
 
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "es-CL";
-      utterance.rate = 1.05; // Ritmo ágil y profesional
-      utterance.pitch = 1.0;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.resume();
 
-      // Buscar voz óptima en español si está disponible en el navegador
-      const voices = window.speechSynthesis.getVoices();
-      const spanishVoice = voices.find(
-        (v) =>
-          v.lang.startsWith("es-CL") ||
-          v.lang.startsWith("es-ES") ||
-          v.lang.startsWith("es-MX") ||
-          v.lang.startsWith("es")
-      );
-      if (spanishVoice) {
-        utterance.voice = spanishVoice;
+        const utterance = new SpeechSynthesisUtterance(text);
+        activeUtteranceRef.current = utterance; // Referencia retenida para evitar garbage collection en V8
+
+        const availableVoices = voices.length > 0 ? voices : window.speechSynthesis.getVoices();
+        const spanishVoice =
+          availableVoices.find((v) => v.lang.toLowerCase() === "es-cl") ||
+          availableVoices.find((v) => v.lang.toLowerCase().startsWith("es-mx") || v.lang.toLowerCase().includes("mexico")) ||
+          availableVoices.find((v) => v.lang.toLowerCase().startsWith("es-419") || v.lang.toLowerCase().includes("latin")) ||
+          availableVoices.find((v) => v.lang.toLowerCase().startsWith("es-ar") || v.lang.toLowerCase().startsWith("es-co")) ||
+          availableVoices.find((v) => v.lang.toLowerCase().startsWith("es-es") || v.lang.toLowerCase().includes("spain") || v.lang.toLowerCase().includes("spanish")) ||
+          availableVoices.find((v) => v.lang.toLowerCase().startsWith("es"));
+
+        if (spanishVoice) {
+          utterance.voice = spanishVoice;
+          utterance.lang = spanishVoice.lang;
+        } else {
+          utterance.lang = "es-CL";
+        }
+
+        utterance.rate = 1.0; // Cadencia firme y clara
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0; // Volumen al 100%
+
+        utterance.onstart = () => {
+          setVoiceSpeaking(true);
+        };
+        utterance.onend = () => {
+          setVoiceSpeaking(false);
+          activeUtteranceRef.current = null;
+        };
+        utterance.onerror = (e) => {
+          if (e.error !== "interrupted" && e.error !== "canceled") {
+            console.warn("Aviso de síntesis vocal:", e.error);
+          }
+          setVoiceSpeaking(false);
+          activeUtteranceRef.current = null;
+        };
+
+        // Breve retardo para permitir que el ciclo de cancelación de Chromium libere el bus de audio
+        speechTimeoutRef.current = setTimeout(() => {
+          if (typeof window !== "undefined" && "speechSynthesis" in window) {
+            window.speechSynthesis.resume();
+            window.speechSynthesis.speak(utterance);
+          }
+        }, 45);
+      } catch (err) {
+        console.error("Falla en síntesis vocal Web Speech:", err);
+        setVoiceSpeaking(false);
       }
-
-      utterance.onstart = () => setVoiceSpeaking(true);
-      utterance.onend = () => setVoiceSpeaking(false);
-      utterance.onerror = () => setVoiceSpeaking(false);
-
-      window.speechSynthesis.speak(utterance);
     },
-    [isVoiceActive]
+    [isVoiceActive, voices]
   );
 
   /* ------------------------------------------------------------------ */
@@ -456,18 +538,35 @@ export function ModernCanvasVideoPlayer() {
     }
   };
 
-  // Controles
+  // Controles con activación de gesto de usuario directa
+  const handleDirectSpeak = (customText?: string) => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.resume();
+    }
+    setIsVoiceActive(true);
+    const textToSpeak = customText || currentSubtitle;
+    speakText(textToSpeak);
+    if (videoRef.current && videoRef.current.paused) {
+      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+    }
+  };
+
   const togglePlay = () => {
     const video = videoRef.current;
     if (!video) return;
 
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.resume();
+    }
+
     if (video.paused) {
+      if (isVoiceActive) {
+        speakText(currentSubtitle);
+      }
       video.play().then(() => {
         setIsPlaying(true);
-        // Si no se ha hablado este capítulo, hablarlo
-        if (isVoiceActive) {
-          speakText(currentSubtitle);
-        }
+      }).catch(() => {
+        setIsPlaying(false);
       });
     } else {
       video.pause();
@@ -480,6 +579,10 @@ export function ModernCanvasVideoPlayer() {
     const video = videoRef.current;
     if (!video) return;
 
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.resume();
+    }
+
     video.currentTime = chapterTime;
     setCurrentChapterIdx(chapterIdx);
     lastSpokenChapterRef.current = chapterIdx;
@@ -488,7 +591,7 @@ export function ModernCanvasVideoPlayer() {
     setCurrentHighlight(chapter.persuasiveHighlight);
 
     if (video.paused) {
-      video.play().then(() => setIsPlaying(true));
+      video.play().then(() => setIsPlaying(true)).catch(() => {});
     }
 
     if (isVoiceActive) {
@@ -508,8 +611,7 @@ export function ModernCanvasVideoPlayer() {
       stopVoice();
       setIsVoiceActive(false);
     } else {
-      setIsVoiceActive(true);
-      speakText(currentSubtitle);
+      handleDirectSpeak(currentSubtitle);
     }
   };
 
@@ -585,6 +687,39 @@ export function ModernCanvasVideoPlayer() {
               onClick={togglePlay}
               className="w-full aspect-video block cursor-pointer object-cover transition-transform duration-300"
             />
+
+            {/* Botón Flotante Superior: Escuchar Guía Narrada por Voz IA */}
+            <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (voiceSpeaking) {
+                    stopVoice();
+                  } else {
+                    handleDirectSpeak();
+                  }
+                }}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold font-mono transition-all flex items-center gap-2 cursor-pointer shadow-lg ${
+                  voiceSpeaking
+                    ? "bg-[#721828] text-[#f2cf6b] border border-[#cba135] shadow-[0_0_20px_rgba(203,161,53,0.5)] animate-pulse"
+                    : "bg-[#721828]/90 hover:bg-[#9e233b] text-white border border-[#f2cf6b]/70 hover:scale-105 active:scale-95"
+                }`}
+                title="Haz clic para escuchar la voz IA guiando las soluciones y resultados del dashboard"
+              >
+                {voiceSpeaking ? (
+                  <>
+                    <Mic size={15} className="text-[#f2cf6b]" />
+                    <span>🔊 IA Hablando en Vivo (Clic para Silenciar)</span>
+                  </>
+                ) : (
+                  <>
+                    <Volume2 size={15} className="text-[#f2cf6b] animate-bounce" />
+                    <span>🔊 Escuchar Explicación Guiada por Voz IA</span>
+                  </>
+                )}
+              </button>
+            </div>
 
             {/* Botón Central Play cuando está pausado */}
             {!isPlaying && (
@@ -748,6 +883,41 @@ export function ModernCanvasVideoPlayer() {
               <Sparkles size={14} className="text-[#f2cf6b] shrink-0" />
               <span className="text-[#f2cf6b] font-semibold text-[11px]">
                 {currentHighlight}
+              </span>
+            </div>
+
+            {/* Botón de Acción Directa para Escuchar Explicación */}
+            <div className="mt-4 pt-4 border-t border-[#615362] flex flex-col sm:flex-row items-center justify-between gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  if (voiceSpeaking) {
+                    stopVoice();
+                  } else {
+                    handleDirectSpeak();
+                  }
+                }}
+                className={`w-full sm:w-auto px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 border transition-all cursor-pointer shadow-md ${
+                  voiceSpeaking
+                    ? "bg-[#721828] text-[#f2cf6b] border-[#cba135] shadow-[0_0_15px_rgba(203,161,53,0.4)] animate-pulse"
+                    : "bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] text-white border-[#f2cf6b]/50 hover:scale-[1.02]"
+                }`}
+              >
+                {voiceSpeaking ? (
+                  <>
+                    <VolumeX size={15} />
+                    <span>Pausar Explicación IA</span>
+                  </>
+                ) : (
+                  <>
+                    <Volume2 size={15} className="text-[#f2cf6b]" />
+                    <span>▶️ Escuchar Explicación de la Solución</span>
+                  </>
+                )}
+              </button>
+
+              <span className="text-[11px] text-[#c29da5] font-mono text-center sm:text-right">
+                {voiceSpeaking ? "🔊 Relatando solución en tiempo real" : "Voz natural en español (es-CL)"}
               </span>
             </div>
           </div>

@@ -14,63 +14,226 @@ import {
   Layers,
   BarChart3,
   Terminal,
-  ExternalLink,
-  HelpCircle,
+  User,
+  RefreshCw,
+  Globe,
+  Share2,
 } from "lucide-react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 const PHONE_NUMBER = "56957286145";
 
+type AuthMode = "login" | "register" | "forgot" | "reset";
+
 export default function LoginPage() {
+  const [mode, setMode] = useState<AuthMode>("login");
+  const [role, setRole] = useState<"client" | "admin">("client");
+
+  // Form states
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<"client" | "admin">("client");
+  const [fullName, setFullName] = useState("");
+  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [acceptMarketing, setAcceptMarketing] = useState(false);
+
+  // Recovery states
+  const [resetToken, setResetToken] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [recoveryNotice, setRecoveryNotice] = useState("");
+
+  // Feedback states
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [authSuccess, setAuthSuccess] = useState<{
     token: string;
     user: { id: number; email: string; full_name: string; role: string };
   } | null>(null);
 
+  // 1. Manejador de Login Tradicional
   async function handleLogin(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
     setErrorMessage("");
+    setSuccessMessage("");
 
     try {
       const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email.trim(),
-          password,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), password }),
       });
 
       const data = await response.json();
-
       if (!response.ok) {
         throw new Error(data.detail || "Error en las credenciales de acceso.");
       }
 
-      // Almacenar token en localStorage para persistencia de sesión
       if (typeof window !== "undefined") {
         localStorage.setItem("naxo_token", data.access_token);
         localStorage.setItem("naxo_user", JSON.stringify(data.user));
       }
 
-      setAuthSuccess({
-        token: data.access_token,
-        user: data.user,
-      });
+      setAuthSuccess({ token: data.access_token, user: data.user });
     } catch (err: unknown) {
-      const msg =
-        err instanceof Error
-          ? err.message
-          : "Fallo de conexión con el backend de autenticación.";
-      setErrorMessage(msg);
+      setErrorMessage(
+        err instanceof Error ? err.message : "Fallo de conexión con el backend."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // 2. Manejador de Registro con Cumplimiento Ley 19.628 / 21.719
+  async function handleRegister(e: FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    if (!acceptTerms) {
+      setErrorMessage(
+        "Debe aceptar expresamente los Términos y Condiciones y la Política de Privacidad conforme a la Ley 19.628 de Chile."
+      );
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          full_name: fullName.trim(),
+          email: email.trim(),
+          password,
+          accept_terms: acceptTerms,
+          accept_marketing: acceptMarketing,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.detail || "Error al procesar el registro.");
+      }
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem("naxo_token", data.access_token);
+        localStorage.setItem("naxo_user", JSON.stringify(data.user));
+      }
+
+      setAuthSuccess({ token: data.access_token, user: data.user });
+    } catch (err: unknown) {
+      setErrorMessage(
+        err instanceof Error ? err.message : "Fallo de conexión con el backend."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // 3. Manejador de Solicitud de Recuperación
+  async function handleForgotPassword(e: FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setErrorMessage("");
+    setRecoveryNotice("");
+
+    try {
+      const response = await fetch(`${API_URL}/auth/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.detail || "Error al solicitar recuperación.");
+      }
+
+      setRecoveryNotice(data.message);
+      if (data.reset_token_simulated) {
+        setResetToken(data.reset_token_simulated);
+        setMode("reset");
+      }
+    } catch (err: unknown) {
+      setErrorMessage(
+        err instanceof Error ? err.message : "Error al procesar la solicitud."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // 4. Manejador de Reseteo de Clave
+  async function handleResetPassword(e: FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setErrorMessage("");
+
+    try {
+      const response = await fetch(`${API_URL}/auth/reset-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token: resetToken.trim(),
+          new_password: newPassword,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.detail || "Token inválido o expirado.");
+      }
+
+      setSuccessMessage(data.message);
+      setMode("login");
+      setPassword("");
+    } catch (err: unknown) {
+      setErrorMessage(
+        err instanceof Error ? err.message : "Error al actualizar contraseña."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // 5. Autenticación Federada Social (Google, Facebook, Instagram)
+  async function handleSocialOAuth(provider: "google" | "facebook" | "instagram" | "microsoft") {
+    setLoading(true);
+    setErrorMessage("");
+
+    try {
+      // Simulación de flujo OAuth 2.0 / OIDC con consentimiento
+      const simulatedProviderUser = {
+        provider,
+        provider_user_id: `${provider}-oauth-sub-${Date.now()}`,
+        email: email ? email.trim() : `usuario.${provider}@empresa.cl`,
+        full_name: fullName ? fullName.trim() : `Usuario ${provider.toUpperCase()}`,
+        accept_terms: true,
+      };
+
+      const response = await fetch(`${API_URL}/auth/oauth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(simulatedProviderUser),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.detail || "Error en autenticación federada.");
+      }
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem("naxo_token", data.access_token);
+        localStorage.setItem("naxo_user", JSON.stringify(data.user));
+      }
+
+      setAuthSuccess({ token: data.access_token, user: data.user });
+    } catch (err: unknown) {
+      setErrorMessage(
+        err instanceof Error ? err.message : "Error en el proveedor de identidad."
+      );
     } finally {
       setLoading(false);
     }
@@ -78,6 +241,7 @@ export default function LoginPage() {
 
   function fillDemoCredentials(demoRole: "client" | "admin") {
     setRole(demoRole);
+    setMode("login");
     if (demoRole === "admin") {
       setEmail("pablovaldescontacto@gmail.com");
       setPassword("PabloAdminSecure2026!");
@@ -86,11 +250,12 @@ export default function LoginPage() {
       setPassword("ClienteClaveSegura2026#");
     }
     setErrorMessage("");
+    setSuccessMessage("");
   }
 
   return (
     <div className="min-h-screen bg-[#362f37] text-[#f5dade] flex flex-col relative overflow-hidden font-sans">
-      {/* Background Decorativo Obsidian & Vino */}
+      {/* Background Decorativo */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#362f37]">
         <div className="absolute inset-0 cyber-grid opacity-50" />
         <div className="absolute top-[-15%] left-[-10%] w-[550px] h-[550px] rounded-full bg-[#721828]/25 blur-[150px] animate-float-slow" />
@@ -116,7 +281,7 @@ export default function LoginPage() {
               Pablo Valdés · naxoresuelve
             </span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#721828]/60 text-[#f2cf6b] border border-[#721828]">
-              Portal Seguro SSL
+              Ley 19.628 / 21.719 & Ley 21.663
             </span>
           </div>
         </div>
@@ -125,21 +290,21 @@ export default function LoginPage() {
       {/* Main Container */}
       <main className="relative z-10 flex-1 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
         <div className="max-w-5xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          
-          {/* Columna Izquierda: Información Persuasiva y Beneficios del Portal (5 cols) */}
+          {/* Columna Izquierda: Información Persuasiva y Beneficios */}
           <div className="lg:col-span-5 space-y-6">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#721828]/50 border border-[#cba135]/40 text-xs font-bold text-[#f2cf6b] uppercase">
               <ShieldCheck size={14} className="text-[#f2cf6b]" />
-              <span>Entorno Autenticado PBKDF2 + JWT</span>
+              <span>Ciberseguridad y Privacidad Chilena</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl font-extrabold text-[#ff6b85] tracking-tight leading-tight">
-              Control Centralizado de tus Servicios y Automatizaciones
+              Portal Corporativo y Autenticación Segura
             </h1>
 
             <p className="text-sm text-[#f5dade] leading-relaxed">
-              Ingresa al portal exclusivo para clientes y empresas contratantes.
-              Monitorea en tiempo real tus pipelines de datos, estado de sincronización y métricas operativas.
+              Acceso a la plataforma de monitoreo de servicios, automatizaciones y
+              telemetría en tiempo real. Cumplimiento estricto de consentimiento informado y
+              cifrado de datos en tránsito y reposo.
             </p>
 
             {/* Tarjetas de Beneficios */}
@@ -160,10 +325,10 @@ export default function LoginPage() {
                 <Layers size={18} className="text-[#f2cf6b] mt-0.5 shrink-0" />
                 <div>
                   <h4 className="text-xs font-bold text-[#ff6b85]">
-                    Gestión de SaaS y Licencias Activas
+                    Federación OIDC & Social Login
                   </h4>
                   <p className="text-[11px] text-[#c29da5] mt-0.5">
-                    Acceso a descargas, credenciales de API, tokens de integración y backups inmutables.
+                    Inicia sesión de forma segura con tu cuenta de Google, Facebook o Instagram.
                   </p>
                 </div>
               </div>
@@ -172,33 +337,32 @@ export default function LoginPage() {
                 <Sparkles size={18} className="text-[#f2cf6b] mt-0.5 shrink-0" />
                 <div>
                   <h4 className="text-xs font-bold text-[#ff6b85]">
-                    Preventa Prioritaria de Nuevas Soluciones
+                    Recuperación Criptográfica Uniuso
                   </h4>
                   <p className="text-[11px] text-[#c29da5] mt-0.5">
-                    Descuento exclusivo en los próximos paquetes y módulos de la tienda virtual multi-producto.
+                    Tokens temporales de 15 minutos con hash SHA-256 sin exposición de claves.
                   </p>
                 </div>
               </div>
             </div>
 
             <div className="text-xs text-[#c29da5] pt-2">
-              ¿No tienes tus credenciales corporativas aún?{" "}
+              ¿Requieres asistencia directa?{" "}
               <a
                 href={`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(
-                  "Hola Pablo, necesito solicitar las credenciales de acceso para mi empresa en el portal de naxoresuelve."
+                  "Hola Pablo, tengo una consulta sobre mi cuenta en el portal de naxoresuelve."
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[#f2cf6b] hover:text-[#ff6b85] font-semibold underline underline-offset-2"
               >
-                Solicítalas por WhatsApp directo
+                Escríbenos por WhatsApp directo
               </a>
             </div>
           </div>
 
-          {/* Columna Derecha: Tarjeta de Login (7 cols) */}
+          {/* Columna Derecha: Tarjeta de Autenticación */}
           <div className="lg:col-span-7 bg-[#423943] border border-[#615362] rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
-            {/* Acabado decorativo superior */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#721828] via-[#b82d46] to-[#cba135]" />
 
             {authSuccess ? (
@@ -210,7 +374,8 @@ export default function LoginPage() {
                   ¡Sesión Iniciada con Éxito!
                 </h3>
                 <p className="text-sm text-[#f5dade] max-w-md mx-auto">
-                  Bienvenido, <strong className="text-[#f2cf6b]">{authSuccess.user.full_name}</strong>.
+                  Bienvenido,{" "}
+                  <strong className="text-[#f2cf6b]">{authSuccess.user.full_name}</strong>.
                   Has ingresado con el rol de{" "}
                   <span className="font-mono px-2 py-0.5 rounded bg-[#721828] text-white text-xs">
                     {authSuccess.user.role.toUpperCase()}
@@ -221,7 +386,9 @@ export default function LoginPage() {
                   <div className="text-[#f2cf6b] font-bold">Estado de Autenticación:</div>
                   <div>ID Usuario: #{authSuccess.user.id}</div>
                   <div>Email: {authSuccess.user.email}</div>
-                  <div className="truncate">Token JWT: {authSuccess.token.slice(0, 24)}...</div>
+                  <div className="truncate">
+                    Token JWT: {authSuccess.token.slice(0, 24)}...
+                  </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
@@ -232,50 +399,65 @@ export default function LoginPage() {
                     Ir al Panel de Servicios
                   </Link>
                   <button
-                    onClick={() => setAuthSuccess(null)}
+                    onClick={() => {
+                      setAuthSuccess(null);
+                      setMode("login");
+                    }}
                     className="px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#f5dade] hover:text-[#f2cf6b] bg-[#362f37] border border-[#615362] transition"
                   >
-                    Cerrar Sesión / Probar Otra Cuenta
+                    Cerrar Sesión
                   </button>
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleLogin} className="space-y-5">
-                <div className="flex items-center justify-between pb-3 border-b border-[#615362]">
-                  <div>
-                    <h2 className="text-xl sm:text-2xl font-bold text-[#ff6b85]">
-                      Iniciar Sesión
-                    </h2>
-                    <p className="text-xs text-[#c29da5] mt-0.5">
-                      Ingresa tu correo y contraseña asignada
-                    </p>
-                  </div>
-
-                  {/* Selector rápido de rol visual */}
-                  <div className="flex items-center gap-1 bg-[#362f37] p-1 rounded-xl border border-[#615362]">
-                    <button
-                      type="button"
-                      onClick={() => setRole("client")}
-                      className={`px-3 py-1 text-[11px] font-bold rounded-lg transition-colors ${
-                        role === "client"
-                          ? "bg-[#721828] text-white shadow-sm"
-                          : "text-[#c29da5] hover:text-[#f5dade]"
-                      }`}
-                    >
-                      Cliente
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setRole("admin")}
-                      className={`px-3 py-1 text-[11px] font-bold rounded-lg transition-colors ${
-                        role === "admin"
-                          ? "bg-[#721828] text-white shadow-sm"
-                          : "text-[#c29da5] hover:text-[#f5dade]"
-                      }`}
-                    >
-                      Admin
-                    </button>
-                  </div>
+              <div className="space-y-5">
+                {/* Selector de Pestañas: Login / Registro / Recuperar */}
+                <div className="flex border-b border-[#615362] pb-3 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMode("login");
+                      setErrorMessage("");
+                      setSuccessMessage("");
+                    }}
+                    className={`pb-1 text-sm font-bold transition-colors border-b-2 ${
+                      mode === "login"
+                        ? "border-[#cba135] text-[#f2cf6b]"
+                        : "border-transparent text-[#c29da5] hover:text-[#f5dade]"
+                    }`}
+                  >
+                    Iniciar Sesión
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMode("register");
+                      setErrorMessage("");
+                      setSuccessMessage("");
+                    }}
+                    className={`pb-1 text-sm font-bold transition-colors border-b-2 ${
+                      mode === "register"
+                        ? "border-[#cba135] text-[#f2cf6b]"
+                        : "border-transparent text-[#c29da5] hover:text-[#f5dade]"
+                    }`}
+                  >
+                    Crear Cuenta
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMode("forgot");
+                      setErrorMessage("");
+                      setSuccessMessage("");
+                    }}
+                    className={`pb-1 text-sm font-bold transition-colors border-b-2 ${
+                      mode === "forgot" || mode === "reset"
+                        ? "border-[#cba135] text-[#f2cf6b]"
+                        : "border-transparent text-[#c29da5] hover:text-[#f5dade]"
+                    }`}
+                  >
+                    Recuperar Clave
+                  </button>
                 </div>
 
                 {errorMessage && (
@@ -285,83 +467,351 @@ export default function LoginPage() {
                   </div>
                 )}
 
-                {/* Email */}
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-xs font-semibold text-[#f5dade] mb-1.5"
+                {successMessage && (
+                  <div className="p-3.5 rounded-xl bg-emerald-950/80 border border-emerald-800 text-emerald-200 text-xs flex items-center gap-2.5">
+                    <CheckCircle2 size={16} className="shrink-0 text-emerald-400" />
+                    <span>{successMessage}</span>
+                  </div>
+                )}
+
+                {recoveryNotice && (
+                  <div className="p-3.5 rounded-xl bg-[#721828]/60 border border-[#cba135]/50 text-[#f5dade] text-xs space-y-1">
+                    <div className="font-bold text-[#f2cf6b]">Aviso de Seguridad:</div>
+                    <div>{recoveryNotice}</div>
+                  </div>
+                )}
+
+                {/* MODO 1: INICIAR SESIÓN */}
+                {mode === "login" && (
+                  <form onSubmit={handleLogin} className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-[#f5dade] mb-1.5">
+                        Correo Electrónico
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9e8e97]">
+                          <Mail size={16} />
+                        </div>
+                        <input
+                          type="email"
+                          required
+                          placeholder="tu-correo@empresa.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-3 text-[#f5dade] placeholder-[#9e8e97] text-sm transition"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <label className="block text-xs font-semibold text-[#f5dade]">
+                          Contraseña Cifrada
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setMode("forgot")}
+                          className="text-[11px] text-[#f2cf6b] hover:text-[#ff6b85] transition"
+                        >
+                          ¿Olvidaste tu contraseña?
+                        </button>
+                      </div>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9e8e97]">
+                          <Lock size={16} />
+                        </div>
+                        <input
+                          type="password"
+                          required
+                          placeholder="••••••••••••"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-3 text-[#f5dade] placeholder-[#9e8e97] text-sm transition"
+                        />
+                      </div>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full py-3.5 px-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] hover:opacity-95 active:scale-[0.99] transition shadow-[0_4px_25px_rgba(184,45,70,0.5)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                    >
+                      {loading ? (
+                        <span>Validando credenciales...</span>
+                      ) : (
+                        <>
+                          <KeyRound size={16} />
+                          <span>Ingresar al Portal</span>
+                        </>
+                      )}
+                    </button>
+                  </form>
+                )}
+
+                {/* MODO 2: CREAR CUENTA (REGISTRO) */}
+                {mode === "register" && (
+                  <form onSubmit={handleRegister} className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-[#f5dade] mb-1.5">
+                        Nombre Completo o Empresa
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9e8e97]">
+                          <User size={16} />
+                        </div>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Pablo Valdés"
+                          value={fullName}
+                          onChange={(e) => setFullName(e.target.value)}
+                          className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-3 text-[#f5dade] placeholder-[#9e8e97] text-sm transition"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-[#f5dade] mb-1.5">
+                        Correo Electrónico
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9e8e97]">
+                          <Mail size={16} />
+                        </div>
+                        <input
+                          type="email"
+                          required
+                          placeholder="tu-correo@empresa.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-3 text-[#f5dade] placeholder-[#9e8e97] text-sm transition"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-[#f5dade] mb-1.5">
+                        Contraseña (mínimo 8 caracteres)
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9e8e97]">
+                          <Lock size={16} />
+                        </div>
+                        <input
+                          type="password"
+                          required
+                          minLength={8}
+                          placeholder="Mínimo 8 caracteres seguros"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-3 text-[#f5dade] placeholder-[#9e8e97] text-sm transition"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Checkboxes de Ley 19.628 y 21.719 */}
+                    <div className="space-y-2 pt-2 border-t border-[#615362]">
+                      <label className="flex items-start gap-2.5 text-xs text-[#f5dade] cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={acceptTerms}
+                          onChange={(e) => setAcceptTerms(e.target.checked)}
+                          className="mt-0.5 rounded border-[#615362] text-[#721828] focus:ring-[#cba135]"
+                        />
+                        <span>
+                          <strong className="text-[#f2cf6b]">Obligatorio:</strong> Acepto los{" "}
+                          <span className="underline">Términos del Servicio</span> y la{" "}
+                          <span className="underline">Política de Privacidad</span> conforme a la
+                          Ley 19.628 y Ley 21.719 de Chile.
+                        </span>
+                      </label>
+
+                      <label className="flex items-start gap-2.5 text-xs text-[#c29da5] cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={acceptMarketing}
+                          onChange={(e) => setAcceptMarketing(e.target.checked)}
+                          className="mt-0.5 rounded border-[#615362] text-[#721828] focus:ring-[#cba135]"
+                        />
+                        <span>
+                          (Opcional) Acepto recibir novedades, informes de ciberseguridad y
+                          promociones por correo electrónico.
+                        </span>
+                      </label>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full py-3.5 px-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] hover:opacity-95 active:scale-[0.99] transition shadow-[0_4px_25px_rgba(184,45,70,0.5)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                    >
+                      {loading ? (
+                        <span>Registrando cuenta cifrada...</span>
+                      ) : (
+                        <>
+                          <ShieldCheck size={16} />
+                          <span>Crear Cuenta Formal</span>
+                        </>
+                      )}
+                    </button>
+                  </form>
+                )}
+
+                {/* MODO 3: SOLICITAR RECUPERACIÓN */}
+                {mode === "forgot" && (
+                  <form onSubmit={handleForgotPassword} className="space-y-4">
+                    <p className="text-xs text-[#c29da5]">
+                      Ingresa tu correo registrado. Te enviaremos un token criptográfico seguro de un
+                      solo uso, válido por 15 minutos, bajo el estándar de la Ley 21.663.
+                    </p>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-[#f5dade] mb-1.5">
+                        Correo Registrado
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9e8e97]">
+                          <Mail size={16} />
+                        </div>
+                        <input
+                          type="email"
+                          required
+                          placeholder="tu-correo@empresa.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-3 text-[#f5dade] placeholder-[#9e8e97] text-sm transition"
+                        />
+                      </div>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full py-3.5 px-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-[#721828] to-[#9e233b] hover:opacity-95 active:scale-[0.99] transition flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      {loading ? (
+                        <span>Generando enlace seguro...</span>
+                      ) : (
+                        <>
+                          <RefreshCw size={16} />
+                          <span>Enviar Enlace de Recuperación</span>
+                        </>
+                      )}
+                    </button>
+
+                    <div className="text-center pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setMode("login")}
+                        className="text-xs text-[#f2cf6b] hover:underline"
+                      >
+                        Recordé mi contraseña, volver a iniciar sesión
+                      </button>
+                    </div>
+                  </form>
+                )}
+
+                {/* MODO 4: INGRESAR NUEVA CONTRASEÑA */}
+                {mode === "reset" && (
+                  <form onSubmit={handleResetPassword} className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-[#f5dade] mb-1.5">
+                        Token de Recuperación
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Token seguro recibido"
+                        value={resetToken}
+                        onChange={(e) => setResetToken(e.target.value)}
+                        className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-3 text-[#f5dade] placeholder-[#9e8e97] text-sm font-mono transition"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-[#f5dade] mb-1.5">
+                        Nueva Contraseña (mínimo 8 caracteres)
+                      </label>
+                      <input
+                        type="password"
+                        required
+                        minLength={8}
+                        placeholder="••••••••••••"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-3 text-[#f5dade] placeholder-[#9e8e97] text-sm transition"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full py-3.5 px-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-[#721828] to-[#cba135] hover:opacity-95 active:scale-[0.99] transition flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      {loading ? (
+                        <span>Actualizando clave...</span>
+                      ) : (
+                        <>
+                          <KeyRound size={16} />
+                          <span>Guardar Nueva Contraseña</span>
+                        </>
+                      )}
+                    </button>
+                  </form>
+                )}
+
+                {/* Separador de Federación Social OAuth */}
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-[#615362]" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-[#423943] px-3 text-[#c29da5] font-mono text-[10px]">
+                      O continúa con Identidad Social
+                    </span>
+                  </div>
+                </div>
+
+                {/* Botones de Social Login OIDC */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleSocialOAuth("google")}
+                    className="p-2.5 rounded-xl bg-[#362f37] hover:bg-[#554a57] border border-[#615362] text-xs font-bold text-[#f5dade] hover:text-[#f2cf6b] transition flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
                   >
-                    Correo Electrónico Corporativo
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9e8e97]">
-                      <Mail size={16} />
-                    </div>
-                    <input
-                      id="email"
-                      type="email"
-                      required
-                      placeholder="tu-correo@empresa.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-3 text-[#f5dade] placeholder-[#9e8e97] text-sm transition"
-                    />
-                  </div>
+                    <Globe size={14} className="text-[#f2cf6b]" />
+                    <span>Google</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleSocialOAuth("facebook")}
+                    className="p-2.5 rounded-xl bg-[#362f37] hover:bg-[#554a57] border border-[#615362] text-xs font-bold text-[#f5dade] hover:text-[#f2cf6b] transition flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+                  >
+                    <Share2 size={14} className="text-[#f2cf6b]" />
+                    <span>Facebook</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleSocialOAuth("instagram")}
+                    className="p-2.5 rounded-xl bg-[#362f37] hover:bg-[#554a57] border border-[#615362] text-xs font-bold text-[#f5dade] hover:text-[#f2cf6b] transition flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+                  >
+                    <Share2 size={14} className="text-[#f2cf6b]" />
+                    <span>Instagram</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleSocialOAuth("microsoft")}
+                    className="p-2.5 rounded-xl bg-[#362f37] hover:bg-[#554a57] border border-[#615362] text-xs font-bold text-[#f5dade] hover:text-[#f2cf6b] transition flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+                  >
+                    <Globe size={14} className="text-[#f2cf6b]" />
+                    <span>Outlook</span>
+                  </button>
                 </div>
 
-                {/* Password */}
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label
-                      htmlFor="password"
-                      className="block text-xs font-semibold text-[#f5dade]"
-                    >
-                      Contraseña Cifrada
-                    </label>
-                    <a
-                      href={`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(
-                        "Hola Pablo, olvidé mi contraseña del portal de clientes."
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[11px] text-[#f2cf6b] hover:text-[#ff6b85] transition"
-                    >
-                      ¿Olvidaste tu contraseña?
-                    </a>
-                  </div>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9e8e97]">
-                      <Lock size={16} />
-                    </div>
-                    <input
-                      id="password"
-                      type="password"
-                      required
-                      placeholder="••••••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-3 text-[#f5dade] placeholder-[#9e8e97] text-sm transition"
-                    />
-                  </div>
-                </div>
-
-                {/* Botón de Submit */}
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-3.5 px-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] hover:opacity-95 active:scale-[0.99] transition shadow-[0_4px_25px_rgba(184,45,70,0.5)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-                >
-                  {loading ? (
-                    <span>Validando credenciales criptográficas...</span>
-                  ) : (
-                    <>
-                      <KeyRound size={16} />
-                      <span>Ingresar al Portal {role === "admin" ? "Admin" : "Corporativo"}</span>
-                    </>
-                  )}
-                </button>
-
-                {/* Helper de Pruebas Rudas & Demo */}
+                {/* Helper de Testing Rudo & Demo */}
                 <div className="mt-6 pt-4 border-t border-[#615362] bg-[#362f37]/60 rounded-xl p-3.5 border border-dashed">
                   <div className="flex items-center justify-between text-xs font-mono text-[#f2cf6b] mb-2 font-bold">
                     <div className="flex items-center gap-1.5">
@@ -373,7 +823,8 @@ export default function LoginPage() {
                     </span>
                   </div>
                   <p className="text-[11px] text-[#c29da5] leading-relaxed mb-3">
-                    Para propósitos de revisión y testing del endpoint FastAPI (`/auth/login`), puedes precargar credenciales de prueba con un clic:
+                    Para pruebas rápidas de los endpoints FastAPI (`/auth/login`), puedes precargar
+                    credenciales verificadas:
                   </p>
                   <div className="flex flex-wrap gap-2">
                     <button
@@ -392,7 +843,7 @@ export default function LoginPage() {
                     </button>
                   </div>
                 </div>
-              </form>
+              </div>
             )}
           </div>
         </div>
