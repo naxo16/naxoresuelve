@@ -44,9 +44,10 @@
   --color-gold: var(--color-gold);
   --color-gold-light: var(--color-gold-light);
   --color-gold-dark: var(--color-gold-dark);
-  --font-cyber: var(--font-rajdhani), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-cyber: var(--font-outfit), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: var(--font-jetbrains-mono), monospace;
-  --font-sans: var(--font-rajdhani), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans: var(--font-outfit), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-round: var(--font-outfit), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 html {
@@ -56,9 +57,10 @@ html {
 body {
   background-color: var(--bg-dark);
   color: var(--color-text-main);
-  font-family: var(--font-rajdhani), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-outfit), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 400;
   overflow-x: hidden;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   font-size: 1.15rem; /* ~22px de tamaño base para lectura descansada y ejecutiva */
   line-height: 1.6;
 }

@@ -106,3 +106,72 @@ def test_cyber_lateral_sidebar_has_all_required_languages():
     assert "handleSelectLang" in code, "CyberLateralSidebar debe tener función de selección de idioma"
     assert "role=\"navigation\"" in code, "CyberLateralSidebar debe cumplir con el rol ARIA de navegación"
     assert "Escape" in code, "CyberLateralSidebar debe soportar repliegue con tecla Escape para accesibilidad"
+
+
+def test_sidebar_anchor_targets_exist_in_dom():
+    """Certifica con rigor QA que cada ID referenciado por el Navbar existe en el DOM de la página principal."""
+    page_tsx_path = os.path.join(ROOT_DIR, "apps", "web", "src", "app", "page.tsx")
+    assert os.path.isfile(page_tsx_path), "page.tsx debe existir"
+    with open(page_tsx_path, "r", encoding="utf-8") as f:
+        page_code = f.read()
+
+    with open(SIDEBAR_TSX_PATH, "r", encoding="utf-8") as f:
+        sidebar_code = f.read()
+
+    # Extraer todos los anclajes href="#..." dentro del sidebar
+    anchors = re.findall(r'href="#([a-zA-Z0-9_\-]+)"', sidebar_code)
+    assert len(anchors) > 0, "El sidebar debe contener enlaces de navegación interna"
+
+    # Verificar que cada id="..." exista en page.tsx
+    for anchor in anchors:
+        assert f'id="{anchor}"' in page_code, (
+            f"El anclaje '#{anchor}' referenciado en CyberLateralSidebar DEBE existir como id=\"{anchor}\" en page.tsx"
+        )
+
+
+def test_sidebar_navigation_does_not_block_scrolling():
+    """Certifica que el manejador de anclajes restaura overflow y ejecuta scrollIntoView."""
+    with open(SIDEBAR_TSX_PATH, "r", encoding="utf-8") as f:
+        code = f.read()
+
+    # Debe implementar handleNavAnchor
+    assert "handleNavAnchor" in code, "CyberLateralSidebar debe implementar 'handleNavAnchor'"
+    assert 'document.body.style.overflow = ""' in code, (
+        "CyberLateralSidebar debe restaurar document.body.style.overflow al hacer clic para permitir el scroll"
+    )
+    assert "scrollIntoView" in code, (
+        "CyberLateralSidebar debe invocar scrollIntoView con desplazamiento suave"
+    )
+    assert "100dvh" in code, (
+        "CyberLateralSidebar debe usar altura dinámica h-[100dvh] para compatibilidad móvil total"
+    )
+
+
+def test_font_outfit_and_weights_configuration():
+    """Certifica que la tipografía Outfit esté configurada con pesos 400 y 700 (fuente redonda y legible)."""
+    layout_path = os.path.join(ROOT_DIR, "apps", "web", "src", "app", "layout.tsx")
+    css_path = os.path.join(ROOT_DIR, "apps", "web", "src", "app", "globals.css")
+    assert os.path.isfile(layout_path), "layout.tsx debe existir"
+    assert os.path.isfile(css_path), "globals.css debe existir"
+
+    with open(layout_path, "r", encoding="utf-8") as f:
+        layout_code = f.read()
+
+    with open(css_path, "r", encoding="utf-8") as f:
+        css_code = f.read()
+
+    # Outfit importado y configurado en layout.tsx
+    assert "Outfit" in layout_code, "layout.tsx debe importar 'Outfit' de next/font/google"
+    assert '"400"' in layout_code and '"700"' in layout_code, (
+        "Outfit debe estar configurado explícitamente con pesos '400' (normal) y '700' (bold)"
+    )
+    assert "--font-outfit" in layout_code, "layout.tsx debe declarar la variable CSS '--font-outfit'"
+
+    # CSS debe enlazar la fuente redonda
+    assert "var(--font-outfit)" in css_code, (
+        "globals.css debe referenciar 'var(--font-outfit)' para tipografía redonda"
+    )
+    assert "--bg-dark: #3a3640" in css_code, (
+        "globals.css debe definir el fondo con 25% de luminosidad (#3a3640)"
+    )
+

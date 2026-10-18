@@ -1,24 +1,18 @@
 import type { Metadata } from "next";
-import { Rajdhani, JetBrains_Mono, Geist } from "next/font/google";
+import { Outfit, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const rajdhani = Rajdhani({
-  variable: "--font-rajdhani",
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["400", "700"],
   display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  display: "swap",
-});
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  weight: ["400", "700"],
   display: "swap",
 });
 
@@ -59,9 +53,9 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${rajdhani.variable} ${jetbrainsMono.variable} ${geistSans.variable} h-full antialiased scroll-smooth`}
+      className={`${outfit.variable} ${jetbrainsMono.variable} h-full antialiased scroll-smooth`}
     >
-      <body className="min-h-full flex flex-col bg-[#3a3640] text-[#ffffff] font-cyber selection:bg-[#80182a] selection:text-[#f2cf6b]">
+      <body className="min-h-full flex flex-col bg-[#3a3640] text-[#ffffff] font-round selection:bg-[#80182a] selection:text-[#f2cf6b]">
         {children}
       </body>
     </html>

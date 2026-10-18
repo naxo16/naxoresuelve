@@ -9,7 +9,6 @@ import {
   Flame,
   Play,
   Cpu,
-  Layers,
   FlaskConical,
   Tag,
   ShieldCheck,
@@ -18,10 +17,9 @@ import {
   Send,
   ExternalLink,
   ChevronRight,
-  ChevronLeft,
   Sparkles,
   PhoneCall,
-  Laptop,
+  Briefcase,
   Check,
 } from "lucide-react";
 
@@ -40,6 +38,7 @@ export interface NavTranslation {
     caseStudies: string;
     promotions: string;
     methodology: string;
+    portfolio: string;
     clientPortal: string;
     downloadCv: string;
     requestAudit: string;
@@ -68,10 +67,11 @@ export const I18N_NAV: Record<Language, NavTranslation> = {
       home: "Inicio",
       fiscalis: "Fiscalis: Digitalización Terreno",
       videoDemo: "Demostración Video & Voz IA",
-      solutions: "Soluciones de Software & Electrónica",
+      solutions: "Soluciones de Software & Hardware",
       caseStudies: "Casos de Estudio Reales",
       promotions: "Promociones & Tienda SaaS",
       methodology: "Metodología Testing Rudo",
+      portfolio: "Portafolio de Proyectos",
       clientPortal: "Portal Clientes",
       downloadCv: "Descargar CV Oficial",
       requestAudit: "Solicitar Diagnóstico ($0 CLP)",
@@ -98,13 +98,14 @@ export const I18N_NAV: Record<Language, NavTranslation> = {
       home: "Главная",
       fiscalis: "Fiscalis: Полевой Контроль",
       videoDemo: "Видео-демо и Голосовой ИИ",
-      solutions: "ПО Решения и Электроника",
+      solutions: "ПО Решения и Оборудование",
       caseStudies: "Реальные Кейсы и Нагрузки",
       promotions: "Акции и Магазин SaaS",
       methodology: "Методология Тестирования",
+      portfolio: "Портфолио Проектов",
       clientPortal: "Портал Клиентов",
       downloadCv: "Скачать Резюме (CV)",
-      requestAudit: "Запросить Диагностику",
+      requestAudit: "Запросить Диагностику ($0 CLP)",
       contact: "Прямой Контакт (+56957286145)",
     },
     badges: {
@@ -128,13 +129,14 @@ export const I18N_NAV: Record<Language, NavTranslation> = {
       home: "Início",
       fiscalis: "Fiscalis: Coleta em Campo",
       videoDemo: "Demonstração Vídeo & Voz IA",
-      solutions: "Soluções de Software & Eletrônica",
+      solutions: "Soluções de Software & Hardware",
       caseStudies: "Casos de Estudo Reais",
       promotions: "Promoções & Loja SaaS",
       methodology: "Metodologia de Teste Rigoroso",
+      portfolio: "Portfólio de Projetos",
       clientPortal: "Portal do Cliente",
       downloadCv: "Baixar Currículo (CV)",
-      requestAudit: "Solicitar Diagnóstico",
+      requestAudit: "Solicitar Diagnóstico ($0 CLP)",
       contact: "Contato Direto (+56957286145)",
     },
     badges: {
@@ -158,13 +160,14 @@ export const I18N_NAV: Record<Language, NavTranslation> = {
       home: "Home",
       fiscalis: "Fiscalis: Rilevamento sul Campo",
       videoDemo: "Demo Video & Voce IA",
-      solutions: "Soluzioni Software & Elettronica",
+      solutions: "Soluzioni Software & Hardware",
       caseStudies: "Casi Studio Reali",
       promotions: "Promozioni & Negozio SaaS",
       methodology: "Metodologia di Test Rigoroso",
+      portfolio: "Portfolio Progetti",
       clientPortal: "Portale Clienti",
       downloadCv: "Scarica Curriculum (CV)",
-      requestAudit: "Richiedi Diagnosi",
+      requestAudit: "Richiedi Diagnosi ($0 CLP)",
       contact: "Contatto Diretto (+56957286145)",
     },
     badges: {
@@ -188,13 +191,14 @@ export const I18N_NAV: Record<Language, NavTranslation> = {
       home: "Home",
       fiscalis: "Fiscalis: Field Digitalization",
       videoDemo: "Video Demo & AI Voice Guide",
-      solutions: "Software & Electronics Solutions",
+      solutions: "Software & Hardware Solutions",
       caseStudies: "Stress-Tested Case Studies",
       promotions: "Promotions & Multi-SaaS Store",
       methodology: "Extreme Testing Methodology",
+      portfolio: "Project Portfolio",
       clientPortal: "Client Portal",
       downloadCv: "Download Official CV",
-      requestAudit: "Request Free Diagnosis",
+      requestAudit: "Request Free Diagnosis ($0 CLP)",
       contact: "Direct Phone (+56957286145)",
     },
     badges: {
@@ -218,13 +222,14 @@ export const I18N_NAV: Record<Language, NavTranslation> = {
       home: "Startseite",
       fiscalis: "Fiscalis: Vor-Ort-Datenerfassung",
       videoDemo: "Video-Demo & KI-Sprachführung",
-      solutions: "Software & Elektronik-Lösungen",
+      solutions: "Software & Hardware-Lösungen",
       caseStudies: "Echte Fallstudien & Belastungstests",
       promotions: "Aktionen & SaaS-Shop",
       methodology: "Harte Testmethodik",
+      portfolio: "Projektportfolio",
       clientPortal: "Kundenportal",
       downloadCv: "Lebenslauf herunterladen",
-      requestAudit: "Audit anfordern",
+      requestAudit: "Audit anfordern ($0 CLP)",
       contact: "Direktkontakt (+56957286145)",
     },
     badges: {
@@ -296,14 +301,14 @@ export function CyberLateralSidebar({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
-        setIsOpen(false);
+        closeSidebar();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
-  // Prevenir scroll en body cuando está abierto en pantallas móviles
+  // Prevenir scroll en body cuando está abierto pero garantizar restauración inmediata
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -316,43 +321,69 @@ export function CyberLateralSidebar({
   }, [isOpen]);
 
   const closeSidebar = useCallback(() => {
+    document.body.style.overflow = "";
     setIsOpen(false);
+    setShowLangMenu(false);
   }, []);
+
+  // Manejador infalible de navegación suave por anclajes
+  const handleNavAnchor = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      e.preventDefault();
+      // 1. Restaurar scroll de inmediato
+      document.body.style.overflow = "";
+      // 2. Cerrar menú lateral
+      setIsOpen(false);
+      setShowLangMenu(false);
+
+      if (!href || href === "#") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+
+      const targetId = href.replace(/^#/, "");
+      // Pequeño retardo para permitir que el drawer inicie su salida y el DOM recalcule sin bloqueos
+      setTimeout(() => {
+        const el = document.getElementById(targetId);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+          if (typeof window !== "undefined" && window.history?.pushState) {
+            window.history.pushState(null, "", `#${targetId}`);
+          }
+        }
+      }, 60);
+    },
+    []
+  );
 
   return (
     <>
       {/* ============================================================ */}
-      {/* Botón Disparador Flotante Lateral Cyberpunk (Siempre Visible) */}
+      {/* Botón Disparador Flotante Lateral (Visible cuando está cerrado) */}
       {/* ============================================================ */}
-      <div className="fixed top-4 left-4 z-50 flex items-center gap-2">
+      <div
+        className={`fixed top-3 left-3 sm:top-4 sm:left-4 z-40 flex items-center gap-2 transition-all duration-300 ${
+          isOpen ? "opacity-0 pointer-events-none -translate-x-4" : "opacity-100 pointer-events-auto translate-x-0"
+        }`}
+      >
         <button
           type="button"
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => setIsOpen(true)}
           aria-expanded={isOpen}
-          aria-label={isOpen ? t.closeAria : t.openAria}
-          className={`group flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl border transition-all duration-300 shadow-2xl backdrop-blur-xl cursor-pointer ${
-            isOpen
-              ? "bg-[#721828] text-[#f2cf6b] border-[#cba135] shadow-[0_0_25px_rgba(203,161,53,0.4)]"
-              : "bg-[#2a242c]/90 hover:bg-[#423943] text-white border-[#cba135]/60 hover:border-[#f2cf6b] shadow-[0_10px_30px_rgba(0,0,0,0.8)] hover:scale-105 active:scale-95"
-          }`}
+          aria-label={t.openAria}
+          className="group flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-[#2a242c]/95 hover:bg-[#423943] text-white border border-[#cba135]/70 hover:border-[#f2cf6b] shadow-[0_10px_30px_rgba(0,0,0,0.85)] hover:scale-105 active:scale-95 transition-all duration-200 backdrop-blur-xl cursor-pointer"
         >
-          <div className="relative">
-            {isOpen ? (
-              <X size={20} className="text-[#f2cf6b] transition-transform duration-300 rotate-90 group-hover:rotate-180" />
-            ) : (
-              <div className="flex flex-col gap-1 w-5">
-                <span className="w-5 h-0.5 bg-[#f2cf6b] rounded-full transition-all group-hover:w-6 shadow-[0_0_5px_#f2cf6b]" />
-                <span className="w-3.5 h-0.5 bg-white rounded-full transition-all group-hover:w-5" />
-                <span className="w-4 h-0.5 bg-[#ff6b85] rounded-full transition-all group-hover:w-6 shadow-[0_0_5px_#ff6b85]" />
-              </div>
-            )}
+          <div className="flex flex-col gap-1 w-5">
+            <span className="w-5 h-0.5 bg-[#f2cf6b] rounded-full transition-all group-hover:w-6 shadow-[0_0_5px_#f2cf6b]" />
+            <span className="w-3.5 h-0.5 bg-white rounded-full transition-all group-hover:w-5" />
+            <span className="w-4 h-0.5 bg-[#ff6b85] rounded-full transition-all group-hover:w-6 shadow-[0_0_5px_#ff6b85]" />
           </div>
 
-          <div className="flex items-center gap-1.5 font-cyber tracking-wider uppercase text-xs font-bold">
-            <span className={isOpen ? "text-[#f2cf6b]" : "text-white group-hover:text-[#f2cf6b] transition-colors"}>
-              {isOpen ? "CERRAR" : "MENÚ"}
+          <div className="flex items-center gap-1.5 font-round tracking-wider uppercase text-xs font-bold">
+            <span className="text-white group-hover:text-[#f2cf6b] transition-colors">
+              MENÚ
             </span>
-            <span className="hidden sm:inline-block text-[10px] px-1.5 py-0.2 rounded bg-[#721828]/80 text-[#f2cf6b] border border-[#cba135]/40 font-mono">
+            <span className="hidden sm:inline-block text-[10px] px-1.5 py-0.2 rounded bg-[#721828]/90 text-[#f2cf6b] border border-[#cba135]/40 font-mono">
               [HUD]
             </span>
           </div>
@@ -364,14 +395,14 @@ export function CyberLateralSidebar({
             type="button"
             onClick={() => setShowLangMenu(!showLangMenu)}
             aria-label={t.langSelect}
-            className="px-2.5 py-2 rounded-2xl bg-[#2a242c]/90 hover:bg-[#423943] border border-[#615362] hover:border-[#cba135] text-xs font-mono font-bold text-[#f2cf6b] flex items-center gap-1.5 shadow-xl transition backdrop-blur-xl"
+            className="px-2.5 py-2.5 rounded-2xl bg-[#2a242c]/95 hover:bg-[#423943] border border-[#615362] hover:border-[#cba135] text-xs font-mono font-bold text-[#f2cf6b] flex items-center gap-1.5 shadow-xl transition backdrop-blur-xl cursor-pointer"
           >
-            <Globe2 size={14} className="text-[#cba135]" />
+            <Globe2 size={15} className="text-[#cba135]" />
             <span className="uppercase">{lang}</span>
           </button>
 
           {showLangMenu && (
-            <div className="absolute top-full left-0 mt-2 w-44 rounded-2xl bg-[#2a242c]/95 border-2 border-[#cba135] shadow-[0_15px_40px_rgba(0,0,0,0.9)] backdrop-blur-2xl p-1.5 z-50 space-y-1 animate-in fade-in zoom-in-95 duration-150">
+            <div className="absolute top-full left-0 mt-2 w-44 rounded-2xl bg-[#2a242c]/98 border-2 border-[#cba135] shadow-[0_15px_40px_rgba(0,0,0,0.95)] backdrop-blur-2xl p-1.5 z-50 space-y-1 animate-in fade-in zoom-in-95 duration-150">
               <div className="px-2 py-1 text-[10px] font-mono font-bold text-[#c29da5] uppercase border-b border-[#615362]">
                 {t.langSelect}
               </div>
@@ -404,7 +435,7 @@ export function CyberLateralSidebar({
       {isOpen && (
         <div
           onClick={closeSidebar}
-          className="fixed inset-0 bg-black/70 backdrop-blur-md z-40 animate-in fade-in duration-200 cursor-pointer"
+          className="fixed inset-0 bg-black/75 backdrop-blur-md z-40 animate-in fade-in duration-200 cursor-pointer"
           aria-hidden="true"
         />
       )}
@@ -415,7 +446,7 @@ export function CyberLateralSidebar({
       <aside
         role="navigation"
         aria-label={t.menuTitle}
-        className={`fixed top-0 left-0 bottom-0 z-50 w-full sm:w-[380px] md:w-[420px] max-w-[90vw] bg-gradient-to-b from-[#302c36] via-[#3a3640] to-[#25222b] border-r-2 border-[#cba135] shadow-[0_0_60px_rgba(0,0,0,0.95)] backdrop-blur-2xl flex flex-col justify-between transition-transform duration-300 ease-out transform ${
+        className={`fixed top-0 left-0 bottom-0 z-50 w-full sm:w-[380px] md:w-[420px] max-w-[92vw] h-full h-[100dvh] max-h-screen bg-gradient-to-b from-[#302c36] via-[#3a3640] to-[#25222b] border-r-2 border-[#cba135] shadow-[0_0_60px_rgba(0,0,0,0.95)] backdrop-blur-2xl flex flex-col justify-between transition-transform duration-300 ease-out transform ${
           isOpen ? "translate-x-0 pointer-events-auto" : "-translate-x-full pointer-events-none"
         }`}
       >
@@ -423,13 +454,13 @@ export function CyberLateralSidebar({
         <div className="absolute top-0 right-0 w-48 h-48 bg-[#721828]/25 blur-3xl pointer-events-none -z-10" />
 
         {/* Encabezado del Menú Lateral */}
-        <div className="p-5 border-b border-[#615362] flex items-center justify-between">
+        <div className="p-4 sm:p-5 border-b border-[#615362] flex items-center justify-between shrink-0 bg-[#2a242c]/90">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#721828] to-[#cba135] flex items-center justify-center font-bold text-white shadow-lg border border-[#f2cf6b]/50 font-cyber text-base">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#721828] to-[#cba135] flex items-center justify-center font-bold text-white shadow-lg border border-[#f2cf6b]/50 font-round text-base">
               PV
             </div>
             <div className="flex flex-col">
-              <span className="font-cyber text-lg font-black text-white flex items-center gap-1.5 leading-tight">
+              <span className="font-round text-lg font-bold text-white flex items-center gap-1.5 leading-tight">
                 Pablo Valdés
                 <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#721828] text-[#f2cf6b] border border-[#cba135]/50">
                   naxoresuelve
@@ -445,23 +476,40 @@ export function CyberLateralSidebar({
             type="button"
             onClick={closeSidebar}
             aria-label={t.closeAria}
-            className="p-2 rounded-xl text-[#c29da5] hover:text-[#f2cf6b] hover:bg-[#423943] border border-transparent hover:border-[#cba135] transition cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-[#f2cf6b] bg-[#721828]/80 hover:bg-[#721828] border border-[#cba135]/60 hover:border-[#f2cf6b] shadow-md transition cursor-pointer"
           >
-            <ChevronLeft size={22} />
+            <X size={16} />
+            <span className="hidden sm:inline font-mono uppercase">Cerrar</span>
           </button>
         </div>
 
-        {/* Estado Operativo Neón */}
-        <div className="px-5 py-2 bg-[#2a242c]/90 border-b border-[#615362]/60 flex items-center justify-between text-[11px] font-mono">
+        {/* Estado Operativo & Selector de Idioma Integrado */}
+        <div className="px-4 py-2.5 bg-[#25222b] border-b border-[#615362]/60 flex items-center justify-between text-[11px] font-mono shrink-0">
           <span className="flex items-center gap-2 text-[#f2cf6b] font-bold">
             <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-pulse" />
             <span>{t.statusOnline}</span>
           </span>
-          <span className="text-[#c29da5]">{lang.toUpperCase()} · UTF-8</span>
+
+          <div className="flex items-center gap-1">
+            {LANG_OPTIONS.slice(0, 3).map((opt) => (
+              <button
+                key={opt.code}
+                type="button"
+                onClick={() => handleSelectLang(opt.code)}
+                className={`px-1.5 py-0.5 rounded text-[10px] font-bold transition cursor-pointer ${
+                  lang === opt.code
+                    ? "bg-[#721828] text-[#f2cf6b] border border-[#cba135]/60"
+                    : "text-[#c29da5] hover:text-white"
+                }`}
+              >
+                {opt.code.toUpperCase()}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Lista de Navegación con Scroll Suave */}
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1.5 scrollbar-thin">
+        {/* Lista de Navegación con Scroll Suave y sin bloqueo de overflow */}
+        <div className="flex-1 overflow-y-auto overscroll-contain px-3 sm:px-4 py-3 space-y-1.5 scrollbar-thin">
           <div className="text-[10px] font-mono uppercase tracking-widest text-[#c29da5] px-3 pb-1">
             // {t.menuTitle}
           </div>
@@ -469,14 +517,14 @@ export function CyberLateralSidebar({
           {/* Enlace: Inicio */}
           <a
             href="#"
-            onClick={closeSidebar}
-            className="group flex items-center justify-between p-3 rounded-2xl hover:bg-[#423943] border border-transparent hover:border-[#cba135]/50 text-sm font-semibold text-[#f5dade] hover:text-[#f2cf6b] transition-all"
+            onClick={(e) => handleNavAnchor(e, "#")}
+            className="group flex items-center justify-between p-2.5 sm:p-3 rounded-2xl hover:bg-[#423943] border border-transparent hover:border-[#cba135]/50 text-sm font-normal text-[#f5dade] hover:text-[#f2cf6b] transition-all"
           >
             <span className="flex items-center gap-3">
               <span className="w-8 h-8 rounded-xl bg-[#423943] group-hover:bg-[#721828] flex items-center justify-center text-[#f2cf6b] transition">
                 <Sparkles size={16} />
               </span>
-              <span>{t.links.home}</span>
+              <span className="font-round font-normal group-hover:font-bold transition-all">{t.links.home}</span>
             </span>
             <ChevronRight size={15} className="text-[#615362] group-hover:text-[#f2cf6b] transition-transform group-hover:translate-x-1" />
           </a>
@@ -484,14 +532,14 @@ export function CyberLateralSidebar({
           {/* Enlace: Fiscalis */}
           <a
             href="#fiscalis-spotlight"
-            onClick={closeSidebar}
-            className="group flex items-center justify-between p-3 rounded-2xl bg-[#721828]/25 hover:bg-[#721828]/50 border border-[#cba135]/40 text-sm font-bold text-[#ff6b85] hover:text-[#f2cf6b] transition-all shadow-sm"
+            onClick={(e) => handleNavAnchor(e, "#fiscalis-spotlight")}
+            className="group flex items-center justify-between p-2.5 sm:p-3 rounded-2xl bg-[#721828]/30 hover:bg-[#721828]/60 border border-[#cba135]/50 text-sm font-bold text-[#ff6b85] hover:text-[#f2cf6b] transition-all shadow-sm"
           >
             <span className="flex items-center gap-3">
               <span className="w-8 h-8 rounded-xl bg-[#721828] flex items-center justify-center text-[#f2cf6b] shadow-[0_0_10px_rgba(203,161,53,0.3)]">
                 <Flame size={16} />
               </span>
-              <span>{t.links.fiscalis}</span>
+              <span className="font-round font-bold">{t.links.fiscalis}</span>
             </span>
             <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#cba135]/20 text-[#f2cf6b] border border-[#cba135]/50 uppercase font-bold">
               {t.badges.featured}
@@ -501,14 +549,14 @@ export function CyberLateralSidebar({
           {/* Enlace: Video Demo Canvas & Voz IA */}
           <a
             href="#video-preview"
-            onClick={closeSidebar}
-            className="group flex items-center justify-between p-3 rounded-2xl hover:bg-[#423943] border border-transparent hover:border-[#cba135]/50 text-sm font-semibold text-[#f5dade] hover:text-[#f2cf6b] transition-all"
+            onClick={(e) => handleNavAnchor(e, "#video-preview")}
+            className="group flex items-center justify-between p-2.5 sm:p-3 rounded-2xl hover:bg-[#423943] border border-transparent hover:border-[#cba135]/50 text-sm font-normal text-[#f5dade] hover:text-[#f2cf6b] transition-all"
           >
             <span className="flex items-center gap-3">
               <span className="w-8 h-8 rounded-xl bg-[#423943] group-hover:bg-[#721828] flex items-center justify-center text-[#f2cf6b] transition">
                 <Play size={15} className="fill-[#f2cf6b]" />
               </span>
-              <span>{t.links.videoDemo}</span>
+              <span className="font-round font-normal group-hover:font-bold transition-all">{t.links.videoDemo}</span>
             </span>
             <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#721828]/80 text-[#f2cf6b] border border-[#721828] uppercase font-bold">
               {t.badges.liveVoice}
@@ -518,14 +566,14 @@ export function CyberLateralSidebar({
           {/* Enlace: Soluciones & Hardware */}
           <a
             href="#soluciones"
-            onClick={closeSidebar}
-            className="group flex items-center justify-between p-3 rounded-2xl hover:bg-[#423943] border border-transparent hover:border-[#cba135]/50 text-sm font-semibold text-[#f5dade] hover:text-[#f2cf6b] transition-all"
+            onClick={(e) => handleNavAnchor(e, "#soluciones")}
+            className="group flex items-center justify-between p-2.5 sm:p-3 rounded-2xl hover:bg-[#423943] border border-transparent hover:border-[#cba135]/50 text-sm font-normal text-[#f5dade] hover:text-[#f2cf6b] transition-all"
           >
             <span className="flex items-center gap-3">
               <span className="w-8 h-8 rounded-xl bg-[#423943] group-hover:bg-[#721828] flex items-center justify-center text-[#f2cf6b] transition">
                 <Cpu size={16} />
               </span>
-              <span>{t.links.solutions}</span>
+              <span className="font-round font-normal group-hover:font-bold transition-all">{t.links.solutions}</span>
             </span>
             <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#cba135]/20 text-[#f2cf6b] border border-[#cba135]/40 font-bold">
               {t.badges.hardware}
@@ -535,16 +583,16 @@ export function CyberLateralSidebar({
           {/* Enlace: Casos de Estudio */}
           <a
             href="#casos-de-estudio"
-            onClick={closeSidebar}
-            className="group flex items-center justify-between p-3 rounded-2xl hover:bg-[#423943] border border-transparent hover:border-[#cba135]/50 text-sm font-semibold text-[#f5dade] hover:text-[#f2cf6b] transition-all"
+            onClick={(e) => handleNavAnchor(e, "#casos-de-estudio")}
+            className="group flex items-center justify-between p-2.5 sm:p-3 rounded-2xl hover:bg-[#423943] border border-transparent hover:border-[#cba135]/50 text-sm font-normal text-[#f5dade] hover:text-[#f2cf6b] transition-all"
           >
             <span className="flex items-center gap-3">
               <span className="w-8 h-8 rounded-xl bg-[#423943] group-hover:bg-[#721828] flex items-center justify-center text-[#f2cf6b] transition">
                 <FlaskConical size={16} />
               </span>
-              <span>{t.links.caseStudies}</span>
+              <span className="font-round font-normal group-hover:font-bold transition-all">{t.links.caseStudies}</span>
             </span>
-            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-emerald-950/60 text-emerald-300 border border-emerald-500/40">
+            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-emerald-950/60 text-emerald-300 border border-emerald-500/40 font-bold">
               {t.badges.robustQa}
             </span>
           </a>
@@ -552,14 +600,14 @@ export function CyberLateralSidebar({
           {/* Enlace: Promociones & Tienda */}
           <a
             href="#promociones"
-            onClick={closeSidebar}
-            className="group flex items-center justify-between p-3 rounded-2xl hover:bg-[#423943] border border-transparent hover:border-[#cba135]/50 text-sm font-semibold text-[#f5dade] hover:text-[#f2cf6b] transition-all"
+            onClick={(e) => handleNavAnchor(e, "#promociones")}
+            className="group flex items-center justify-between p-2.5 sm:p-3 rounded-2xl hover:bg-[#423943] border border-transparent hover:border-[#cba135]/50 text-sm font-normal text-[#f5dade] hover:text-[#f2cf6b] transition-all"
           >
             <span className="flex items-center gap-3">
               <span className="w-8 h-8 rounded-xl bg-[#423943] group-hover:bg-[#721828] flex items-center justify-center text-[#f2cf6b] transition">
                 <Tag size={16} />
               </span>
-              <span>{t.links.promotions}</span>
+              <span className="font-round font-normal group-hover:font-bold transition-all">{t.links.promotions}</span>
             </span>
             <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#721828] text-[#f2cf6b] border border-[#cba135]/40 font-bold">
               {t.badges.presale}
@@ -569,14 +617,44 @@ export function CyberLateralSidebar({
           {/* Enlace: Metodología Testing Rudo */}
           <a
             href="#filosofia-testing"
-            onClick={closeSidebar}
-            className="group flex items-center justify-between p-3 rounded-2xl hover:bg-[#423943] border border-transparent hover:border-[#cba135]/50 text-sm font-semibold text-[#f5dade] hover:text-[#f2cf6b] transition-all"
+            onClick={(e) => handleNavAnchor(e, "#filosofia-testing")}
+            className="group flex items-center justify-between p-2.5 sm:p-3 rounded-2xl hover:bg-[#423943] border border-transparent hover:border-[#cba135]/50 text-sm font-normal text-[#f5dade] hover:text-[#f2cf6b] transition-all"
           >
             <span className="flex items-center gap-3">
               <span className="w-8 h-8 rounded-xl bg-[#423943] group-hover:bg-[#721828] flex items-center justify-center text-[#f2cf6b] transition">
                 <ShieldCheck size={16} />
               </span>
-              <span>{t.links.methodology}</span>
+              <span className="font-round font-normal group-hover:font-bold transition-all">{t.links.methodology}</span>
+            </span>
+            <ChevronRight size={15} className="text-[#615362] group-hover:text-[#f2cf6b] transition-transform group-hover:translate-x-1" />
+          </a>
+
+          {/* Enlace: Portafolio */}
+          <a
+            href="#portafolio"
+            onClick={(e) => handleNavAnchor(e, "#portafolio")}
+            className="group flex items-center justify-between p-2.5 sm:p-3 rounded-2xl hover:bg-[#423943] border border-transparent hover:border-[#cba135]/50 text-sm font-normal text-[#f5dade] hover:text-[#f2cf6b] transition-all"
+          >
+            <span className="flex items-center gap-3">
+              <span className="w-8 h-8 rounded-xl bg-[#423943] group-hover:bg-[#721828] flex items-center justify-center text-[#f2cf6b] transition">
+                <Briefcase size={16} />
+              </span>
+              <span className="font-round font-normal group-hover:font-bold transition-all">{t.links.portfolio}</span>
+            </span>
+            <ChevronRight size={15} className="text-[#615362] group-hover:text-[#f2cf6b] transition-transform group-hover:translate-x-1" />
+          </a>
+
+          {/* Enlace: Contacto Directo */}
+          <a
+            href="#contacto"
+            onClick={(e) => handleNavAnchor(e, "#contacto")}
+            className="group flex items-center justify-between p-2.5 sm:p-3 rounded-2xl hover:bg-[#423943] border border-transparent hover:border-[#cba135]/50 text-sm font-normal text-[#f5dade] hover:text-[#f2cf6b] transition-all"
+          >
+            <span className="flex items-center gap-3">
+              <span className="w-8 h-8 rounded-xl bg-[#423943] group-hover:bg-[#721828] flex items-center justify-center text-[#f2cf6b] transition">
+                <PhoneCall size={16} />
+              </span>
+              <span className="font-round font-normal group-hover:font-bold transition-all">{t.links.contact}</span>
             </span>
             <ChevronRight size={15} className="text-[#615362] group-hover:text-[#f2cf6b] transition-transform group-hover:translate-x-1" />
           </a>
@@ -592,7 +670,7 @@ export function CyberLateralSidebar({
           <Link
             href="/login"
             onClick={closeSidebar}
-            className="flex items-center gap-3 p-3 rounded-2xl bg-[#423943] hover:bg-[#4c424e] border border-[#615362] text-xs font-bold text-[#f5dade] hover:text-[#f2cf6b] transition-all"
+            className="flex items-center gap-3 p-2.5 sm:p-3 rounded-2xl bg-[#423943] hover:bg-[#4c424e] border border-[#615362] text-xs font-bold text-[#f5dade] hover:text-[#f2cf6b] transition-all font-round"
           >
             <span className="w-7 h-7 rounded-lg bg-[#2a242c] flex items-center justify-center text-[#f2cf6b]">
               <Lock size={14} />
@@ -606,7 +684,7 @@ export function CyberLateralSidebar({
             target="_blank"
             rel="noopener noreferrer"
             onClick={closeSidebar}
-            className="flex items-center gap-3 p-3 rounded-2xl bg-[#423943] hover:bg-[#4c424e] border border-[#615362] text-xs font-bold text-[#f5dade] hover:text-white transition-all"
+            className="flex items-center gap-3 p-2.5 sm:p-3 rounded-2xl bg-[#423943] hover:bg-[#4c424e] border border-[#615362] text-xs font-bold text-[#f5dade] hover:text-white transition-all font-round"
           >
             <span className="w-7 h-7 rounded-lg bg-[#2a242c] flex items-center justify-center text-[#f2cf6b]">
               <Download size={14} />
@@ -620,7 +698,7 @@ export function CyberLateralSidebar({
               href={portfolioUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-1.5 p-2.5 rounded-xl bg-[#2a242c] hover:bg-[#423943] border border-[#615362] text-[11px] font-mono text-[#f2cf6b] transition font-bold"
+              className="flex items-center justify-center gap-1.5 p-2 rounded-xl bg-[#2a242c] hover:bg-[#423943] border border-[#615362] text-[11px] font-mono text-[#f2cf6b] transition font-bold"
             >
               <span>renkaidev</span>
               <ExternalLink size={11} />
@@ -629,7 +707,7 @@ export function CyberLateralSidebar({
               href={linkedinUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-1.5 p-2.5 rounded-xl bg-[#2a242c] hover:bg-[#423943] border border-[#615362] text-[11px] font-mono text-[#c29da5] hover:text-white transition"
+              className="flex items-center justify-center gap-1.5 p-2 rounded-xl bg-[#2a242c] hover:bg-[#423943] border border-[#615362] text-[11px] font-mono text-[#c29da5] hover:text-white transition font-bold"
             >
               <span>LinkedIn</span>
               <ExternalLink size={11} />
@@ -638,14 +716,14 @@ export function CyberLateralSidebar({
         </div>
 
         {/* Pie del Menú Lateral: CTA Diagnóstico */}
-        <div className="p-4 bg-[#2a242c] border-t-2 border-[#cba135]/60 space-y-3">
+        <div className="p-3 sm:p-4 bg-[#2a242c] border-t-2 border-[#cba135]/60 space-y-2.5 shrink-0">
           <button
             type="button"
             onClick={() => {
               closeSidebar();
               onOpenAudit();
             }}
-            className="w-full py-3 px-4 rounded-xl font-cyber text-sm font-bold uppercase tracking-wider text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] hover:from-[#9e233b] hover:to-[#f2cf6b] hover:text-[#07080c] border border-[#f2cf6b]/50 shadow-[0_0_20px_rgba(184,45,70,0.5)] transition-all cursor-pointer flex items-center justify-center gap-2"
+            className="w-full py-3 px-4 rounded-xl font-round text-sm font-bold uppercase tracking-wider text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] hover:from-[#9e233b] hover:to-[#f2cf6b] hover:text-[#07080c] border border-[#f2cf6b]/50 shadow-[0_0_20px_rgba(184,45,70,0.5)] transition-all cursor-pointer flex items-center justify-center gap-2"
           >
             <Send size={15} />
             <span>{t.links.requestAudit}</span>

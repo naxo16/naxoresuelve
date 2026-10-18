@@ -414,31 +414,31 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
       />
 
       {/* Barra de Estado Minimalista Superior (No compite con el sidebar) */}
-      <header className="sticky top-0 z-30 bg-[#2a242c]/90 backdrop-blur-xl border-b border-[#615362]/60 pl-32 sm:pl-44 pr-4 sm:pr-8 py-2.5 transition-all">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
+      <header className="sticky top-0 z-30 bg-[#2a242c]/95 backdrop-blur-xl border-b border-[#615362]/60 pl-36 sm:pl-48 pr-3 sm:pr-6 py-2.5 transition-all">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2">
           {/* Brand Logo & Telemetría */}
-          <a href="#" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#721828] to-[#cba135] flex items-center justify-center font-bold text-white shadow-md border border-[#cba135]/40 font-cyber text-sm group-hover:scale-105 transition-transform">
+          <a href="#" className="flex items-center gap-2 group min-w-0">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#721828] to-[#cba135] flex items-center justify-center font-bold text-white shadow-md border border-[#cba135]/40 font-round text-sm group-hover:scale-105 transition-transform shrink-0">
               PV
             </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-bold tracking-tight text-[#ff6b85] flex items-center gap-1.5 font-cyber">
+            <div className="flex flex-col min-w-0">
+              <span className="text-xs sm:text-sm font-bold tracking-tight text-[#ff6b85] flex items-center gap-1.5 font-round truncate">
                 Pablo Valdés
-                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#721828]/80 text-[#f2cf6b] border border-[#cba135]/40">
+                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#721828]/80 text-[#f2cf6b] border border-[#cba135]/40 shrink-0">
                   naxoresuelve
                 </span>
               </span>
-              <span className="hidden sm:inline-block text-[10px] text-[#c29da5]">
+              <span className="hidden md:inline-block text-[10px] text-[#c29da5] truncate">
                 Arquitectura de Software · Testing Rudo & Hardware
               </span>
             </div>
           </a>
 
           {/* Acciones Rápidas */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 shrink-0">
             <Link
               href="/login"
-              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-[#f5dade] hover:text-[#f2cf6b] bg-[#362f37] hover:bg-[#423943] border border-[#615362] transition"
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-[#f5dade] hover:text-[#f2cf6b] bg-[#362f37] hover:bg-[#423943] border border-[#615362] transition font-round"
             >
               <Lock size={12} className="text-[#f2cf6b]" />
               <span>Portal</span>
@@ -446,7 +446,7 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
 
             <button
               onClick={onOpenAudit}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] hover:scale-105 active:scale-95 border border-[#cba135]/50 shadow-md transition-all cursor-pointer flex items-center gap-1.5 font-cyber tracking-wider"
+              className="px-3 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] hover:scale-105 active:scale-95 border border-[#cba135]/50 shadow-md transition-all cursor-pointer flex items-center gap-1.5 font-round tracking-wider"
             >
               <Send size={12} />
               <span>Diagnóstico $0</span>
