@@ -1,38 +1,173 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --primary: #4f46e5;
-  --primary-dark: #4338ca;
-  --primary-light: #e0e7ff;
-  --accent: #059669;
-  --muted: #6b7280;
-  --surface: #f9fafb;
-  --border: #e5e7eb;
+  /* Color Palette: Blanco, Color Vino, Negro más clarito, y Dorado */
+  --bg-dark: #0d0f14;
+  --bg-surface: #141821;
+  --bg-card: #1b202c;
+  --bg-card-hover: #222938;
+
+  --color-vino: #721828;
+  --color-vino-dark: #4d0c17;
+  --color-vino-light: #9e233b;
+  --color-vino-glow: rgba(114, 24, 40, 0.45);
+
+  --color-gold: #cba135;
+  --color-gold-light: #f2cf6b;
+  --color-gold-dark: #96741f;
+  --color-gold-glow: rgba(203, 161, 53, 0.35);
+
+  --color-white: #ffffff;
+  --color-text-dim: #9aa3b2;
+  --color-border: #272f3f;
+  --color-border-gold: rgba(203, 161, 53, 0.35);
+  --color-border-vino: rgba(114, 24, 40, 0.45);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-primary-dark: var(--primary-dark);
-  --color-primary-light: var(--primary-light);
-  --color-accent: var(--accent);
-  --color-muted: var(--muted);
-  --color-surface: var(--surface);
-  --color-border: var(--border);
+  --color-bg-dark: var(--bg-dark);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-card: var(--bg-card);
+  --color-vino: var(--color-vino);
+  --color-vino-dark: var(--color-vino-dark);
+  --color-vino-light: var(--color-vino-light);
+  --color-gold: var(--color-gold);
+  --color-gold-light: var(--color-gold-light);
+  --color-gold-dark: var(--color-gold-dark);
+  --color-white: var(--color-white);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--color-white);
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
 }
 
-/* Smooth scroll offset for fixed navbar */
+/* Smooth scroll offset */
 [id] {
   scroll-margin-top: 5rem;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0d0f14;
+}
+::-webkit-scrollbar-thumb {
+  background: #272f3f;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-vino);
+}
+
+/* ========================================================
+   Glitch & Cyber Keyframes
+   ======================================================== */
+
+@keyframes glitch-anim {
+  0% {
+    text-shadow: 2px 0 var(--color-vino-light), -2px 0 var(--color-gold);
+    transform: translate(0);
+  }
+  20% {
+    text-shadow: -2px 0 var(--color-vino-light), 2px 0 var(--color-gold);
+    transform: translate(-1px, 1px);
+  }
+  40% {
+    text-shadow: 2px 0 var(--color-gold), -2px 0 var(--color-vino-light);
+    transform: translate(1px, -1px);
+  }
+  60% {
+    text-shadow: -1px 0 var(--color-vino-light), 1px 0 var(--color-gold);
+    transform: translate(0);
+  }
+  80% {
+    text-shadow: 1px 0 var(--color-gold), -1px 0 var(--color-vino-light);
+    transform: translate(-1px, 0);
+  }
+  100% {
+    text-shadow: 2px 0 var(--color-vino-light), -2px 0 var(--color-gold);
+    transform: translate(0);
+  }
+}
+
+.glitch-hover:hover {
+  animation: glitch-anim 0.35s infinite alternate ease-in-out;
+}
+
+.glitch-active {
+  animation: glitch-anim 2.5s infinite alternate ease-in-out;
+}
+
+/* Floating animation */
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(1deg);
+  }
+}
+
+@keyframes float-reverse {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(10px) rotate(-1deg);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: float-reverse 9s ease-in-out infinite;
+}
+
+/* Pulse animation for WhatsApp & Gold CTAs */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 16px rgba(37, 211, 102, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
+
+.whatsapp-pulse {
+  animation: pulse-ring 2.2s infinite;
+}
+
+/* Matrix / Cyber Grid Background */
+.cyber-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #ffffff 0%, #f2cf6b 50%, #cba135 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.vino-gradient-text {
+  background: linear-gradient(135deg, #ffffff 0%, #d84562 50%, #9e233b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

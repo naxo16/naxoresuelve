@@ -13,26 +13,47 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "naxoresuelve — Soluciones digitales a medida",
+  title: "naxoresuelve | Pablo Valdés — Arquitectura de Software & Automatización",
   description:
-    "Analista programador freelance. Desarrollo web, software a medida, automatización y consultoría tecnológica en Chile.",
+    "Soluciones de ingeniería de software de alto impacto por Pablo Valdés. Automatización de procesos masivos, bases de datos optimizadas, erradicación de errores por duplicidad, SaaS y consultoría con rigor de testing extremo.",
   keywords: [
-    "desarrollo web",
-    "software a medida",
-    "freelance",
-    "Chile",
+    "Pablo Valdés",
+    "naxoresuelve",
     "analista programador",
-    "automatización",
+    "ingeniería de software",
+    "automatización excel",
+    "carga masiva de archivos",
+    "optimización postgresql",
+    "duplicidad de datos",
+    "desarrollo saas",
+    "testing riguroso",
+    "google ads roi",
+    "posicionamiento google maps",
+    "Chile",
   ],
+  authors: [{ name: "Pablo Valdés", url: "https://www.linkedin.com/in/pablo-vald%C3%A9s-7a4445430/" }],
+  openGraph: {
+    title: "naxoresuelve | Pablo Valdés — Software & Automatización de Alto Impacto",
+    description:
+      "Ingeniería de software con pruebas de estrés reales. Cero pérdida de información, cero duplicidad.",
+    type: "website",
+    locale: "es_CL",
+  },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html
       lang="es"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-[#0d0f14] text-white selection:bg-[#721828] selection:text-[#f2cf6b]">
+        {children}
+      </body>
     </html>
   );
 }
