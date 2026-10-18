@@ -54,6 +54,7 @@ import { ThreeArchitectureNode } from "@/components/ThreeArchitectureNode";
 import { FiscalisCarousel } from "@/components/FiscalisCarousel";
 import { ModernCanvasVideoPlayer } from "@/components/ModernCanvasVideoPlayer";
 import { ServicesQuickModal } from "@/components/ServicesQuickModal";
+import { CyberLateralSidebar } from "@/components/CyberLateralSidebar";
 
 /* ------------------------------------------------------------------ */
 /*  Constants & Data                                                  */
@@ -401,238 +402,58 @@ export default function Home() {
 /* ------------------------------------------------------------------ */
 
 function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   return (
-    <header className="sticky top-0 z-40 bg-[#362f37]/95 backdrop-blur-md border-b border-[#615362]">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3.5">
-        {/* Brand */}
-        <a href="#" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#721828] to-[#cba135] flex items-center justify-center font-bold text-white shadow-md border border-[#cba135]/40 group-hover:scale-105 transition-transform">
-            PV
-          </div>
-          <div className="flex flex-col">
-            <span className="text-base font-bold tracking-tight text-[#ff6b85] flex items-center gap-1.5">
-              Pablo Valdés
-              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#721828]/70 text-[#f2cf6b] border border-[#721828]">
-                naxoresuelve
-              </span>
-            </span>
-            <span className="text-[11px] text-[#c29da5] font-medium">
-              Analista Programador · Backend & Arquitectura
-            </span>
-          </div>
-        </a>
+    <>
+      {/* Menú Lateral Desplegable Cyberpunk con soporte Multilingüe */}
+      <CyberLateralSidebar
+        onOpenAudit={onOpenAudit}
+        cvUrl={CV_URL}
+        portfolioUrl={PORTFOLIO_URL}
+        linkedinUrl={LINKEDIN_URL}
+      />
 
-        {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-5 text-xs font-semibold uppercase tracking-wider text-[#f5dade]">
-          <a
-            href="#fiscalis-spotlight"
-            className="hover:text-[#f2cf6b] transition-colors flex items-center gap-1 text-[#ff6b85]"
-          >
-            <Flame size={13} className="text-[#f2cf6b]" />
-            <span>Fiscalis</span>
-          </a>
-          <a
-            href="#video-preview"
-            className="hover:text-[#f2cf6b] transition-colors flex items-center gap-1 text-[#f5dade]"
-          >
-            <Play size={12} className="text-[#f2cf6b] fill-[#f2cf6b]" />
-            <span>Video Preview IA</span>
-          </a>
-          <a
-            href="#soluciones"
-            className="hover:text-[#ff6b85] transition-colors flex items-center gap-1"
-          >
-            <span>Soluciones & Hardware</span>
-            <span className="px-1.5 py-0.2 text-[9px] bg-[#cba135]/20 text-[#f2cf6b] rounded border border-[#cba135]/40 font-mono">
-              $15k
-            </span>
-          </a>
-          <a
-            href="#casos-de-estudio"
-            className="hover:text-[#ff6b85] transition-colors flex items-center gap-1"
-          >
-            <span>Casos de Estudio</span>
-            <span className="px-1.5 py-0.2 text-[9px] bg-[#cba135]/20 text-[#f2cf6b] rounded border border-[#cba135]/40">
-              Testing Rudo
-            </span>
-          </a>
-          <a
-            href="#promociones"
-            className="hover:text-[#f2cf6b] transition-colors flex items-center gap-1 text-[#ff6b85]"
-          >
-            <Tag size={13} className="text-[#f2cf6b]" />
-            <span>Promociones & Tienda</span>
-            <span className="px-1.5 py-0.2 text-[9px] bg-[#721828] text-[#f2cf6b] rounded border border-[#cba135]/40 font-bold">
-              Preventa
-            </span>
-          </a>
-          <a
-            href="#filosofia-testing"
-            className="hover:text-[#ff6b85] transition-colors"
-          >
-            Metodología
-          </a>
-          <a
-            href={PORTFOLIO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-[#f2cf6b] transition-colors flex items-center gap-1 text-[#f2cf6b]"
-          >
-            <span>renkaidev</span>
-            <ExternalLink size={12} />
-          </a>
-          <a
-            href={LINKEDIN_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[#c29da5] hover:text-[#ff6b85] flex items-center gap-1 transition-colors"
-          >
-            <span>LinkedIn</span>
-            <ExternalLink size={12} />
-          </a>
-        </nav>
-
-        {/* Actions */}
-        <div className="hidden sm:flex items-center gap-2.5">
-          <Link
-            href="/login"
-            className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#f5dade] hover:text-[#f2cf6b] bg-[#362f37] hover:bg-[#554a57] border border-[#615362] flex items-center gap-1.5 transition"
-          >
-            <Lock size={13} className="text-[#f2cf6b]" />
-            <span>Portal Clientes</span>
-          </Link>
-          <a
-            href={CV_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#f5dade] hover:text-white bg-[#423943] hover:bg-[#4c424e] border border-[#615362] flex items-center gap-1.5 transition"
-          >
-            <Download size={13} className="text-[#f2cf6b]" />
-            <span>Descargar CV</span>
-          </a>
-          <button
-            onClick={onOpenAudit}
-            className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#721828] to-[#9e233b] hover:from-[#9e233b] hover:to-[#cba135] border border-[#cba135]/40 shadow-md hover:shadow-[0_0_15px_rgba(184,45,70,0.4)] transition-all cursor-pointer"
-          >
-            Solicitar Auditoría
-          </button>
-        </div>
-
-        {/* Mobile menu toggle */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Abrir menú de navegación"
-          className="lg:hidden p-2 text-[#c29da5] hover:text-[#f2cf6b] rounded-lg bg-[#423943] border border-[#615362]"
-        >
-          {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
-
-      {/* Mobile Drawer */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden border-b border-[#615362] bg-[#362f37] px-4 py-4 space-y-3">
-          <a
-            href="#fiscalis-spotlight"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-[#ff6b85] flex items-center gap-1"
-          >
-            <Flame size={14} className="text-[#f2cf6b]" />
-            <span>Fiscalis (Demo & QA)</span>
-          </a>
-          <a
-            href="#video-preview"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-[#f5dade] hover:text-[#f2cf6b] flex items-center gap-1.5"
-          >
-            <Play size={14} className="text-[#f2cf6b] fill-[#f2cf6b]" />
-            <span>Video Preview Canvas (Voz IA)</span>
-          </a>
-          <a
-            href="#soluciones"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-[#f5dade] hover:text-[#ff6b85] flex items-center justify-between"
-          >
-            <span>Soluciones & Hardware Electrónica</span>
-            <span className="px-1.5 py-0.2 text-[9px] bg-[#cba135]/20 text-[#f2cf6b] rounded border border-[#cba135]/40 font-mono">
-              $15k
-            </span>
-          </a>
-          <a
-            href="#casos-de-estudio"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-[#f5dade] hover:text-[#ff6b85]"
-          >
-            Casos de Estudio (Testing Rudo)
-          </a>
-          <a
-            href="#promociones"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-[#ff6b85] flex items-center justify-between"
-          >
-            <div className="flex items-center gap-1.5">
-              <Tag size={14} className="text-[#f2cf6b]" />
-              <span>Promociones & Tienda</span>
+      {/* Barra de Estado Minimalista Superior (No compite con el sidebar) */}
+      <header className="sticky top-0 z-30 bg-[#2a242c]/90 backdrop-blur-xl border-b border-[#615362]/60 pl-32 sm:pl-44 pr-4 sm:pr-8 py-2.5 transition-all">
+        <div className="mx-auto flex max-w-7xl items-center justify-between">
+          {/* Brand Logo & Telemetría */}
+          <a href="#" className="flex items-center gap-2.5 group">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#721828] to-[#cba135] flex items-center justify-center font-bold text-white shadow-md border border-[#cba135]/40 font-cyber text-sm group-hover:scale-105 transition-transform">
+              PV
             </div>
-            <span className="px-1.5 py-0.2 text-[9px] bg-[#721828] text-[#f2cf6b] rounded border border-[#cba135]/40 font-bold">
-              Preventa
-            </span>
+            <div className="flex flex-col">
+              <span className="text-sm font-bold tracking-tight text-[#ff6b85] flex items-center gap-1.5 font-cyber">
+                Pablo Valdés
+                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#721828]/80 text-[#f2cf6b] border border-[#cba135]/40">
+                  naxoresuelve
+                </span>
+              </span>
+              <span className="hidden sm:inline-block text-[10px] text-[#c29da5]">
+                Arquitectura de Software · Testing Rudo & Hardware
+              </span>
+            </div>
           </a>
-          <Link
-            href="/login"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-[#f2cf6b] flex items-center gap-1.5"
-          >
-            <Lock size={14} className="text-[#f2cf6b]" />
-            <span>Portal Clientes / Admin</span>
-          </Link>
-          <a
-            href="#filosofia-testing"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-[#f5dade] hover:text-[#ff6b85]"
-          >
-            Metodología de Pruebas
-          </a>
-          <a
-            href={PORTFOLIO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block text-sm font-semibold text-[#f2cf6b] flex items-center gap-1"
-          >
-            <span>Ver Portafolio renkaidev</span>
-            <ExternalLink size={13} />
-          </a>
-          <a
-            href={CV_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block text-sm font-semibold text-[#f5dade] flex items-center gap-1"
-          >
-            <span>Descargar CV Oficial</span>
-            <Download size={13} />
-          </a>
-          <a
-            href={LINKEDIN_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block text-sm font-semibold text-[#c29da5] flex items-center gap-1"
-          >
-            <span>Perfil LinkedIn</span>
-            <ExternalLink size={13} />
-          </a>
-          <button
-            onClick={() => {
-              setMobileMenuOpen(false);
-              onOpenAudit();
-            }}
-            className="w-full mt-2 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#721828] to-[#cba135] text-center"
-          >
-            Solicitar Diagnóstico Sin Costo
-          </button>
+
+          {/* Acciones Rápidas */}
+          <div className="flex items-center gap-2.5">
+            <Link
+              href="/login"
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-[#f5dade] hover:text-[#f2cf6b] bg-[#362f37] hover:bg-[#423943] border border-[#615362] transition"
+            >
+              <Lock size={12} className="text-[#f2cf6b]" />
+              <span>Portal</span>
+            </Link>
+
+            <button
+              onClick={onOpenAudit}
+              className="px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] hover:scale-105 active:scale-95 border border-[#cba135]/50 shadow-md transition-all cursor-pointer flex items-center gap-1.5 font-cyber tracking-wider"
+            >
+              <Send size={12} />
+              <span>Diagnóstico $0</span>
+            </button>
+          </div>
         </div>
-      )}
-    </header>
+      </header>
+    </>
   );
 }
 

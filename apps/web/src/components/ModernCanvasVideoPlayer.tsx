@@ -170,8 +170,35 @@ export function ModernCanvasVideoPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(1);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
+  const [volume, setVolume] = useState(1.0);
   const [hudMode, setHudMode] = useState<"cyber" | "clean">("cyber");
+
+  // Web Audio Confirmation Chime (Audible Cyber Feedback)
+  const playCyberChime = useCallback(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const AudioCtx =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      if (ctx.state === "suspended") ctx.resume();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12); // A5
+      gain.gain.setValueAtTime(0.18, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.3);
+    } catch {
+      // AudioContext fallback
+    }
+  }, []);
 
   // AI Voice State
   const [isVoiceActive, setIsVoiceActive] = useState(true);
@@ -316,13 +343,13 @@ export function ModernCanvasVideoPlayer() {
   );
 
   /* ------------------------------------------------------------------ */
-  /*  Canvas Rendering Loop with HUD, Scanlines & Audio Visualizer     */
+  /*  Canvas HUD Overlay (Scanlines, Golden Brackets & Telemetría)       */
   /* ------------------------------------------------------------------ */
 
   const renderCanvasFrame = useCallback(() => {
     const canvas = canvasRef.current;
     const video = videoRef.current;
-    if (!canvas || !video) return;
+    if (!canvas) return;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -330,43 +357,19 @@ export function ModernCanvasVideoPlayer() {
     const width = canvas.width;
     const height = canvas.height;
 
-    // 1. Dibujar el fotograma del video con ajuste cover/contain proporcional
-    if (video.readyState >= 2) {
-      ctx.drawImage(video, 0, 0, width, height);
-    } else {
-      // Estado de carga o espera
-      ctx.fillStyle = "#07080c";
-      ctx.fillRect(0, 0, width, height);
-      ctx.fillStyle = "#ff758f";
-      ctx.font = "bold 16px monospace";
-      ctx.textAlign = "center";
-      ctx.fillText("INICIALIZANDO MOTOR GRÁFICO CANVASHUD...", width / 2, height / 2);
-    }
-
-    // 2. Efecto Vignette (Obsidian & Vino suave en los bordes)
-    const vignetteGradient = ctx.createRadialGradient(
-      width / 2,
-      height / 2,
-      width * 0.25,
-      width / 2,
-      height / 2,
-      width * 0.75
-    );
-    vignetteGradient.addColorStop(0, "rgba(7, 8, 12, 0)");
-    vignetteGradient.addColorStop(1, "rgba(7, 8, 12, 0.65)");
-    ctx.fillStyle = vignetteGradient;
-    ctx.fillRect(0, 0, width, height);
+    // Limpiar canvas para mantener transparencia cristalina sobre el video nativo
+    ctx.clearRect(0, 0, width, height);
 
     if (hudMode === "cyber") {
-      // 3. Scanlines sutiles estilo monitor militar/forense
+      // 1. Scanlines sutiles estilo monitor militar/forense
       ctx.fillStyle = "rgba(0, 0, 0, 0.12)";
       for (let y = 0; y < height; y += 4) {
         ctx.fillRect(0, y, width, 1.5);
       }
 
-      // 4. Overlays HUD en las 4 esquinas (Marco de Precisión)
-      const bracketSize = 22;
-      const margin = 16;
+      // 2. Overlays HUD en las 4 esquinas (Marco de Precisión)
+      const bracketSize = 24;
+      const margin = 18;
       ctx.strokeStyle = "#cba135"; // Dorado
       ctx.lineWidth = 2.5;
 
@@ -398,42 +401,44 @@ export function ModernCanvasVideoPlayer() {
       ctx.lineTo(width - margin, height - margin - bracketSize);
       ctx.stroke();
 
-      // 5. Telemetría HUD Superior
-      ctx.font = "bold 11px monospace";
+      // 3. Telemetría HUD Superior
+      ctx.font = "bold 12px monospace";
       ctx.textAlign = "left";
       ctx.fillStyle = "#ff758f"; // Vino
-      ctx.fillText("● TELEMETRÍA EN VIVO · PABLO VALDÉS", margin + 10, margin + 20);
+      ctx.fillText("● TELEMETRÍA EN VIVO · PABLO VALDÉS", margin + 10, margin + 22);
 
       ctx.fillStyle = "#f2cf6b"; // Dorado
+      const isPaused = !video || video.paused;
       ctx.fillText(
-        `STATUS: ${video.paused ? "PAUSADO" : "PROCESANDO 60 FPS"}`,
+        `STATUS: ${isPaused ? "PAUSADO" : "EN REPRODUCCIÓN · 60 FPS"}`,
         margin + 10,
-        margin + 36
+        margin + 40
       );
 
       // Tiempo HUD Superior Derecho
       ctx.textAlign = "right";
-      const curMin = Math.floor(video.currentTime / 60)
+      const curTime = video ? video.currentTime : 0;
+      const curMin = Math.floor(curTime / 60)
         .toString()
         .padStart(2, "0");
-      const curSec = Math.floor(video.currentTime % 60)
+      const curSec = Math.floor(curTime % 60)
         .toString()
         .padStart(2, "0");
       ctx.fillStyle = "#f5dade";
-      ctx.fillText(`TIMECODE: 00:${curMin}:${curSec}`, width - margin - 10, margin + 20);
+      ctx.fillText(`TIMECODE: 00:${curMin}:${curSec}`, width - margin - 10, margin + 22);
       ctx.fillStyle = "#c29da5";
-      ctx.fillText("DEDUPLICACIÓN: 100% ACTIVA", width - margin - 10, margin + 36);
+      ctx.fillText("DEDUPLICACIÓN: 100% ACTIVA", width - margin - 10, margin + 40);
 
-      // 6. Visualizador de Espectro de Audio / Voz IA en Canvas
-      if (voiceSpeaking || (!video.paused && !video.muted)) {
-        const barCount = 28;
+      // 4. Visualizador de Espectro de Audio / Voz IA en Canvas
+      if (voiceSpeaking || (video && !video.paused && !video.muted)) {
+        const barCount = 30;
         const barWidth = 3;
         const barSpacing = 4;
         const startX = width / 2 - (barCount * (barWidth + barSpacing)) / 2;
         const baseY = height - 26;
 
         ctx.fillStyle = "#cba135";
-        const now = Date.now() / 150;
+        const now = Date.now() / 140;
         for (let i = 0; i < barCount; i++) {
           const barHeight = Math.max(
             4,
@@ -450,7 +455,7 @@ export function ModernCanvasVideoPlayer() {
         ctx.font = "bold 10px monospace";
         ctx.textAlign = "center";
         ctx.fillStyle = "#ff6b85";
-        ctx.fillText("VOZ GUÍA IA ACTIVA", width / 2, baseY + 12);
+        ctx.fillText("● AUDIO TRANSMISIÓN EN VIVO", width / 2, baseY + 12);
       }
     }
 
@@ -666,72 +671,110 @@ export function ModernCanvasVideoPlayer() {
         
         {/* Columna Izquierda: Canvas Renderer + Controles (7 cols) */}
         <div className="lg:col-span-7 space-y-4">
-          <div className="relative rounded-3xl overflow-hidden border border-[#b82d46]/70 bg-[#362f37] shadow-[0_20px_50px_rgba(0,0,0,0.8)] group">
+          <div className="relative rounded-3xl overflow-hidden border-2 border-[#b82d46] bg-[#07080c] shadow-[0_20px_50px_rgba(0,0,0,0.9)] group aspect-video">
             
-            {/* Elemento de Video Oculto (Fuente de Datos para el Canvas) */}
+            {/* 1. Elemento de Video Nativo Hardware-Accelerated (100% visible, sin proxies) */}
             <video
               ref={videoRef}
               src={activeTrack.videoSrc}
               playsInline
-              muted={isMuted}
               loop
-              preload="metadata"
-              className="hidden"
-            />
-
-            {/* HTML5 Canvas Renderizador Moderno */}
-            <canvas
-              ref={canvasRef}
-              width={1280}
-              height={720}
+              preload="auto"
+              muted={isMuted}
               onClick={togglePlay}
-              className="w-full aspect-video block cursor-pointer object-cover transition-transform duration-300"
+              className="w-full h-full object-cover block cursor-pointer bg-black"
             />
 
-            {/* Botón Flotante Superior: Escuchar Guía Narrada por Voz IA */}
-            <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (voiceSpeaking) {
-                    stopVoice();
-                  } else {
-                    handleDirectSpeak();
-                  }
-                }}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold font-mono transition-all flex items-center gap-2 cursor-pointer shadow-lg ${
-                  voiceSpeaking
-                    ? "bg-[#721828] text-[#f2cf6b] border border-[#cba135] shadow-[0_0_20px_rgba(203,161,53,0.5)] animate-pulse"
-                    : "bg-[#721828]/90 hover:bg-[#9e233b] text-white border border-[#f2cf6b]/70 hover:scale-105 active:scale-95"
-                }`}
-                title="Haz clic para escuchar la voz IA guiando las soluciones y resultados del dashboard"
-              >
-                {voiceSpeaking ? (
-                  <>
-                    <Mic size={15} className="text-[#f2cf6b]" />
-                    <span>🔊 IA Hablando en Vivo (Clic para Silenciar)</span>
-                  </>
-                ) : (
-                  <>
-                    <Volume2 size={15} className="text-[#f2cf6b] animate-bounce" />
-                    <span>🔊 Escuchar Explicación Guiada por Voz IA</span>
-                  </>
-                )}
-              </button>
-            </div>
+            {/* 2. Capa HUD Cyberpunk en Canvas Transparente */}
+            {hudMode === "cyber" && (
+              <canvas
+                ref={canvasRef}
+                width={1280}
+                height={720}
+                onClick={togglePlay}
+                className="absolute inset-0 w-full h-full pointer-events-none object-cover"
+              />
+            )}
 
-            {/* Botón Central Play cuando está pausado */}
+            {/* 3. Botón Central Play cuando está pausado */}
             {!isPlaying && (
               <div
                 onClick={togglePlay}
-                className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px] cursor-pointer group-hover:bg-black/20 transition-all"
+                className="absolute inset-0 flex flex-col items-center justify-center bg-black/55 backdrop-blur-[2px] cursor-pointer group-hover:bg-black/35 transition-all z-10"
               >
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#721828] to-[#cba135] flex items-center justify-center text-white shadow-[0_0_30px_rgba(184,45,70,0.8)] border border-[#f2cf6b] transform group-hover:scale-110 transition-transform">
+                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#721828] via-[#9e233b] to-[#cba135] flex items-center justify-center text-white shadow-[0_0_35px_rgba(184,45,70,0.9)] border-2 border-[#f2cf6b] transform group-hover:scale-110 transition-transform">
                   <Play size={36} className="ml-1 text-white fill-white" />
                 </div>
+                <span className="mt-3 px-3.5 py-1 rounded-full bg-black/85 border border-[#cba135]/70 text-xs font-mono font-bold text-[#f2cf6b] tracking-wider uppercase shadow-lg">
+                  ▶ Iniciar Demostración en Video con Audio
+                </span>
               </div>
             )}
+
+            {/* 4. Barra Superior Flotante con Estado de Audio y Voz */}
+            <div className="absolute top-4 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+              <div className="flex items-center gap-2 pointer-events-auto">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (voiceSpeaking) {
+                      stopVoice();
+                    } else {
+                      handleDirectSpeak();
+                    }
+                  }}
+                  className={`px-3.5 py-2 rounded-xl text-xs font-bold font-mono transition-all flex items-center gap-2 cursor-pointer shadow-lg ${
+                    voiceSpeaking
+                      ? "bg-[#721828] text-[#f2cf6b] border border-[#cba135] shadow-[0_0_20px_rgba(203,161,53,0.5)] animate-pulse"
+                      : "bg-[#721828]/95 hover:bg-[#9e233b] text-white border border-[#f2cf6b]/70 hover:scale-105 active:scale-95"
+                  }`}
+                  title="Haz clic para escuchar la voz IA guiando las soluciones y resultados del dashboard"
+                >
+                  {voiceSpeaking ? (
+                    <>
+                      <Mic size={15} className="text-[#f2cf6b]" />
+                      <span>🔊 Voz IA Activa (Clic para Silenciar)</span>
+                    </>
+                  ) : (
+                    <>
+                      <Volume2 size={15} className="text-[#f2cf6b] animate-bounce" />
+                      <span>🔊 Escuchar Guía por Voz IA</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleMute();
+                  }}
+                  className={`px-3 py-2 rounded-xl text-xs font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer shadow-lg ${
+                    !isMuted
+                      ? "bg-emerald-800/90 text-white border border-emerald-400"
+                      : "bg-[#362f37]/90 text-[#f2cf6b] border border-[#615362] hover:border-[#f2cf6b]"
+                  }`}
+                  title={isMuted ? "Clic para Activar Audio del Video" : "Audio del Video Activo"}
+                >
+                  {!isMuted ? <Volume2 size={14} /> : <VolumeX size={14} />}
+                  <span>{isMuted ? "Audio Video: Silenciado" : "Audio Video: Activo"}</span>
+                </button>
+              </div>
+
+              {/* Enlace directo a abrir video en pestaña */}
+              <a
+                href={activeTrack.videoSrc}
+                target="_blank"
+                rel="noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="pointer-events-auto px-2.5 py-1.5 rounded-lg text-[11px] font-mono bg-black/60 hover:bg-black/80 text-[#c29da5] hover:text-white border border-[#615362] transition flex items-center gap-1"
+                title="Abrir video directamente en pestaña nueva"
+              >
+                <span>MP4 Directo</span>
+                <Maximize2 size={11} />
+              </a>
+            </div>
 
             {/* Barra de Progreso Interactiva en Canvas */}
             <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#07080c] via-[#07080c]/90 to-transparent space-y-2">
@@ -784,8 +827,27 @@ export function ModernCanvasVideoPlayer() {
                     className="p-2 rounded-xl bg-[#423943] hover:bg-[#4c424e] border border-[#615362] text-[#c29da5] hover:text-[#f5dade] transition cursor-pointer"
                     title={isMuted ? "Activar Audio Video" : "Silenciar Video"}
                   >
-                    {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+                    {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} className="text-[#f2cf6b]" />}
                   </button>
+
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    value={isMuted ? 0 : volume}
+                    onChange={(e) => {
+                      const newVol = parseFloat(e.target.value);
+                      setVolume(newVol);
+                      if (videoRef.current) {
+                        videoRef.current.volume = newVol;
+                        videoRef.current.muted = newVol === 0;
+                        setIsMuted(newVol === 0);
+                      }
+                    }}
+                    className="w-16 h-1.5 accent-[#cba135] bg-[#281a24] rounded-lg cursor-pointer"
+                    title="Control de Volumen del Video"
+                  />
 
                   <span className="text-[11px] text-[#c29da5]">
                     {Math.floor(currentTime / 60)}:

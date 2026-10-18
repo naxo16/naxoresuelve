@@ -45,6 +45,5 @@ context.md
 *maestro*.md
 *MAESTRO*.md
 ESPECIFICACION_MAESTRA*.md
-# Media binaries
-*.mp4
-*.mov
+# Media binaries allowed for demos
+!apps/web/public/videos/*.mp4
