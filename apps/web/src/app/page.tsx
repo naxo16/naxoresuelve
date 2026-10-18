@@ -25,6 +25,10 @@ import {
   Menu,
   X,
   FileCheck2,
+  Download,
+  Mail,
+  Smartphone,
+  CalendarCheck,
 } from "lucide-react";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { CaseStudyModal, type CaseStudyData } from "@/components/CaseStudyModal";
@@ -37,83 +41,90 @@ import { AuditModal } from "@/components/AuditModal";
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 const LINKEDIN_URL = "https://www.linkedin.com/in/pablo-vald%C3%A9s-7a4445430/";
+const PORTFOLIO_URL = "https://renkaidev-web.renkaidev.workers.dev/";
+const CV_URL = "https://renkaidev-web.renkaidev.workers.dev/cv-pablo-valdes.pdf";
+const GITHUB_URL = "https://github.com/naxo16";
+const EMAIL_DIRECT = "pablovaldescontacto@gmail.com";
 
-// Casos de Estudio con enfoque en "Testing Rudo"
+// Casos de Estudio Reales de Pablo Valdés con enfoque en "Testing Rudo"
 const CASE_STUDIES: CaseStudyData[] = [
   {
-    id: "ingestion-dedup",
-    title: "Ingestión Masiva & Deduplicación Financiera en Tiempo Real",
-    clientType: "Empresa de Servicios Logísticos & Facturación",
+    id: "fiscalis",
+    title: "Fiscalis: Digitalización Municipal & Recolección en Terreno",
+    clientType: "Sector Público / Inspección & Seguridad Municipal",
     problem:
-      "Recibían más de 60.000 filas diarias en múltiples planillas Excel. La mezcla de sucursales generaba más de un 14% de registros duplicados, inconsistencias en cobros y una pérdida de 5 horas diarias de personal cotejando información.",
+      "La operativa municipal en terreno sufría de grave redundancia operativa y desincronización de datos. Los inspectores anotaban la misma infracción en formularios de papel, WhatsApp y bitácoras físicas, demorando hasta 72 horas en consolidar las actas en el juzgado, con caligrafía ilegible y actas duplicadas.",
     solution:
-      "Pipeline asíncrono en FastAPI + PostgreSQL con algoritmos de hashing criptográfico para deduplicación instantánea y normalización relacional en milisegundos.",
+      "Arquitectura offline-first integral con API asíncrona en FastAPI + PostgreSQL en Tercera Forma Normal (3FN), validación estricta en frontera con Pydantic v2, autenticación RFC 6238 MFA TOTP y cliente móvil Flutter con georreferenciación GPS automática, captura de fotos y cola de sincronización local.",
     rudaTest: [
       {
-        name: "Stress & Concurrency Test",
-        description: "Envío simultáneo de 10 lotes de 10.000 filas con concurrencia máxima en 8 hilos.",
-        metrics: "100.000 registros procesados en 4.2 segundos (consumo pico RAM: 180MB).",
+        name: "Stress & Resiliencia Offline-to-Online",
+        description: "Simulación de ráfaga de 5.000 actas sincronizadas simultáneamente desde terreno tras reconexión a red celular.",
+        metrics: "Tiempo de captura reducido de ~12 min a <90 segundos. 0 actas perdidas o duplicadas en la cola local.",
         outcome: "100% APROBADO",
       },
       {
-        name: "Fuzzing & Inyección de Datos Sucios",
-        description: "Inyección de caracteres nulos, formatos de fecha inválidos, emails rotos y duplicados idénticos/parciales.",
-        metrics: "0 registros duplicados insertados. 100% de errores capturados en log de auditoría con rollback atómico.",
+        name: "Integridad Relacional 3FN & Inyección Fuzzing",
+        description: "Inyección de coordenadas GPS nulas, patentes PPU malformadas y payloads corruptos en frontera.",
+        metrics: "Cero corrupción de tablas relacionales. Rollback atómico verificado y validación estricta Pydantic.",
         outcome: "100% APROBADO",
       },
     ],
-    verdict: "Resistió sobrecarga 4x del volumen proyectado sin degradación de memoria ni colisión de datos.",
-    technologies: ["Python", "FastAPI", "PostgreSQL", "Docker", "Asyncpg", "Pytest"],
+    verdict: "Transformó un flujo analógico lento de 72 horas en un procedimiento digital instantáneo con trazabilidad legal inmutable.",
+    technologies: ["FastAPI", "PostgreSQL (3FN)", "Python", "Flutter", "Docker", "MFA TOTP", "GitHub Actions"],
+    liveUrl: "https://renkaidev-web.renkaidev.workers.dev/casos/fiscalis",
   },
   {
-    id: "sql-opt",
-    title: "Reingeniería de Base de Datos & Fin a la Búsqueda Lenta",
-    clientType: "Plataforma de Inventarios y Distribución B2B",
+    id: "del-valle",
+    title: "Del Valle Construcciones: Plataforma Comercial & Captación",
+    clientType: "Industria de la Construcción e Inmobiliaria",
     problem:
-      "Consultas SQL que demoraban hasta 48 segundos en responder. El personal colapsaba esperando datos para despachos y la información histórica corría riesgo de corrupción por falta de integridad transaccional.",
+      "Falta de presencia digital estructurada, cotizaciones perdidas en cadenas de correos y chats informales sin seguimiento comercial y nula trazabilidad del retorno sobre la inversión en publicidad.",
     solution:
-      "Rediseño del modelo relacional a 3NF, indexación compuesta, eliminación de cuellos de botella N+1 y motor de búsqueda indexada con soporte de autocompletado en 15ms.",
+      "Desarrollo de plataforma web corporativa y landing de alta conversión con motor de captura de leads integrado a base de datos relacional y alertas comerciales instantáneas.",
     rudaTest: [
       {
-        name: "Benchmark de Latencia SQL Extremo",
-        description: "Ejecución continua de 5.000 consultas complejas de agregación sobre 1.8 millones de registros.",
-        metrics: "Tiempo de respuesta promedio reducido de 48s a 140ms (99.7% de optimización).",
+        name: "Core Web Vitals & Carga Concurrente",
+        description: "Simulación de tráfico publicitario concurrente y análisis de tiempo de respuesta del servidor.",
+        metrics: "Puntuación de rendimiento 98/100, tiempo de carga inicial <1.2s y 100% de persistencia en captación.",
         outcome: "100% APROBADO",
       },
       {
-        name: "Simulación de Caída & Resiliencia ACID",
-        description: "Interrupción forzada del contenedor de base de datos a mitad de transacción de escritura masiva.",
-        metrics: "Cero corrupción de tablas. Reanudación en frío y consistencia verificada al 100%.",
+        name: "Validación Anti-Spam & Sanitización",
+        description: "Pruebas de inyección de bots y formularios automatizados con datos basura.",
+        metrics: "0 falsos positivos, captura limpia de datos corporativos y 100% de leads genuinos ingresados.",
         outcome: "100% APROBADO",
       },
     ],
-    verdict: "Aprobó la prueba de resiliencia ante cortes abruptos y cargas pesadas de lectura simultánea.",
-    technologies: ["PostgreSQL", "Index Tuning", "pg_stat_statements", "Python", "Redis Caching"],
+    verdict: "Habilitó la captación digital comercial inmediata estructurando el embudo de ventas de la empresa.",
+    technologies: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL", "Tailwind CSS", "Docker"],
+    liveUrl: "https://renkaidev-web.renkaidev.workers.dev/casos/del-valle-construcciones",
   },
   {
-    id: "saas-centralizado",
-    title: "SaaS a Medida: Centralización Operativa Llave en Mano",
-    clientType: "Consultora de Gestión y Operaciones Comerciales",
+    id: "agenda-automation",
+    title: "Intelligent Agenda Automation: Sincronización Directiva",
+    clientType: "Gestión Corporativa & Coordinación Directiva",
     problem:
-      "Información fragmentada en cadenas de correos, carpetas locales y WhatsApp. Desconocimiento de KPIs en tiempo real y costo inaccesible de comprar un ERP corporativo rígido.",
+      "Conflictos constantes de horarios entre múltiples ejecutivos, reuniones agendadas dos veces en el mismo bloque y horas de personal directivo perdidas coordinando disponibilidad manualmente.",
     solution:
-      "Desarrollo de plataforma SaaS moderna bajo esquema de arriendo mensual con dashboards en vivo, control de acceso por roles, backups automáticos cada 6 horas y panel de analítica ejecutiva.",
+      "Automatización de flujos de trabajo inteligentes para sincronización bidireccional de agendas con detección de colisiones, recordatorios automáticos y trazabilidad de asistencia.",
     rudaTest: [
       {
-        name: "Prueba E2E de Penetración & Roles",
-        description: "Intentos automatizados de escalamiento de privilegios horizontales y verticales sobre endpoints de reportes.",
-        metrics: "0 brechas de acceso. Tokens JWT validados con revocación instantánea.",
+        name: "Concurrencia & Detección de Colisiones",
+        description: "Intentos simultáneos de agendamiento en el mismo intervalo de microsegundo por múltiples usuarios.",
+        metrics: "Cero solapamiento de reuniones. Algoritmo de locking transaccional que resolvió colisiones en <50ms.",
         outcome: "100% APROBADO",
       },
       {
-        name: "Continuous Integration Testing Riguroso",
-        description: "Suite de 84 pruebas unitarias, de integración y rendimiento ejecutadas en pipeline antes de cada despliegue.",
-        metrics: "Cobertura de código 94.8% en capa de lógica de negocio y cálculo financiero.",
+        name: "Resiliencia ante Cortes de Webhook",
+        description: "Simulación de fallas de conexión con APIs de calendario externas.",
+        metrics: "Cola de reintentos con retroceso exponencial. Cero eventos perdidos y sincronización exacta al reconectar.",
         outcome: "100% APROBADO",
       },
     ],
-    verdict: "Software validado para operación ininterrumpida con SLA 99.9% y costo mensual predecible.",
-    technologies: ["Next.js", "TypeScript", "Tailwind CSS", "FastAPI", "PostgreSQL", "Docker"],
+    verdict: "Eliminó por completo la fricción de coordinación y la duplicidad en agendas de alta dirección.",
+    technologies: ["Python", "FastAPI", "Webhooks", "PostgreSQL", "Worker Queues", "Pytest"],
+    liveUrl: "https://renkaidev-web.renkaidev.workers.dev/casos/intelligent-agenda-automation",
   },
 ];
 
@@ -176,7 +187,7 @@ const SERVICES_DATA = [
     problem:
       "¿Consultas lentas que tardan minutos en cargar, bases de datos mal diseñadas que cruzan datos erróneos y bloquean tus sistemas?",
     solution:
-      "Modelado relacional profesional, normalización, optimización de índices y afinamiento de consultas PostgreSQL para exprimir la máxima velocidad del hardware.",
+      "Modelado relacional profesional, normalización (3FN), optimización de índices y afinamiento de consultas PostgreSQL para exprimir la máxima velocidad del hardware.",
     badge: "PostgreSQL Especialista",
   },
   {
@@ -267,7 +278,7 @@ export default function Home() {
         {/* Banner de Filosofía de Testing Rudo */}
         <TestingRudoBanner />
 
-        {/* Sección de Casos de Estudio & Telemetría */}
+        {/* Sección de Casos de Estudio Reales & Telemetría */}
         <CaseStudiesSection onSelectCase={setSelectedCase} />
 
         {/* Servicios Orientados a Problemas Reales */}
@@ -276,7 +287,7 @@ export default function Home() {
         {/* El Manifiesto de Pruebas Rudas */}
         <TestingPhilosophySection />
 
-        {/* Portafolio Directo & Credenciales */}
+        {/* Portafolio Directo & Credenciales de Pablo Valdés */}
         <PortfolioSection onSelectCase={setSelectedCase} />
 
         {/* Formulario de Contacto / Cotización */}
@@ -315,25 +326,25 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
     <header className="sticky top-0 z-40 bg-[#0d0f14]/90 backdrop-blur-md border-b border-[#272f3f]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3.5">
         {/* Brand */}
-        <a href="#" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#721828] to-[#cba135] flex items-center justify-center font-bold text-white shadow-md border border-[#cba135]/40 group-hover:scale-105 transition-transform">
-            NR
+        <a href="#" className="flex items-center gap-2.5 group">
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#721828] to-[#cba135] flex items-center justify-center font-bold text-white shadow-md border border-[#cba135]/40 group-hover:scale-105 transition-transform">
+            PV
           </div>
           <div className="flex flex-col">
             <span className="text-base font-bold tracking-tight text-white flex items-center gap-1.5">
-              naxoresuelve
+              Pablo Valdés
               <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#721828]/60 text-[#f2cf6b] border border-[#721828]">
-                v2.0
+                naxoresuelve
               </span>
             </span>
             <span className="text-[11px] text-slate-400 font-medium">
-              Pablo Valdés — Software & Datos
+              Analista Programador · Backend & Arquitectura
             </span>
           </div>
         </a>
 
         {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-7 text-xs font-semibold uppercase tracking-wider text-slate-300">
+        <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold uppercase tracking-wider text-slate-300">
           <a
             href="#soluciones"
             className="hover:text-[#f2cf6b] transition-colors"
@@ -353,13 +364,16 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
             href="#filosofia-testing"
             className="hover:text-[#f2cf6b] transition-colors"
           >
-            Metodología de Pruebas
+            Metodología
           </a>
           <a
-            href="#portafolio"
-            className="hover:text-[#f2cf6b] transition-colors"
+            href={PORTFOLIO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-[#f2cf6b] transition-colors flex items-center gap-1"
           >
-            Portafolio
+            <span>Portafolio renkaidev</span>
+            <ExternalLink size={12} />
           </a>
           <a
             href={LINKEDIN_URL}
@@ -374,6 +388,15 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
 
         {/* Actions */}
         <div className="hidden sm:flex items-center gap-3">
+          <a
+            href={CV_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-[#141821] hover:bg-[#1b202c] border border-[#272f3f] flex items-center gap-1.5 transition"
+          >
+            <Download size={13} className="text-[#f2cf6b]" />
+            <span>Descargar CV</span>
+          </a>
           <button
             onClick={onOpenAudit}
             className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#721828] to-[#9e233b] hover:from-[#9e233b] hover:to-[#cba135] border border-[#cba135]/30 shadow-md hover:shadow-[0_0_15px_rgba(203,161,53,0.3)] transition-all cursor-pointer"
@@ -417,19 +440,30 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
             Metodología de Pruebas
           </a>
           <a
-            href="#portafolio"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-slate-200 hover:text-[#f2cf6b]"
+            href={PORTFOLIO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block text-sm font-semibold text-[#f2cf6b] flex items-center gap-1"
           >
-            Portafolio
+            <span>Ver Portafolio renkaidev</span>
+            <ExternalLink size={13} />
+          </a>
+          <a
+            href={CV_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block text-sm font-semibold text-slate-300 flex items-center gap-1"
+          >
+            <span>Descargar CV Oficial</span>
+            <Download size={13} />
           </a>
           <a
             href={LINKEDIN_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-sm font-semibold text-[#f2cf6b] flex items-center gap-1"
+            className="block text-sm font-semibold text-slate-300 flex items-center gap-1"
           >
-            <span>Ver Perfil LinkedIn</span>
+            <span>Perfil LinkedIn</span>
             <ExternalLink size={13} />
           </a>
           <button
@@ -459,25 +493,26 @@ function HeroSection({ onOpenAudit }: { onOpenAudit: () => void }) {
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#141821] border border-[#cba135]/40 shadow-inner">
           <Terminal size={14} className="text-[#f2cf6b]" />
           <span className="text-xs font-mono font-medium text-slate-300">
-            Pablo Valdés · Analista Programador & Consultor de Software
+            Pablo Valdés · Analista Programador & Desarrollador Backend
           </span>
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
         </div>
 
         {/* Título Principal con Efecto Glitch y Colores Vino/Dorado */}
         <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-tight">
-          Elimino la duplicidad de datos, el caos en planillas y los sistemas lentos con{" "}
+          Cero papel. Cero duplicidad. Resuelvo problemas críticos con{" "}
           <span className="glitch-hover inline-block gold-gradient-text cursor-default">
-            ingeniería de software rigurosa
+            arquitectura de software rigurosa
           </span>
         </h1>
 
         {/* Subtítulo de propuesta de valor */}
         <p className="text-base sm:text-lg text-slate-300 max-w-3xl mx-auto leading-relaxed font-normal">
-          Desde automatizaciones masivas en Excel y procesamiento de archivos en streaming, hasta
-          arquitectura de bases de datos de alta velocidad, SaaS en arriendo y campañas digitales.{" "}
+          Especializado en Python, FastAPI y PostgreSQL. Desde automatizaciones masivas en terreno
+          como <strong>Fiscalis</strong> y plataformas de captación comercial, hasta erradicación de
+          duplicidad en bases de datos y SaaS en arriendo.{" "}
           <span className="text-white font-semibold underline decoration-[#cba135] underline-offset-4">
-            No considero un sistema listo si no supera pruebas rudas de estrés y consistencia.
+            No es un caso de éxito si no aprueba el testing riguroso.
           </span>
         </p>
 
@@ -488,7 +523,7 @@ function HeroSection({ onOpenAudit }: { onOpenAudit: () => void }) {
             className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#721828] hover:from-[#9e233b] hover:to-[#cba135] border border-[#cba135]/50 shadow-[0_4px_25px_rgba(114,24,40,0.6)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <FlaskConical size={18} className="text-[#f2cf6b]" />
-            <span>Ver Casos de Estudio (Pruebas Rudas)</span>
+            <span>Ver Casos de Estudio Reales (Testing Rudo)</span>
           </a>
 
           <button
@@ -496,27 +531,27 @@ function HeroSection({ onOpenAudit }: { onOpenAudit: () => void }) {
             className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-bold text-sm text-slate-200 hover:text-white bg-[#141821] hover:bg-[#1b202c] border border-[#272f3f] hover:border-[#cba135]/60 transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <Sparkles size={18} className="text-[#cba135]" />
-            <span>Diagnóstico Rápido de tu Problema</span>
+            <span>Diagnóstico Rápido de tu Caso</span>
           </button>
         </div>
 
         {/* Métricas / Badges de Confiabilidad */}
         <div className="pt-10 grid grid-cols-2 md:grid-cols-4 gap-3 text-left">
           <div className="bg-[#141821]/80 border border-[#272f3f] rounded-xl p-3.5 backdrop-blur">
-            <div className="text-xl font-mono font-bold text-[#f2cf6b]">0%</div>
+            <div className="text-xl font-mono font-bold text-[#f2cf6b]">72h → &lt;90s</div>
+            <div className="text-xs text-slate-400">Reducción operativa en terreno (Fiscalis)</div>
+          </div>
+          <div className="bg-[#141821]/80 border border-[#272f3f] rounded-xl p-3.5 backdrop-blur">
+            <div className="text-xl font-mono font-bold text-white">0%</div>
             <div className="text-xs text-slate-400">Tolerancia a duplicidad de datos</div>
           </div>
           <div className="bg-[#141821]/80 border border-[#272f3f] rounded-xl p-3.5 backdrop-blur">
-            <div className="text-xl font-mono font-bold text-white">&gt; 100k</div>
-            <div className="text-xs text-slate-400">Filas procesadas por lote</div>
+            <div className="text-xl font-mono font-bold text-[#f2cf6b]">3FN / ACID</div>
+            <div className="text-xs text-slate-400">Integridad relacional estricta</div>
           </div>
           <div className="bg-[#141821]/80 border border-[#272f3f] rounded-xl p-3.5 backdrop-blur">
-            <div className="text-xl font-mono font-bold text-[#f2cf6b]">&lt; 200ms</div>
-            <div className="text-xs text-slate-400">Latencia en queries optimizadas</div>
-          </div>
-          <div className="bg-[#141821]/80 border border-[#272f3f] rounded-xl p-3.5 backdrop-blur">
-            <div className="text-xl font-mono font-bold text-white">100% ACID</div>
-            <div className="text-xs text-slate-400">Persistencia y cero pérdida</div>
+            <div className="text-xl font-mono font-bold text-white">100% Pass</div>
+            <div className="text-xs text-slate-400">Testing riguroso en CI/CD</div>
           </div>
         </div>
       </div>
@@ -571,13 +606,13 @@ function CaseStudiesSection({
       <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#721828]/40 border border-[#cba135]/30 text-xs font-bold text-[#f2cf6b] uppercase tracking-wider">
           <FlaskConical size={13} />
-          Casos de Estudio con Evidencia de Pruebas
+          Casos de Estudio Reales de Pablo Valdés
         </div>
         <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
           Sistemas sometidos a pruebas rudas antes de tocar producción
         </h2>
         <p className="text-sm sm:text-base text-slate-300">
-          Haz clic en cualquier caso para abrir el expediente técnico, métricas de estrés y telemetría de rendimiento.
+          Haz clic en cualquier caso para abrir el expediente técnico, métricas de estrés y enlace directo a la documentación en vivo.
         </p>
       </div>
 
@@ -591,7 +626,7 @@ function CaseStudiesSection({
             {/* Header Card */}
             <div>
               <div className="flex items-center justify-between text-xs text-slate-400 mb-3">
-                <span className="font-mono text-[#f2cf6b]">EXPEDIENTE #{c.id.toUpperCase()}</span>
+                <span className="font-mono text-[#f2cf6b]">PROYECTO #{c.id.toUpperCase()}</span>
                 <span className="px-2 py-0.5 rounded bg-[#721828]/50 text-white text-[10px] font-bold">
                   TESTING CERTIFICADO
                 </span>
@@ -599,7 +634,7 @@ function CaseStudiesSection({
               <h3 className="text-lg font-bold text-white group-hover:text-[#f2cf6b] transition-colors mb-2">
                 {c.title}
               </h3>
-              <p className="text-xs text-slate-400 mb-4 line-clamp-2">
+              <p className="text-xs text-slate-400 mb-4 line-clamp-3 leading-relaxed">
                 {c.problem}
               </p>
 
@@ -618,7 +653,7 @@ function CaseStudiesSection({
             {/* Footer Card */}
             <div className="pt-3 border-t border-[#272f3f] flex items-center justify-between">
               <span className="text-xs font-semibold text-slate-300 group-hover:text-white flex items-center gap-1">
-                Ver expediente completo
+                Ver expediente y demo
                 <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </span>
               <span className="text-xs text-slate-400 font-mono">
@@ -792,31 +827,51 @@ function PortfolioSection({
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
           <div className="space-y-4 max-w-2xl">
             <span className="text-xs font-mono uppercase tracking-widest text-[#f2cf6b] font-bold">
-              Portafolio Profesional & Trayectoria
+              Portafolio Oficial & Trayectoria
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-              Pablo Valdés — Analista Programador & Consultor
+              Pablo Valdés — Desarrollador Backend & Analista Programador
             </h2>
             <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-              Especialista en resolver problemas complejos de arquitectura, procesamiento masivo de datos y rescate de sistemas críticos. Puedes revisar mi perfil profesional verificado en LinkedIn o profundizar directamente en los casos de estudio certificados.
+              Especializado en Python, FastAPI y PostgreSQL. Resuelvo problemas de lógica, persistencia y arquitectura limpia con un enfoque analítico riguroso. Puedes explorar mi portafolio completo en renkaidev, revisar el código en GitHub o descargar mi CV oficial.
             </p>
-            <div className="flex flex-wrap gap-4 pt-2">
+            <div className="flex flex-wrap gap-3 pt-2">
+              <a
+                href={PORTFOLIO_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#721828] to-[#9e233b] hover:from-[#9e233b] hover:to-[#cba135] transition-all flex items-center gap-2 shadow-md border border-[#cba135]/30"
+              >
+                <span>Explorar renkaidev.workers.dev</span>
+                <ExternalLink size={14} />
+              </a>
+              <a
+                href={CV_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-slate-200 hover:text-white bg-[#141821] hover:bg-[#1b202c] border border-[#272f3f] transition-colors flex items-center gap-2"
+              >
+                <Download size={14} className="text-[#f2cf6b]" />
+                <span>Descargar CV</span>
+              </a>
               <a
                 href={LINKEDIN_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-[#0A66C2] hover:bg-[#004182] transition-colors flex items-center gap-2 shadow-md"
+                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-[#0A66C2] hover:bg-[#004182] transition-colors flex items-center gap-2 shadow-md"
               >
-                <span>Ver Perfil LinkedIn</span>
+                <span>LinkedIn</span>
                 <ExternalLink size={14} />
               </a>
-              <button
-                onClick={() => onSelectCase(CASE_STUDIES[0])}
-                className="px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-slate-200 hover:text-white bg-[#141821] hover:bg-[#721828] border border-[#cba135]/40 transition-colors flex items-center gap-2 cursor-pointer"
+              <a
+                href={GITHUB_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-slate-300 hover:text-white bg-[#141821] border border-[#272f3f] transition-colors flex items-center gap-2"
               >
-                <FileCheck2 size={14} className="text-[#f2cf6b]" />
-                <span>Explorar Caso #1 (Carga Masiva)</span>
-              </button>
+                <GithubIcon className="w-3.5 h-3.5" />
+                <span>GitHub (naxo16)</span>
+              </a>
             </div>
           </div>
 
@@ -830,16 +885,27 @@ function PortfolioSection({
               </span>
             </div>
             <div className="flex items-center justify-between pb-3 border-b border-[#272f3f]">
-              <span className="text-slate-400">Especialidad:</span>
-              <span className="text-[#f2cf6b]">Bases de Datos & Python</span>
+              <span className="text-slate-400">Core Stack:</span>
+              <span className="text-[#f2cf6b]">FastAPI · Python · PostgreSQL</span>
             </div>
             <div className="flex items-center justify-between pb-3 border-b border-[#272f3f]">
-              <span className="text-slate-400">Enfoque:</span>
-              <span className="text-white">Cero Duplicidad / Testing</span>
+              <span className="text-slate-400">Proyecto Insignia:</span>
+              <button
+                onClick={() => onSelectCase(CASE_STUDIES[0])}
+                className="text-white hover:text-[#f2cf6b] underline cursor-pointer"
+              >
+                Fiscalis (MVP Terreno)
+              </button>
+            </div>
+            <div className="flex items-center justify-between pb-3 border-b border-[#272f3f]">
+              <span className="text-slate-400">Contacto Directo:</span>
+              <a href={`mailto:${EMAIL_DIRECT}`} className="text-slate-300 hover:text-[#f2cf6b]">
+                {EMAIL_DIRECT}
+              </a>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-slate-400">Ubicación:</span>
-              <span className="text-slate-200">Chile (Remoto / Global)</span>
+              <span className="text-slate-200">Chile (Remoto / Presencial)</span>
             </div>
           </div>
         </div>
@@ -929,10 +995,10 @@ function ContactSection({
             </div>
           </div>
 
-          <div className="pt-4">
+          <div className="pt-4 flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => onOpenAudit("duplicidad")}
-              className="text-xs font-bold uppercase tracking-wider text-[#f2cf6b] hover:text-white underline underline-offset-4 cursor-pointer"
+              className="text-xs font-bold uppercase tracking-wider text-[#f2cf6b] hover:text-white underline underline-offset-4 cursor-pointer text-left"
             >
               ¿Prefieres el asistente de diagnóstico rápido? Haz clic aquí.
             </button>
@@ -1068,13 +1134,31 @@ function Footer() {
     <footer className="border-t border-[#272f3f] bg-[#090b0e] py-10 px-4 sm:px-6 text-slate-400 text-xs">
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
-          <span className="font-bold text-white tracking-tight">naxoresuelve</span> — Pablo Valdés · Analista Programador
+          <span className="font-bold text-white tracking-tight">Pablo Valdés</span> · naxoresuelve / renkaidev
           <div className="text-[11px] text-slate-400 mt-0.5">
-            Ingeniería de software, automatización masiva y testing riguroso.
+            Ingeniería de software, persistencia en PostgreSQL, FastAPI y testing riguroso.
           </div>
         </div>
 
-        <div className="flex items-center gap-6">
+        <div className="flex flex-wrap items-center gap-5">
+          <a
+            href={PORTFOLIO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-white transition flex items-center gap-1 text-[#f2cf6b]"
+          >
+            <span>renkaidev.workers.dev</span>
+            <ExternalLink size={11} />
+          </a>
+          <a
+            href={CV_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-white transition flex items-center gap-1"
+          >
+            <span>CV</span>
+            <Download size={11} />
+          </a>
           <a
             href={LINKEDIN_URL}
             target="_blank"
@@ -1082,19 +1166,31 @@ function Footer() {
             className="hover:text-white transition flex items-center gap-1"
           >
             <span>LinkedIn</span>
-            <ExternalLink size={12} />
+            <ExternalLink size={11} />
           </a>
-          <a href="#casos-de-estudio" className="hover:text-white transition">
-            Casos de Estudio
-          </a>
-          <a href="#soluciones" className="hover:text-white transition">
-            Soluciones
-          </a>
-          <a href="#contacto" className="hover:text-white transition">
-            Contacto
+          <a
+            href={GITHUB_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-white transition flex items-center gap-1"
+          >
+            <span>GitHub</span>
+            <GithubIcon className="w-3 h-3" />
           </a>
         </div>
       </div>
     </footer>
+  );
+}
+
+function GithubIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+      />
+    </svg>
   );
 }

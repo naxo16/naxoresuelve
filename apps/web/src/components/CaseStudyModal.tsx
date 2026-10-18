@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { X, CheckCircle2, ShieldAlert, Cpu, Database, Activity } from "lucide-react";
+import { X, CheckCircle2, ShieldAlert, Cpu, Activity, ExternalLink } from "lucide-react";
 
 export interface CaseStudyData {
   id: string;
@@ -17,6 +17,7 @@ export interface CaseStudyData {
   }[];
   verdict: string;
   technologies: string[];
+  liveUrl?: string;
 }
 
 interface CaseStudyModalProps {
@@ -151,7 +152,21 @@ export function CaseStudyModal({ caseStudy, onClose }: CaseStudyModalProps) {
         </div>
 
         {/* Footer */}
-        <div className="mt-6 pt-4 border-t border-[#272f3f] flex justify-end">
+        <div className="mt-6 pt-4 border-t border-[#272f3f] flex flex-wrap items-center justify-between gap-3">
+          {caseStudy.liveUrl ? (
+            <a
+              href={caseStudy.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-[#721828] to-[#9e233b] hover:from-[#9e233b] hover:to-[#cba135] border border-[#cba135]/40 rounded-xl transition flex items-center gap-1.5 shadow-md"
+            >
+              <span>Ver Caso Completo & Demo en renkaidev.workers.dev</span>
+              <ExternalLink size={13} />
+            </a>
+          ) : (
+            <span />
+          )}
+
           <button
             onClick={onClose}
             className="px-5 py-2 text-sm font-semibold text-slate-200 hover:text-white bg-[#1b202c] hover:bg-[#721828] border border-[#272f3f] rounded-xl transition-all"
