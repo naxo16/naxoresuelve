@@ -588,26 +588,26 @@ function HeroSection({ onOpenAudit }: { onOpenAudit: () => void }) {
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#423943] border border-[#b82d46]/50 shadow-inner">
             <Terminal size={14} className="text-[#f2cf6b]" />
             <span className="text-xs font-mono font-medium text-[#f5dade]">
-              Pablo Valdés · Soluciones de Software de Alto Impacto & Arquitectura Backend
+              Pablo Valdés · Sistemas con Código Limpio, Mantenible & Arquitectura Robusta
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           </div>
 
-          {/* Título Principal con Tipografía Rojo Vino y Efecto Glitch Orientado a Resultados */}
+          {/* Título Principal: Código Limpio, Mantenible, Robusto + Resultados */}
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[#f5dade] leading-tight drop-shadow-sm">
-            Automatización Robusta y Datos Consistentes:{" "}
+            Sistemas con código limpio y mantenible:{" "}
             <span className="glitch-hover inline-block vino-gradient-text cursor-default font-black">
-              Reducción del 100% de Errores Manuales y Alta Velocidad Operativa
+              Arquitectura robusta certificada con testing rudo para erradicar errores
             </span>
           </h1>
 
-          {/* Subtítulo de propuesta de valor con fondo de contraste y comunicación de resultados */}
+          {/* Subtítulo de propuesta de valor: Codeo Limpio + Tester QA + Resultados */}
           <div className="p-4 rounded-2xl bg-[#423943]/95 border border-[#615362] backdrop-blur-md">
             <p className="text-sm sm:text-base text-[#f5dade] leading-relaxed font-normal">
-              Desarrollador Backend & Analista Programador senior especializado en <strong className="text-[#ff6b85]">Python, FastAPI y PostgreSQL</strong>. Creador de{" "}
-              <strong className="text-[#f2cf6b]">Fiscalis</strong> (digitalización municipal en terreno que redujo tiempos de proceso de 72 horas a &lt;90 segundos). Reemplazo planillas descalzadas que colapsan por motores transaccionales con respuesta en milisegundos, recuperando más de 38 horas semanales de trabajo repetitivo y blindando la continuidad de tu negocio a 5 años plazo.{" "}
+              Desarrollador Backend & Analista Programador enfocado en ingeniería de software con <strong className="text-[#ff6b85]">código limpio, mantenible y robusto</strong> (Python, FastAPI y PostgreSQL). Creador de{" "}
+              <strong className="text-[#f2cf6b]">Fiscalis</strong> (digitalización municipal en terreno de 72h a &lt;90s). Diseñamos aplicaciones modulares donde cada función y endpoint es validado mediante <strong className="text-[#f2cf6b]">pruebas rudas de estrés, fuzzing y seguridad OWASP</strong> antes de tocar producción. ¿El resultado? Erradicación del 100% de duplicados en tus datos, respuestas en milisegundos y más de 38 horas semanales ahorradas en tareas manuales.{" "}
               <span className="text-[#ff6b85] font-bold underline decoration-[#cba135] underline-offset-4">
-                No es un caso de éxito si no aprueba pruebas de estrés extremas y no entrega resultados medibles.
+                No es un caso de éxito si no aprueba el testing riguroso.
               </span>
             </p>
           </div>
@@ -690,10 +690,10 @@ function TestingRudoBanner() {
           </div>
           <div>
             <span className="text-xs font-bold uppercase tracking-widest text-[#f2cf6b] block">
-              Gobernanza TI & Compromiso Operativo
+              Gobernanza de Calidad & Protocolo Tester QA
             </span>
             <p className="text-sm font-semibold text-[#f5dade]">
-              &ldquo;No es un caso de éxito si no reduce errores reales, recorta costos operativos y aprueba pruebas de estrés extremas.&rdquo;
+              &ldquo;Código limpio, mantenible y robusto en el desarrollo · Testing rudo e implacable en el aseguramiento de calidad (QA).&rdquo;
             </p>
           </div>
         </div>

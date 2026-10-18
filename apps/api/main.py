@@ -17,6 +17,9 @@ import hashlib
 import hmac
 import os
 import secrets
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from fastapi import FastAPI, HTTPException, Header, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -29,7 +32,7 @@ import jwt
 # ---------------------------------------------------------------------------
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://naxoresuelve:naxoresuelve@db:5432/naxoresuelve",
+    "postgresql://naxoresuelve_app:naxoresuelve_app_pass_2026@localhost:5432/naxoresuelve_db",
 )
 JWT_SECRET = os.getenv("JWT_SECRET", "naxoresuelve-crypto-secret-key-2026-chile")
 JWT_ALGORITHM = "HS256"

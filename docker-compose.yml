@@ -1,17 +1,17 @@
 services:
   db:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     environment:
       POSTGRES_USER: naxoresuelve
       POSTGRES_PASSWORD: naxoresuelve
-      POSTGRES_DB: naxoresuelve
+      POSTGRES_DB: naxoresuelve_db
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./infra/migrations:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "naxoresuelve"]
+      test: ["CMD", "pg_isready", "-U", "naxoresuelve", "-d", "naxoresuelve_db"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -26,7 +26,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql://naxoresuelve:naxoresuelve@db:5432/naxoresuelve
+      DATABASE_URL: postgresql://naxoresuelve:naxoresuelve@db:5432/naxoresuelve_db
 
 volumes:
   pgdata:
