@@ -32,7 +32,7 @@ import jwt
 # ---------------------------------------------------------------------------
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://naxoresuelve_app:naxoresuelve_app_pass_2026@localhost:5432/naxoresuelve_db",
+    "postgresql://Postgre:Postgre_naxo@localhost:5432/Naxo_85721",
 )
 JWT_SECRET = os.getenv("JWT_SECRET", "naxoresuelve-crypto-secret-key-2026-chile")
 JWT_ALGORITHM = "HS256"

@@ -48,6 +48,7 @@ import { AuditModal } from "@/components/AuditModal";
 import { ThreeArchitectureNode } from "@/components/ThreeArchitectureNode";
 import { FiscalisCarousel } from "@/components/FiscalisCarousel";
 import { ModernCanvasVideoPlayer } from "@/components/ModernCanvasVideoPlayer";
+import { ServicesQuickModal } from "@/components/ServicesQuickModal";
 
 /* ------------------------------------------------------------------ */
 /*  Constants & Data                                                  */
@@ -265,6 +266,7 @@ const SERVICES_DATA = [
 export default function Home() {
   const [selectedCase, setSelectedCase] = useState<CaseStudyData | null>(null);
   const [auditModalOpen, setAuditModalOpen] = useState(false);
+  const [servicesModalOpen, setServicesModalOpen] = useState(false);
   const [auditTopic, setAuditTopic] = useState("duplicidad");
 
   const openAudit = (topic = "duplicidad") => {
@@ -288,8 +290,11 @@ export default function Home() {
       <Navbar onOpenAudit={() => openAudit("general")} />
 
       <main className="relative z-10 flex-1 flex flex-col text-[#f5dade]">
-        {/* Hero Section con Three.js 3D Interactivo */}
-        <HeroSection onOpenAudit={() => openAudit("general")} />
+        {/* Hero Section con Three.js 3D Interactivo y Popup de Servicios */}
+        <HeroSection
+          onOpenAudit={() => openAudit("general")}
+          onOpenServices={() => setServicesModalOpen(true)}
+        />
 
         {/* Banner de Filosofía de Testing Rudo */}
         <TestingRudoBanner />
@@ -335,6 +340,12 @@ export default function Home() {
         isOpen={auditModalOpen}
         onClose={() => setAuditModalOpen(false)}
         preselectedTopic={auditTopic}
+      />
+
+      <ServicesQuickModal
+        isOpen={servicesModalOpen}
+        onClose={() => setServicesModalOpen(false)}
+        onOpenAudit={openAudit}
       />
     </>
   );
@@ -578,7 +589,13 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
 /*  Hero Section con Three.js 3D Interactivo                          */
 /* ------------------------------------------------------------------ */
 
-function HeroSection({ onOpenAudit }: { onOpenAudit: () => void }) {
+function HeroSection({
+  onOpenAudit,
+  onOpenServices,
+}: {
+  onOpenAudit: () => void;
+  onOpenServices: () => void;
+}) {
   return (
     <section className="relative pt-10 pb-16 sm:pt-16 sm:pb-24 px-4 sm:px-6 max-w-7xl mx-auto w-full">
       <div className="grid lg:grid-cols-12 gap-10 items-center">
@@ -601,34 +618,41 @@ function HeroSection({ onOpenAudit }: { onOpenAudit: () => void }) {
             </span>
           </h1>
 
-          {/* Subtítulo de propuesta de valor: Codeo Limpio + Tester QA + Resultados */}
+          {/* Subtítulo de propuesta de valor natural y directa solicitada */}
           <div className="p-4 rounded-2xl bg-[#423943]/95 border border-[#615362] backdrop-blur-md">
             <p className="text-sm sm:text-base text-[#f5dade] leading-relaxed font-normal">
-              Desarrollador Backend & Analista Programador enfocado en ingeniería de software con <strong className="text-[#ff6b85]">código limpio, mantenible y robusto</strong> (Python, FastAPI y PostgreSQL). Creador de{" "}
-              <strong className="text-[#f2cf6b]">Fiscalis</strong> (digitalización municipal en terreno de 72h a &lt;90s). Diseñamos aplicaciones modulares donde cada función y endpoint es validado mediante <strong className="text-[#f2cf6b]">pruebas rudas de estrés, fuzzing y seguridad OWASP</strong> antes de tocar producción. ¿El resultado? Erradicación del 100% de duplicados en tus datos, respuestas en milisegundos y más de 38 horas semanales ahorradas en tareas manuales.{" "}
-              <span className="text-[#ff6b85] font-bold underline decoration-[#cba135] underline-offset-4">
-                No es un caso de éxito si no aprueba el testing riguroso.
+              Reduce errores en tu negocio en simples pasos con soluciones de motor rápido, ahorra tiempo, perder dinero, y calentarte menos la cabeza con <strong className="text-[#ff6b85] font-black">naxo resuelve</strong>.{" "}
+              <span className="text-[#f2cf6b] font-medium block mt-1.5">
+                Automatizaciones en Python, bases de datos PostgreSQL optimizadas y aplicaciones en terreno (Fiscalis) para que tu empresa opere sin caídas ni descalces.
               </span>
             </p>
           </div>
 
-          {/* Botones de Acción Formal */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
-            <a
-              href="#fiscalis-spotlight"
-              className="px-6 py-3.5 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#721828] hover:from-[#9e233b] hover:to-[#cba135] border border-[#cba135]/50 shadow-[0_4px_25px_rgba(114,24,40,0.7)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
+          {/* Botones de Acción: Ver Servicios Pop-up + Diagnóstico + Fiscalis */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+            <button
+              onClick={onOpenServices}
+              className="px-6 py-3.5 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] hover:opacity-95 border border-[#cba135]/50 shadow-[0_4px_25px_rgba(114,24,40,0.7)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
-              <Flame size={18} className="text-[#f2cf6b]" />
-              <span>Conoce Fiscalis (Módulos & QA)</span>
-            </a>
+              <Sparkles size={18} className="text-[#f2cf6b]" />
+              <span>Ver Servicios & Soluciones (Pop-up)</span>
+            </button>
 
             <button
               onClick={onOpenAudit}
-              className="px-6 py-3.5 rounded-xl font-bold text-sm text-[#f5dade] hover:text-[#f2cf6b] bg-[#423943] hover:bg-[#4c424e] border border-[#615362] hover:border-[#b82d46]/70 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+              className="px-5 py-3.5 rounded-xl font-bold text-sm text-[#f5dade] hover:text-[#f2cf6b] bg-[#423943] hover:bg-[#4c424e] border border-[#615362] hover:border-[#b82d46]/70 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
             >
-              <Sparkles size={18} className="text-[#f2cf6b]" />
+              <Zap size={16} className="text-[#f2cf6b]" />
               <span>Diagnóstico Rápido de tu Caso</span>
             </button>
+
+            <a
+              href="#fiscalis-spotlight"
+              className="px-4 py-3.5 rounded-xl font-semibold text-xs text-[#c29da5] hover:text-[#f5dade] bg-[#2a242c] hover:bg-[#362f37] border border-[#615362] transition-colors flex items-center justify-center gap-1.5 cursor-pointer text-center"
+            >
+              <Flame size={14} className="text-[#cba135]" />
+              <span>Ver Fiscalis QA</span>
+            </a>
           </div>
 
           {/* Métricas / Badges de Confiabilidad */}
