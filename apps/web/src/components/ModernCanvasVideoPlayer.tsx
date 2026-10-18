@@ -532,27 +532,47 @@ export function ModernCanvasVideoPlayer() {
 
     if (videoRef.current) {
       videoRef.current.currentTime = 0;
-      videoRef.current.play().then(() => {
-        setIsPlaying(true);
-        if (isVoiceActive) {
-          speakText(VIDEO_TRACKS[index].chapters[0].speechText);
-        }
-      }).catch(() => {
-        setIsPlaying(false);
-      });
+      const p = videoRef.current.play();
+      if (p !== undefined) {
+        p.then(() => {
+          setIsPlaying(true);
+          if (isVoiceActive) {
+            speakText(VIDEO_TRACKS[index].chapters[0].speechText);
+          }
+        }).catch(() => {
+          if (videoRef.current) {
+            videoRef.current.muted = true;
+            setIsMuted(true);
+            videoRef.current.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+          }
+        });
+      }
     }
   };
 
   // Controles con activación de gesto de usuario directa
   const handleDirectSpeak = (customText?: string) => {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.resume();
+      try {
+        window.speechSynthesis.resume();
+      } catch {
+        // ignore
+      }
     }
     setIsVoiceActive(true);
     const textToSpeak = customText || currentSubtitle;
     speakText(textToSpeak);
     if (videoRef.current && videoRef.current.paused) {
-      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+      const p = videoRef.current.play();
+      if (p !== undefined) {
+        p.then(() => setIsPlaying(true)).catch(() => {
+          if (videoRef.current) {
+            videoRef.current.muted = true;
+            setIsMuted(true);
+            videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+          }
+        });
+      }
     }
   };
 
@@ -561,18 +581,33 @@ export function ModernCanvasVideoPlayer() {
     if (!video) return;
 
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.resume();
+      try {
+        window.speechSynthesis.resume();
+      } catch {
+        // ignore
+      }
     }
 
     if (video.paused) {
       if (isVoiceActive) {
         speakText(currentSubtitle);
       }
-      video.play().then(() => {
-        setIsPlaying(true);
-      }).catch(() => {
-        setIsPlaying(false);
-      });
+      const p = video.play();
+      if (p !== undefined) {
+        p.then(() => {
+          setIsPlaying(true);
+        }).catch((err) => {
+          console.warn("Reproducción unmuted bloqueada por navegador, intentando muted:", err);
+          video.muted = true;
+          setIsMuted(true);
+          video.play().then(() => {
+            setIsPlaying(true);
+          }).catch((finalErr) => {
+            console.error("Fallo definitivo de reproducción de video:", finalErr);
+            setIsPlaying(false);
+          });
+        });
+      }
     } else {
       video.pause();
       setIsPlaying(false);
@@ -585,7 +620,11 @@ export function ModernCanvasVideoPlayer() {
     if (!video) return;
 
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.resume();
+      try {
+        window.speechSynthesis.resume();
+      } catch {
+        // ignore
+      }
     }
 
     video.currentTime = chapterTime;
@@ -596,7 +635,14 @@ export function ModernCanvasVideoPlayer() {
     setCurrentHighlight(chapter.persuasiveHighlight);
 
     if (video.paused) {
-      video.play().then(() => setIsPlaying(true)).catch(() => {});
+      const p = video.play();
+      if (p !== undefined) {
+        p.then(() => setIsPlaying(true)).catch(() => {
+          video.muted = true;
+          setIsMuted(true);
+          video.play().then(() => setIsPlaying(true)).catch(() => {});
+        });
+      }
     }
 
     if (isVoiceActive) {

@@ -256,6 +256,8 @@ const LANG_OPTIONS: { code: Language; label: string; flag: string }[] = [
 ];
 
 interface CyberLateralSidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
   onOpenAudit: () => void;
   cvUrl: string;
   portfolioUrl: string;
@@ -263,12 +265,17 @@ interface CyberLateralSidebarProps {
 }
 
 export function CyberLateralSidebar({
+  isOpen: controlledIsOpen,
+  onClose,
   onOpenAudit,
   cvUrl,
   portfolioUrl,
   linkedinUrl,
 }: CyberLateralSidebarProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const isControlled = controlledIsOpen !== undefined;
+  const isOpen = isControlled ? controlledIsOpen : internalIsOpen;
+
   const [lang, setLang] = useState<Language>("es");
   const [showLangMenu, setShowLangMenu] = useState(false);
 
@@ -322,9 +329,13 @@ export function CyberLateralSidebar({
 
   const closeSidebar = useCallback(() => {
     document.body.style.overflow = "";
-    setIsOpen(false);
+    if (isControlled) {
+      onClose?.();
+    } else {
+      setInternalIsOpen(false);
+    }
     setShowLangMenu(false);
-  }, []);
+  }, [isControlled, onClose]);
 
   // Manejador infalible de navegación suave por anclajes
   const handleNavAnchor = useCallback(
@@ -333,7 +344,11 @@ export function CyberLateralSidebar({
       // 1. Restaurar scroll de inmediato
       document.body.style.overflow = "";
       // 2. Cerrar menú lateral
-      setIsOpen(false);
+      if (isControlled) {
+        onClose?.();
+      } else {
+        setInternalIsOpen(false);
+      }
       setShowLangMenu(false);
 
       if (!href || href === "#") {
@@ -353,26 +368,27 @@ export function CyberLateralSidebar({
         }
       }, 60);
     },
-    []
+    [isControlled, onClose]
   );
 
   return (
     <>
       {/* ============================================================ */}
-      {/* Botón Disparador Flotante Lateral (Visible cuando está cerrado) */}
+      {/* Botón Disparador Flotante Lateral (Sólo si no es controlado externamente) */}
       {/* ============================================================ */}
-      <div
-        className={`fixed top-3 left-3 sm:top-4 sm:left-4 z-40 flex items-center gap-2 transition-all duration-300 ${
-          isOpen ? "opacity-0 pointer-events-none -translate-x-4" : "opacity-100 pointer-events-auto translate-x-0"
-        }`}
-      >
-        <button
-          type="button"
-          onClick={() => setIsOpen(true)}
-          aria-expanded={isOpen}
-          aria-label={t.openAria}
-          className="group flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-[#2a242c]/95 hover:bg-[#423943] text-white border border-[#cba135]/70 hover:border-[#f2cf6b] shadow-[0_10px_30px_rgba(0,0,0,0.85)] hover:scale-105 active:scale-95 transition-all duration-200 backdrop-blur-xl cursor-pointer"
+      {!isControlled && (
+        <div
+          className={`fixed top-3 left-3 sm:top-4 sm:left-4 z-40 flex items-center gap-2 transition-all duration-300 ${
+            isOpen ? "opacity-0 pointer-events-none -translate-x-4" : "opacity-100 pointer-events-auto translate-x-0"
+          }`}
         >
+          <button
+            type="button"
+            onClick={() => setInternalIsOpen(true)}
+            aria-expanded={isOpen}
+            aria-label={t.openAria}
+            className="group flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-[#2a242c]/95 hover:bg-[#423943] text-white border border-[#cba135]/70 hover:border-[#f2cf6b] shadow-[0_10px_30px_rgba(0,0,0,0.85)] hover:scale-105 active:scale-95 transition-all duration-200 backdrop-blur-xl cursor-pointer"
+          >
           <div className="flex flex-col gap-1 w-5">
             <span className="w-5 h-0.5 bg-[#f2cf6b] rounded-full transition-all group-hover:w-6 shadow-[0_0_5px_#f2cf6b]" />
             <span className="w-3.5 h-0.5 bg-white rounded-full transition-all group-hover:w-5" />
@@ -428,6 +444,7 @@ export function CyberLateralSidebar({
           )}
         </div>
       </div>
+      )}
 
       {/* ============================================================ */}
       {/* Backdrop Oscuro Semi-transparente para Cierre Táctil         */}

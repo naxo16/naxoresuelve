@@ -403,36 +403,55 @@ export default function Home() {
 /* ------------------------------------------------------------------ */
 
 function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <>
       {/* Menú Lateral Desplegable Cyberpunk con soporte Multilingüe */}
       <CyberLateralSidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
         onOpenAudit={onOpenAudit}
         cvUrl={CV_URL}
         portfolioUrl={PORTFOLIO_URL}
         linkedinUrl={LINKEDIN_URL}
       />
 
-      {/* Barra de Estado Minimalista Superior (No compite con el sidebar) */}
-      <header className="sticky top-0 z-30 bg-[#2a242c]/95 backdrop-blur-xl border-b border-[#615362]/60 pl-36 sm:pl-48 pr-3 sm:pr-6 py-2.5 transition-all">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2">
-          {/* Brand Logo & Telemetría */}
-          <a href="#" className="flex items-center gap-2 group min-w-0">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#721828] to-[#cba135] flex items-center justify-center font-bold text-white shadow-md border border-[#cba135]/40 font-round text-sm group-hover:scale-105 transition-transform shrink-0">
-              PV
-            </div>
-            <div className="flex flex-col min-w-0">
-              <span className="text-xs sm:text-sm font-bold tracking-tight text-[#ff6b85] flex items-center gap-1.5 font-round truncate">
-                Pablo Valdés
-                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#721828]/80 text-[#f2cf6b] border border-[#cba135]/40 shrink-0">
-                  naxoresuelve
+      {/* Barra de Estado Minimalista Superior */}
+      <header className="sticky top-0 z-30 bg-[#2a242c]/95 backdrop-blur-xl border-b border-[#615362]/60 px-4 sm:px-6 py-2.5 transition-all">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
+          {/* Brand Logo, Trigger & Telemetría */}
+          <div className="flex items-center gap-3 min-w-0">
+            <button
+              type="button"
+              onClick={() => setSidebarOpen(true)}
+              aria-label="Abrir menú lateral de navegación"
+              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#721828]/85 hover:bg-[#721828] text-[#f2cf6b] border border-[#cba135]/60 hover:border-[#f2cf6b] shadow-md transition font-round text-xs font-bold cursor-pointer shrink-0"
+            >
+              <Menu size={18} />
+              <span className="hidden sm:inline">MENÚ</span>
+              <span className="text-[10px] px-1 py-0.2 rounded bg-black/40 border border-[#cba135]/40 font-mono">
+                [HUD]
+              </span>
+            </button>
+
+            <a href="#" className="flex items-center gap-2 group min-w-0">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#721828] to-[#cba135] flex items-center justify-center font-bold text-white shadow-md border border-[#cba135]/40 font-round text-sm group-hover:scale-105 transition-transform shrink-0">
+                PV
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="text-xs sm:text-sm font-bold tracking-tight text-[#ff6b85] flex items-center gap-1.5 font-round truncate">
+                  Pablo Valdés
+                  <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#721828]/80 text-[#f2cf6b] border border-[#cba135]/40 shrink-0">
+                    naxoresuelve
+                  </span>
                 </span>
-              </span>
-              <span className="hidden md:inline-block text-[10px] text-[#c29da5] truncate">
-                Arquitectura de Software · Testing Rudo & Hardware
-              </span>
-            </div>
-          </a>
+                <span className="hidden md:inline-block text-[10px] text-[#c29da5] truncate">
+                  Arquitectura de Software · Testing Rudo & Hardware
+                </span>
+              </div>
+            </a>
+          </div>
 
           {/* Acciones Rápidas */}
           <div className="flex items-center gap-2 shrink-0">
