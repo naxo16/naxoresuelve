@@ -40,12 +40,14 @@ import {
   Lock,
   Gift,
   UserCheck,
+  Play,
 } from "lucide-react";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { CaseStudyModal, type CaseStudyData } from "@/components/CaseStudyModal";
 import { AuditModal } from "@/components/AuditModal";
 import { ThreeArchitectureNode } from "@/components/ThreeArchitectureNode";
 import { FiscalisCarousel } from "@/components/FiscalisCarousel";
+import { ModernCanvasVideoPlayer } from "@/components/ModernCanvasVideoPlayer";
 
 /* ------------------------------------------------------------------ */
 /*  Constants & Data                                                  */
@@ -273,7 +275,7 @@ export default function Home() {
   return (
     <>
       {/* Background Decorativo con Objetos Flotantes Seguros */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#07080c]">
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#d6d0d5]">
         {/* Cyber grid matizada en vino tenue */}
         <div className="absolute inset-0 cyber-grid opacity-60" />
         {/* Orbes flotantes de gradiente (vino profundo y dorado) */}
@@ -285,7 +287,7 @@ export default function Home() {
       {/* Navbar Superior Formal */}
       <Navbar onOpenAudit={() => openAudit("general")} />
 
-      <main className="relative z-10 flex-1 flex flex-col text-[#f5dade]">
+      <main className="relative z-10 flex-1 flex flex-col text-[#181a22]">
         {/* Hero Section con Three.js 3D Interactivo */}
         <HeroSection onOpenAudit={() => openAudit("general")} />
 
@@ -294,6 +296,9 @@ export default function Home() {
 
         {/* SHOWCASE DESTACADO: Fiscalis con Carrusel de Hallazgos QA */}
         <FiscalisSpotlightSection onSelectFiscalis={() => setSelectedCase(CASE_STUDIES[0])} />
+
+        {/* DEMOSTRACIÓN EN VIDEO CON CANVAS 2D & VOZ IA GUÍA */}
+        <CanvasVideoDemonstrationSection onOpenAudit={openAudit} />
 
         {/* Sección de Casos de Estudio Reales & Telemetría */}
         <CaseStudiesSection onSelectCase={setSelectedCase} />
@@ -343,7 +348,7 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 bg-[#07080c]/95 backdrop-blur-md border-b border-[#281a24]">
+    <header className="sticky top-0 z-40 bg-[#d6d0d5]/95 backdrop-blur-md border-b border-[#b8acb5]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3.5">
         {/* Brand */}
         <a href="#" className="flex items-center gap-2.5 group">
@@ -351,55 +356,62 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
             PV
           </div>
           <div className="flex flex-col">
-            <span className="text-base font-bold tracking-tight text-[#ff758f] flex items-center gap-1.5">
+            <span className="text-base font-bold tracking-tight text-[#660f1d] flex items-center gap-1.5">
               Pablo Valdés
-              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#721828]/70 text-[#f2cf6b] border border-[#721828]">
+              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#721828]/70 text-[#7a580e] border border-[#721828]">
                 naxoresuelve
               </span>
             </span>
-            <span className="text-[11px] text-[#c29da5] font-medium">
+            <span className="text-[11px] text-[#423e47] font-medium">
               Analista Programador · Backend & Arquitectura
             </span>
           </div>
         </a>
 
         {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-5 text-xs font-semibold uppercase tracking-wider text-[#f5dade]">
+        <nav className="hidden lg:flex items-center gap-5 text-xs font-semibold uppercase tracking-wider text-[#181a22]">
           <a
             href="#fiscalis-spotlight"
-            className="hover:text-[#f2cf6b] transition-colors flex items-center gap-1 text-[#ff6b85]"
+            className="hover:text-[#7a580e] transition-colors flex items-center gap-1 text-[#660f1d]"
           >
-            <Flame size={13} className="text-[#cba135]" />
+            <Flame size={13} className="text-[#7a580e]" />
             <span>Fiscalis</span>
           </a>
           <a
+            href="#video-preview"
+            className="hover:text-[#7a580e] transition-colors flex items-center gap-1 text-[#181a22]"
+          >
+            <Play size={12} className="text-[#7a580e] fill-[#f2cf6b]" />
+            <span>Video Preview IA</span>
+          </a>
+          <a
             href="#soluciones"
-            className="hover:text-[#ff758f] transition-colors"
+            className="hover:text-[#660f1d] transition-colors"
           >
             Soluciones
           </a>
           <a
             href="#casos-de-estudio"
-            className="hover:text-[#ff758f] transition-colors flex items-center gap-1"
+            className="hover:text-[#660f1d] transition-colors flex items-center gap-1"
           >
             <span>Casos de Estudio</span>
-            <span className="px-1.5 py-0.2 text-[9px] bg-[#cba135]/20 text-[#f2cf6b] rounded border border-[#cba135]/40">
+            <span className="px-1.5 py-0.2 text-[9px] bg-[#cba135]/20 text-[#7a580e] rounded border border-[#cba135]/40">
               Testing Rudo
             </span>
           </a>
           <a
             href="#promociones"
-            className="hover:text-[#f2cf6b] transition-colors flex items-center gap-1 text-[#ff758f]"
+            className="hover:text-[#7a580e] transition-colors flex items-center gap-1 text-[#660f1d]"
           >
-            <Tag size={13} className="text-[#cba135]" />
+            <Tag size={13} className="text-[#7a580e]" />
             <span>Promociones & Tienda</span>
-            <span className="px-1.5 py-0.2 text-[9px] bg-[#721828] text-[#f2cf6b] rounded border border-[#cba135]/40 font-bold">
+            <span className="px-1.5 py-0.2 text-[9px] bg-[#721828] text-[#7a580e] rounded border border-[#cba135]/40 font-bold">
               Preventa
             </span>
           </a>
           <a
             href="#filosofia-testing"
-            className="hover:text-[#ff758f] transition-colors"
+            className="hover:text-[#660f1d] transition-colors"
           >
             Metodología
           </a>
@@ -407,7 +419,7 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
             href={PORTFOLIO_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[#f2cf6b] transition-colors flex items-center gap-1 text-[#f2cf6b]"
+            className="hover:text-[#7a580e] transition-colors flex items-center gap-1 text-[#7a580e]"
           >
             <span>renkaidev</span>
             <ExternalLink size={12} />
@@ -416,7 +428,7 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
             href={LINKEDIN_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#c29da5] hover:text-[#ff758f] flex items-center gap-1 transition-colors"
+            className="text-[#423e47] hover:text-[#660f1d] flex items-center gap-1 transition-colors"
           >
             <span>LinkedIn</span>
             <ExternalLink size={12} />
@@ -427,18 +439,18 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
         <div className="hidden sm:flex items-center gap-2.5">
           <Link
             href="/login"
-            className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#f5dade] hover:text-[#f2cf6b] bg-[#141824] hover:bg-[#1f2438] border border-[#281a24] flex items-center gap-1.5 transition"
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#181a22] hover:text-[#7a580e] bg-[#e2dce1] hover:bg-[#d5ced5] border border-[#b8acb5] flex items-center gap-1.5 transition"
           >
-            <Lock size={13} className="text-[#f2cf6b]" />
+            <Lock size={13} className="text-[#7a580e]" />
             <span>Portal Clientes</span>
           </Link>
           <a
             href={CV_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#f5dade] hover:text-white bg-[#0e111a] hover:bg-[#181c28] border border-[#281a24] flex items-center gap-1.5 transition"
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#181a22] hover:text-white bg-[#ece6eb] hover:bg-[#ded8de] border border-[#b8acb5] flex items-center gap-1.5 transition"
           >
-            <Download size={13} className="text-[#f2cf6b]" />
+            <Download size={13} className="text-[#7a580e]" />
             <span>Descargar CV</span>
           </a>
           <button
@@ -453,7 +465,7 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Abrir menú de navegación"
-          className="lg:hidden p-2 text-[#c29da5] hover:text-[#f2cf6b] rounded-lg bg-[#0e111a] border border-[#281a24]"
+          className="lg:hidden p-2 text-[#423e47] hover:text-[#7a580e] rounded-lg bg-[#ece6eb] border border-[#b8acb5]"
         >
           {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
@@ -461,54 +473,62 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-b border-[#281a24] bg-[#07080c] px-4 py-4 space-y-3">
+        <div className="lg:hidden border-b border-[#b8acb5] bg-[#d6d0d5] px-4 py-4 space-y-3">
           <a
             href="#fiscalis-spotlight"
             onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-[#ff6b85] flex items-center gap-1"
+            className="block text-sm font-semibold text-[#660f1d] flex items-center gap-1"
           >
-            <Flame size={14} className="text-[#cba135]" />
+            <Flame size={14} className="text-[#7a580e]" />
             <span>Fiscalis (Demo & QA)</span>
+          </a>
+          <a
+            href="#video-preview"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-sm font-semibold text-[#181a22] hover:text-[#7a580e] flex items-center gap-1.5"
+          >
+            <Play size={14} className="text-[#7a580e] fill-[#f2cf6b]" />
+            <span>Video Preview Canvas (Voz IA)</span>
           </a>
           <a
             href="#soluciones"
             onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-[#f5dade] hover:text-[#ff758f]"
+            className="block text-sm font-semibold text-[#181a22] hover:text-[#660f1d]"
           >
             Soluciones
           </a>
           <a
             href="#casos-de-estudio"
             onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-[#f5dade] hover:text-[#ff758f]"
+            className="block text-sm font-semibold text-[#181a22] hover:text-[#660f1d]"
           >
             Casos de Estudio (Testing Rudo)
           </a>
           <a
             href="#promociones"
             onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-[#ff6b85] flex items-center justify-between"
+            className="block text-sm font-semibold text-[#660f1d] flex items-center justify-between"
           >
             <div className="flex items-center gap-1.5">
-              <Tag size={14} className="text-[#cba135]" />
+              <Tag size={14} className="text-[#7a580e]" />
               <span>Promociones & Tienda</span>
             </div>
-            <span className="px-1.5 py-0.2 text-[9px] bg-[#721828] text-[#f2cf6b] rounded border border-[#cba135]/40 font-bold">
+            <span className="px-1.5 py-0.2 text-[9px] bg-[#721828] text-[#7a580e] rounded border border-[#cba135]/40 font-bold">
               Preventa
             </span>
           </a>
           <Link
             href="/login"
             onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-[#f2cf6b] flex items-center gap-1.5"
+            className="block text-sm font-semibold text-[#7a580e] flex items-center gap-1.5"
           >
-            <Lock size={14} className="text-[#f2cf6b]" />
+            <Lock size={14} className="text-[#7a580e]" />
             <span>Portal Clientes / Admin</span>
           </Link>
           <a
             href="#filosofia-testing"
             onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-semibold text-[#f5dade] hover:text-[#ff758f]"
+            className="block text-sm font-semibold text-[#181a22] hover:text-[#660f1d]"
           >
             Metodología de Pruebas
           </a>
@@ -516,7 +536,7 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
             href={PORTFOLIO_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-sm font-semibold text-[#f2cf6b] flex items-center gap-1"
+            className="block text-sm font-semibold text-[#7a580e] flex items-center gap-1"
           >
             <span>Ver Portafolio renkaidev</span>
             <ExternalLink size={13} />
@@ -525,7 +545,7 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
             href={CV_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-sm font-semibold text-[#f5dade] flex items-center gap-1"
+            className="block text-sm font-semibold text-[#181a22] flex items-center gap-1"
           >
             <span>Descargar CV Oficial</span>
             <Download size={13} />
@@ -534,7 +554,7 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
             href={LINKEDIN_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-sm font-semibold text-[#c29da5] flex items-center gap-1"
+            className="block text-sm font-semibold text-[#423e47] flex items-center gap-1"
           >
             <span>Perfil LinkedIn</span>
             <ExternalLink size={13} />
@@ -565,16 +585,16 @@ function HeroSection({ onOpenAudit }: { onOpenAudit: () => void }) {
         {/* Columna Izquierda: Mensaje y CTA */}
         <div className="lg:col-span-7 space-y-6 text-left">
           {/* Badge Formal con micro-glitch */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0e111a] border border-[#b82d46]/50 shadow-inner">
-            <Terminal size={14} className="text-[#f2cf6b]" />
-            <span className="text-xs font-mono font-medium text-[#f5dade]">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ece6eb] border border-[#b82d46]/50 shadow-inner">
+            <Terminal size={14} className="text-[#7a580e]" />
+            <span className="text-xs font-mono font-medium text-[#181a22]">
               Pablo Valdés · Analista Programador & Backend Engineer
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           </div>
 
           {/* Título Principal con Tipografía Rojo Vino y Efecto Glitch */}
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[#f5dade] leading-tight drop-shadow-sm">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[#181a22] leading-tight drop-shadow-sm">
             Cero papel. Cero duplicidad. Resuelvo problemas críticos con{" "}
             <span className="glitch-hover inline-block vino-gradient-text cursor-default font-black">
               arquitectura de software rigurosa
@@ -582,13 +602,13 @@ function HeroSection({ onOpenAudit }: { onOpenAudit: () => void }) {
           </h1>
 
           {/* Subtítulo de propuesta de valor con fondo de contraste */}
-          <div className="p-4 rounded-2xl bg-[#0e111a]/95 border border-[#281a24] backdrop-blur-md">
-            <p className="text-sm sm:text-base text-[#f5dade] leading-relaxed font-normal">
-              Especializado en <strong className="text-[#ff6b85]">Python, FastAPI y PostgreSQL</strong>. Creador de{" "}
-              <strong className="text-[#f2cf6b]">Fiscalis</strong> (digitalización municipal con
+          <div className="p-4 rounded-2xl bg-[#ece6eb]/95 border border-[#b8acb5] backdrop-blur-md">
+            <p className="text-sm sm:text-base text-[#181a22] leading-relaxed font-normal">
+              Especializado en <strong className="text-[#660f1d]">Python, FastAPI y PostgreSQL</strong>. Creador de{" "}
+              <strong className="text-[#7a580e]">Fiscalis</strong> (digitalización municipal con
               georreferenciación GPS y resiliencia offline-first). Resuelvo cuellos de botella en
               planillas Excel colapsadas, bases de datos lentas y software SaaS en arriendo.{" "}
-              <span className="text-[#ff758f] font-bold underline decoration-[#cba135] underline-offset-4">
+              <span className="text-[#660f1d] font-bold underline decoration-[#cba135] underline-offset-4">
                 No es un caso de éxito si no aprueba el testing riguroso.
               </span>
             </p>
@@ -600,46 +620,46 @@ function HeroSection({ onOpenAudit }: { onOpenAudit: () => void }) {
               href="#fiscalis-spotlight"
               className="px-6 py-3.5 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#721828] hover:from-[#9e233b] hover:to-[#cba135] border border-[#cba135]/50 shadow-[0_4px_25px_rgba(114,24,40,0.7)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
-              <Flame size={18} className="text-[#f2cf6b]" />
+              <Flame size={18} className="text-[#7a580e]" />
               <span>Conoce Fiscalis (Módulos & QA)</span>
             </a>
 
             <button
               onClick={onOpenAudit}
-              className="px-6 py-3.5 rounded-xl font-bold text-sm text-[#f5dade] hover:text-[#f2cf6b] bg-[#0e111a] hover:bg-[#181c28] border border-[#281a24] hover:border-[#b82d46]/70 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+              className="px-6 py-3.5 rounded-xl font-bold text-sm text-[#181a22] hover:text-[#7a580e] bg-[#ece6eb] hover:bg-[#ded8de] border border-[#b8acb5] hover:border-[#b82d46]/70 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
             >
-              <Sparkles size={18} className="text-[#cba135]" />
+              <Sparkles size={18} className="text-[#7a580e]" />
               <span>Diagnóstico Rápido de tu Caso</span>
             </button>
           </div>
 
           {/* Métricas / Badges de Confiabilidad */}
           <div className="pt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
-            <div className="bg-[#0e111a] border border-[#281a24] rounded-xl p-3.5 shadow-md">
-              <div className="text-xl font-mono font-bold text-[#f2cf6b]">72h → &lt;90s</div>
-              <div className="text-xs text-[#c29da5]">En terreno con Fiscalis</div>
+            <div className="bg-[#ece6eb] border border-[#b8acb5] rounded-xl p-3.5 shadow-md">
+              <div className="text-xl font-mono font-bold text-[#7a580e]">72h → &lt;90s</div>
+              <div className="text-xs text-[#423e47]">En terreno con Fiscalis</div>
             </div>
-            <div className="bg-[#0e111a] border border-[#281a24] rounded-xl p-3.5 shadow-md">
-              <div className="text-xl font-mono font-bold text-[#ff6b85]">0%</div>
-              <div className="text-xs text-[#c29da5]">Tolerancia a duplicidad</div>
+            <div className="bg-[#ece6eb] border border-[#b8acb5] rounded-xl p-3.5 shadow-md">
+              <div className="text-xl font-mono font-bold text-[#660f1d]">0%</div>
+              <div className="text-xs text-[#423e47]">Tolerancia a duplicidad</div>
             </div>
-            <div className="bg-[#0e111a] border border-[#281a24] rounded-xl p-3.5 shadow-md">
-              <div className="text-xl font-mono font-bold text-[#f2cf6b]">3FN / GIN</div>
-              <div className="text-xs text-[#c29da5]">PostgreSQL relacional</div>
+            <div className="bg-[#ece6eb] border border-[#b8acb5] rounded-xl p-3.5 shadow-md">
+              <div className="text-xl font-mono font-bold text-[#7a580e]">3FN / GIN</div>
+              <div className="text-xs text-[#423e47]">PostgreSQL relacional</div>
             </div>
-            <div className="bg-[#0e111a] border border-[#281a24] rounded-xl p-3.5 shadow-md">
+            <div className="bg-[#ece6eb] border border-[#b8acb5] rounded-xl p-3.5 shadow-md">
               <div className="text-xl font-mono font-bold text-emerald-400">100% Pass</div>
-              <div className="text-xs text-[#c29da5]">Suite de pruebas rudas</div>
+              <div className="text-xs text-[#423e47]">Suite de pruebas rudas</div>
             </div>
           </div>
         </div>
 
         {/* Columna Derecha: Three.js 3D Interactive Canvas */}
         <div className="lg:col-span-5 relative flex flex-col items-center justify-center">
-          <div className="relative w-full rounded-3xl bg-[#07080c] border-2 border-[#b82d46]/50 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.9)] overflow-hidden">
+          <div className="relative w-full rounded-3xl bg-[#d6d0d5] border-2 border-[#b82d46]/50 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.9)] overflow-hidden">
             {/* 3D Header Tag */}
-            <div className="absolute top-4 left-4 z-10 flex items-center gap-2 bg-[#0e111a]/95 border border-[#cba135]/40 px-3 py-1 rounded-full text-[11px] font-mono text-[#f2cf6b] backdrop-blur">
-              <Boxes size={13} className="text-[#cba135]" />
+            <div className="absolute top-4 left-4 z-10 flex items-center gap-2 bg-[#ece6eb]/95 border border-[#cba135]/40 px-3 py-1 rounded-full text-[11px] font-mono text-[#7a580e] backdrop-blur">
+              <Boxes size={13} className="text-[#7a580e]" />
               <span>Three.js 3D Architecture Node</span>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
             </div>
@@ -648,7 +668,7 @@ function HeroSection({ onOpenAudit }: { onOpenAudit: () => void }) {
             <ThreeArchitectureNode />
 
             {/* 3D Footer Descriptor */}
-            <div className="mt-2 text-center text-xs font-mono text-[#c29da5] bg-[#0e111a] py-1.5 px-3 rounded-xl border border-[#281a24]">
+            <div className="mt-2 text-center text-xs font-mono text-[#423e47] bg-[#ece6eb] py-1.5 px-3 rounded-xl border border-[#b8acb5]">
               <span>Malla geométrica interactiva · Pasa el cursor para rotar</span>
             </div>
           </div>
@@ -667,21 +687,21 @@ function TestingRudoBanner() {
     <div className="w-full bg-gradient-to-r from-[#4d0c17] via-[#0e111a] to-[#0e111a] border-y border-[#b82d46]/40 py-4 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-left">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-[#721828] text-[#f2cf6b] border border-[#cba135]/40 shadow-inner">
+          <div className="p-2 rounded-lg bg-[#721828] text-[#7a580e] border border-[#cba135]/40 shadow-inner">
             <Award size={22} />
           </div>
           <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-[#f2cf6b] block">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#7a580e] block">
               Regla de Oro en Cada Entrega
             </span>
-            <p className="text-sm font-semibold text-[#f5dade]">
+            <p className="text-sm font-semibold text-[#181a22]">
               &ldquo;No es un caso de éxito si no aprueba el testing riguroso.&rdquo;
             </p>
           </div>
         </div>
         <a
           href="#filosofia-testing"
-          className="text-xs font-mono text-[#f2cf6b] hover:underline flex items-center gap-1 group"
+          className="text-xs font-mono text-[#7a580e] hover:underline flex items-center gap-1 group"
         >
           <span>Conoce nuestra batería de pruebas extremas</span>
           <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
@@ -703,14 +723,14 @@ function FiscalisSpotlightSection({
   return (
     <section id="fiscalis-spotlight" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full">
       <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#721828]/60 border border-[#cba135]/50 text-xs font-bold text-[#f2cf6b] uppercase tracking-wider">
-          <Flame size={14} className="text-[#cba135]" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#721828]/60 border border-[#cba135]/50 text-xs font-bold text-[#7a580e] uppercase tracking-wider">
+          <Flame size={14} className="text-[#7a580e]" />
           Proyecto Insignia de Ingeniería & Terreno
         </div>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#ff6b85] tracking-tight">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#660f1d] tracking-tight">
           Fiscalis: El Sistema de Gestión Operativa que Erradicó el Papel
         </h2>
-        <p className="text-sm sm:text-base text-[#f5dade] max-w-2xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-base text-[#181a22] max-w-2xl mx-auto leading-relaxed">
           Diseñado, probado y documentado para fiscalización municipal y seguridad pública. De 72
           horas analógicas a menos de 90 segundos digitalizados con georreferenciación GPS y
           persistencia asíncrona.
@@ -733,12 +753,45 @@ function FiscalisSpotlightSection({
         </a>
         <button
           onClick={onSelectFiscalis}
-          className="px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#f5dade] hover:text-[#f2cf6b] bg-[#0e111a] hover:bg-[#181c28] border border-[#281a24] hover:border-[#cba135]/60 transition-all flex items-center gap-2 cursor-pointer"
+          className="px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#181a22] hover:text-[#7a580e] bg-[#ece6eb] hover:bg-[#ded8de] border border-[#b8acb5] hover:border-[#cba135]/60 transition-all flex items-center gap-2 cursor-pointer"
         >
-          <FileCheck2 size={14} className="text-[#f2cf6b]" />
+          <FileCheck2 size={14} className="text-[#7a580e]" />
           <span>Ver Expediente Técnico Modal</span>
         </button>
       </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Demostración en Video con Renderizador Canvas 2D & Guía Voz IA    */
+/* ------------------------------------------------------------------ */
+
+function CanvasVideoDemonstrationSection({
+  onOpenAudit,
+}: {
+  onOpenAudit: (topic: string) => void;
+}) {
+  return (
+    <section id="video-preview" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full relative">
+      {/* Glow ambiental */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-[#721828]/20 blur-[170px] pointer-events-none -z-10" />
+
+      <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#721828]/60 border border-[#cba135]/50 text-xs font-bold text-[#7a580e] uppercase tracking-wider shadow-lg">
+          <Play size={13} className="text-[#7a580e] fill-[#f2cf6b]" />
+          <span>Renderizado en Canvas 2D · Guía Narrada por Voz IA</span>
+        </div>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#660f1d] tracking-tight">
+          Demostración en Vivo: Dashboard Agrícola & Automatización de Contratistas
+        </h2>
+        <p className="text-sm sm:text-base text-[#181a22] max-w-2xl mx-auto leading-relaxed">
+          Examina el caso real de ingeniería donde eliminamos el 100% de errores de duplicidad en jornadas laborales y consolidamos 14 planillas descalzadas. Activa la <strong className="text-[#7a580e]">Voz IA</strong> para escuchar la explicación técnica sincronizada con cada fotograma.
+        </p>
+      </div>
+
+      {/* Modern Canvas Video Player with AI Voice Guide */}
+      <ModernCanvasVideoPlayer />
     </section>
   );
 }
@@ -755,14 +808,14 @@ function CaseStudiesSection({
   return (
     <section id="casos-de-estudio" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full">
       <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#721828]/50 border border-[#cba135]/40 text-xs font-bold text-[#f2cf6b] uppercase tracking-wider">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#721828]/50 border border-[#cba135]/40 text-xs font-bold text-[#7a580e] uppercase tracking-wider">
           <FlaskConical size={13} />
           Casos de Estudio Reales de Pablo Valdés
         </div>
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-[#ff758f]">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-[#660f1d]">
           Sistemas sometidos a pruebas rudas antes de tocar producción
         </h2>
-        <p className="text-sm sm:text-base text-[#c29da5]">
+        <p className="text-sm sm:text-base text-[#423e47]">
           Haz clic en cualquier caso para abrir el expediente técnico, métricas de estrés y enlace directo a la documentación en vivo.
         </p>
       </div>
@@ -772,42 +825,42 @@ function CaseStudiesSection({
           <div
             key={c.id}
             onClick={() => onSelectCase(c)}
-            className="group relative bg-[#0e111a] hover:bg-[#141824] border border-[#281a24] hover:border-[#b82d46]/70 rounded-2xl p-6 transition-all duration-300 shadow-lg hover:shadow-[0_10px_35px_rgba(114,24,40,0.4)] cursor-pointer flex flex-col justify-between"
+            className="group relative bg-[#ece6eb] hover:bg-[#e2dce1] border border-[#b8acb5] hover:border-[#b82d46]/70 rounded-2xl p-6 transition-all duration-300 shadow-lg hover:shadow-[0_10px_35px_rgba(114,24,40,0.4)] cursor-pointer flex flex-col justify-between"
           >
             {/* Header Card */}
             <div>
-              <div className="flex items-center justify-between text-xs text-[#c29da5] mb-3">
-                <span className="font-mono text-[#f2cf6b]">PROYECTO #{c.id.toUpperCase()}</span>
-                <span className="px-2 py-0.5 rounded bg-[#721828]/70 text-[#f2cf6b] text-[10px] font-bold">
+              <div className="flex items-center justify-between text-xs text-[#423e47] mb-3">
+                <span className="font-mono text-[#7a580e]">PROYECTO #{c.id.toUpperCase()}</span>
+                <span className="px-2 py-0.5 rounded bg-[#721828]/70 text-[#7a580e] text-[10px] font-bold">
                   TESTING CERTIFICADO
                 </span>
               </div>
-              <h3 className="text-lg font-bold text-[#ff6b85] group-hover:text-[#f2cf6b] transition-colors mb-2">
+              <h3 className="text-lg font-bold text-[#660f1d] group-hover:text-[#7a580e] transition-colors mb-2">
                 {c.title}
               </h3>
-              <p className="text-xs text-[#f5dade] mb-4 line-clamp-3 leading-relaxed">
+              <p className="text-xs text-[#181a22] mb-4 line-clamp-3 leading-relaxed">
                 {c.problem}
               </p>
 
               {/* Batería resumida */}
-              <div className="space-y-2 mb-4 bg-[#07080c] p-3 rounded-xl border border-[#281a24]">
-                <div className="text-[11px] font-bold text-[#ff758f] uppercase tracking-wider flex items-center gap-1.5">
+              <div className="space-y-2 mb-4 bg-[#d6d0d5] p-3 rounded-xl border border-[#b8acb5]">
+                <div className="text-[11px] font-bold text-[#660f1d] uppercase tracking-wider flex items-center gap-1.5">
                   <CheckCircle2 size={13} className="text-emerald-400" />
                   Prueba de Estrés Superada:
                 </div>
-                <div className="text-xs font-mono text-[#f2cf6b] truncate">
+                <div className="text-xs font-mono text-[#7a580e] truncate">
                   {c.rudaTest[0].metrics}
                 </div>
               </div>
             </div>
 
             {/* Footer Card */}
-            <div className="pt-3 border-t border-[#281a24] flex items-center justify-between">
-              <span className="text-xs font-semibold text-[#f5dade] group-hover:text-[#f2cf6b] flex items-center gap-1">
+            <div className="pt-3 border-t border-[#b8acb5] flex items-center justify-between">
+              <span className="text-xs font-semibold text-[#181a22] group-hover:text-[#7a580e] flex items-center gap-1">
                 Ver expediente y demo
                 <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </span>
-              <span className="text-xs text-[#c29da5] font-mono">
+              <span className="text-xs text-[#423e47] font-mono">
                 {c.technologies.slice(0, 2).join(" · ")}
               </span>
             </div>
@@ -830,13 +883,13 @@ function ServicesSection({
   return (
     <section id="soluciones" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full">
       <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-        <span className="text-xs font-bold uppercase tracking-widest text-[#f2cf6b]">
+        <span className="text-xs font-bold uppercase tracking-widest text-[#7a580e]">
           Capacidades & Especialización
         </span>
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-[#ff758f]">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-[#660f1d]">
           No vendo líneas de código: resuelvo los cuellos de botella que frenan tu negocio
         </h2>
-        <p className="text-sm sm:text-base text-[#c29da5]">
+        <p className="text-sm sm:text-base text-[#423e47]">
           Compara el dolor operativo habitual frente a la solución de ingeniería definitiva que implemento.
         </p>
       </div>
@@ -847,30 +900,30 @@ function ServicesSection({
           return (
             <div
               key={idx}
-              className="bg-[#0e111a] border border-[#281a24] hover:border-[#b82d46]/60 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-[0_10px_30px_rgba(0,0,0,0.7)] flex flex-col justify-between"
+              className="bg-[#ece6eb] border border-[#b8acb5] hover:border-[#b82d46]/60 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-[0_10px_30px_rgba(0,0,0,0.7)] flex flex-col justify-between"
             >
               <div>
                 {/* Header */}
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 rounded-xl bg-gradient-to-br from-[#721828] to-[#0e111a] text-[#f2cf6b] border border-[#cba135]/40">
+                  <div className="p-3 rounded-xl bg-gradient-to-br from-[#721828] to-[#0e111a] text-[#7a580e] border border-[#cba135]/40">
                     <Icon size={22} />
                   </div>
-                  <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#181c28] text-[#f2cf6b] border border-[#281a24]">
+                  <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#ded8de] text-[#7a580e] border border-[#b8acb5]">
                     {s.badge}
                   </span>
                 </div>
 
-                <h3 className="text-lg font-bold text-[#ff6b85] mb-1">{s.title}</h3>
-                <span className="text-xs text-[#f2cf6b] font-semibold block mb-4">
+                <h3 className="text-lg font-bold text-[#660f1d] mb-1">{s.title}</h3>
+                <span className="text-xs text-[#7a580e] font-semibold block mb-4">
                   {s.tag}
                 </span>
 
                 {/* El Dolor (Pain Point) */}
                 <div className="mb-3 p-3 rounded-xl bg-red-950/30 border border-red-900/40 text-xs">
-                  <span className="font-bold text-[#ff758f] block mb-1">
+                  <span className="font-bold text-[#660f1d] block mb-1">
                     El Dolor Real:
                   </span>
-                  <p className="text-[#f5dade] leading-relaxed">{s.problem}</p>
+                  <p className="text-[#181a22] leading-relaxed">{s.problem}</p>
                 </div>
 
                 {/* La Solución */}
@@ -878,15 +931,15 @@ function ServicesSection({
                   <span className="font-bold text-emerald-300 block mb-1">
                     Solución de Ingeniería:
                   </span>
-                  <p className="text-[#f5dade] leading-relaxed">{s.solution}</p>
+                  <p className="text-[#181a22] leading-relaxed">{s.solution}</p>
                 </div>
               </div>
 
               {/* Botón rápido de cotizar */}
-              <div className="pt-4 mt-4 border-t border-[#281a24] flex items-center justify-between">
+              <div className="pt-4 mt-4 border-t border-[#b8acb5] flex items-center justify-between">
                 <button
                   onClick={() => onOpenAudit(s.title)}
-                  className="text-xs font-bold text-[#f2cf6b] hover:text-[#ff758f] flex items-center gap-1 transition-colors cursor-pointer"
+                  className="text-xs font-bold text-[#7a580e] hover:text-[#660f1d] flex items-center gap-1 transition-colors cursor-pointer"
                 >
                   <span>Diagnosticar mi caso</span>
                   <ChevronRight size={14} />
@@ -1046,14 +1099,14 @@ Fecha Solicitud: 2026`;
 
       {/* Header de la Sección */}
       <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#721828]/60 border border-[#cba135]/50 text-xs font-bold text-[#f2cf6b] uppercase tracking-wider shadow-lg">
-          <Tag size={13} className="text-[#cba135]" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#721828]/60 border border-[#cba135]/50 text-xs font-bold text-[#7a580e] uppercase tracking-wider shadow-lg">
+          <Tag size={13} className="text-[#7a580e]" />
           <span>Promociones In-Web & Estrategia de Lanzamiento</span>
         </div>
-        <h2 className="text-3xl sm:text-5xl font-black text-[#ff6b85] tracking-tight leading-tight">
+        <h2 className="text-3xl sm:text-5xl font-black text-[#660f1d] tracking-tight leading-tight">
           Acelera tu Empresa con Soluciones Reales y Asegura Tu Cupo en Nuestra Próxima Tienda Virtual
         </h2>
-        <p className="text-sm sm:text-base text-[#f5dade] leading-relaxed">
+        <p className="text-sm sm:text-base text-[#181a22] leading-relaxed">
           El costo de convivir con planillas rotas, sistemas caídos y registros duplicados supera con creces el valor de implementar ingeniería profesional. Suscríbete a nuestro canal de inteligencia técnica: te entregamos herramientas gratuitas hoy y te aseguramos descuentos de preventa en nuestra próxima tienda de soluciones de software.
         </p>
       </div>
@@ -1070,7 +1123,7 @@ Fecha Solicitud: 2026`;
               className={`rounded-2xl p-6 sm:p-7 border transition-all duration-300 cursor-pointer flex flex-col justify-between relative overflow-hidden ${
                 isSelected
                   ? "bg-gradient-to-b from-[#181c28] to-[#0e111a] border-[#cba135] shadow-[0_0_25px_rgba(203,161,53,0.25)] scale-[1.02]"
-                  : "bg-[#0e111a] border-[#281a24] hover:border-[#721828]/80 hover:bg-[#141824]"
+                  : "bg-[#ece6eb] border-[#b8acb5] hover:border-[#721828]/80 hover:bg-[#e2dce1]"
               }`}
             >
               {isSelected && (
@@ -1082,30 +1135,30 @@ Fecha Solicitud: 2026`;
 
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#721828] to-[#07080c] border border-[#cba135]/40 flex items-center justify-center text-[#f2cf6b]">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#721828] to-[#07080c] border border-[#cba135]/40 flex items-center justify-center text-[#7a580e]">
                     <Icon size={24} />
                   </div>
-                  <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-[#721828]/60 text-[#f2cf6b] border border-[#721828] font-bold">
+                  <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-[#721828]/60 text-[#7a580e] border border-[#721828] font-bold">
                     {promo.badge}
                   </span>
                 </div>
 
-                <h3 className="text-lg font-bold text-[#ff6b85] mb-1.5 leading-snug">
+                <h3 className="text-lg font-bold text-[#660f1d] mb-1.5 leading-snug">
                   {promo.title}
                 </h3>
-                <div className="text-xs text-[#cba135] font-mono font-semibold mb-3">
+                <div className="text-xs text-[#7a580e] font-mono font-semibold mb-3">
                   {promo.valText}
                 </div>
-                <p className="text-xs text-[#f5dade] leading-relaxed mb-4">
+                <p className="text-xs text-[#181a22] leading-relaxed mb-4">
                   {promo.benefit}
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-[#281a24] flex items-center justify-between text-xs">
-                <span className="text-[#c29da5] text-[11px]">
-                  Canal: <strong className="text-[#f5dade]">{promo.targetChannel}</strong>
+              <div className="pt-4 border-t border-[#b8acb5] flex items-center justify-between text-xs">
+                <span className="text-[#423e47] text-[11px]">
+                  Canal: <strong className="text-[#181a22]">{promo.targetChannel}</strong>
                 </span>
-                <span className="text-[#f2cf6b] font-bold flex items-center gap-1">
+                <span className="text-[#7a580e] font-bold flex items-center gap-1">
                   <span>Reclamar</span>
                   <ChevronRight size={14} />
                 </span>
@@ -1125,15 +1178,15 @@ Fecha Solicitud: 2026`;
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#721828] to-[#cba135] border border-[#cba135] flex items-center justify-center mx-auto text-white shadow-xl animate-bounce">
                 <CheckCircle2 size={36} />
               </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#721828]/80 text-[#f2cf6b] text-xs font-mono font-bold">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#721828]/80 text-[#7a580e] text-xs font-mono font-bold">
                 <Sparkles size={13} />
                 <span>BENEFICIO ACTIVADO EXITOSAMENTE</span>
               </div>
-              <h3 className="text-2xl sm:text-3xl font-black text-[#ff6b85]">
+              <h3 className="text-2xl sm:text-3xl font-black text-[#660f1d]">
                 ¡Tu Solicitud Ha Sido Priorizada!
               </h3>
-              <p className="text-sm text-[#f5dade] max-w-md mx-auto leading-relaxed">
-                Excelente, <strong className="text-[#f2cf6b]">{name}</strong>. Hemos registrado tu interés por <strong className="text-[#ff758f]">"{selectedPromo}"</strong>.
+              <p className="text-sm text-[#181a22] max-w-md mx-auto leading-relaxed">
+                Excelente, <strong className="text-[#7a580e]">{name}</strong>. Hemos registrado tu interés por <strong className="text-[#660f1d]">"{selectedPromo}"</strong>.
                 Recibirás el material en tu correo y quedas inscrito en la lista VIP de lanzamiento de nuestra tienda virtual.
               </p>
 
@@ -1156,7 +1209,7 @@ Fecha Solicitud: 2026`;
                     setEmail("");
                     setPhone("+56 9 ");
                   }}
-                  className="text-xs text-[#c29da5] hover:text-[#f2cf6b] underline underline-offset-4"
+                  className="text-xs text-[#423e47] hover:text-[#7a580e] underline underline-offset-4"
                 >
                   Registrar otro correo o solicitar otra promoción
                 </button>
@@ -1165,14 +1218,14 @@ Fecha Solicitud: 2026`;
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <span className="text-xs font-mono font-bold text-[#f2cf6b] uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
-                  <Gift size={14} className="text-[#cba135]" />
+                <span className="text-xs font-mono font-bold text-[#7a580e] uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
+                  <Gift size={14} className="text-[#7a580e]" />
                   <span>Captura de Beneficio Directo</span>
                 </span>
-                <h3 className="text-2xl font-extrabold text-[#ff6b85]">
+                <h3 className="text-2xl font-extrabold text-[#660f1d]">
                   Asegura tus Datos para Activación Inmediata
                 </h3>
-                <p className="text-xs text-[#c29da5] mt-1 leading-relaxed">
+                <p className="text-xs text-[#423e47] mt-1 leading-relaxed">
                   Completa tus datos para enviarte los kits por correo y coordinar alertas de nuevos lanzamientos vía WhatsApp. Cero spam, 100% valor técnico aplicable.
                 </p>
               </div>
@@ -1186,13 +1239,13 @@ Fecha Solicitud: 2026`;
 
               {/* Selector de Promoción */}
               <div>
-                <label className="block text-xs font-semibold text-[#f5dade] mb-1.5">
+                <label className="block text-xs font-semibold text-[#181a22] mb-1.5">
                   Promoción o Beneficio a Reclamar:
                 </label>
                 <select
                   value={selectedPromo}
                   onChange={(e) => setSelectedPromo(e.target.value)}
-                  className="w-full bg-[#07080c] border border-[#281a24] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-3 text-[#f5dade] text-xs font-medium transition"
+                  className="w-full bg-[#d6d0d5] border border-[#b8acb5] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-3 text-[#181a22] text-xs font-medium transition"
                 >
                   {PROMO_OPTIONS.map((p) => (
                     <option key={p.id} value={p.value}>
@@ -1207,11 +1260,11 @@ Fecha Solicitud: 2026`;
 
               {/* Nombre */}
               <div>
-                <label htmlFor="promo-name" className="block text-xs font-semibold text-[#f5dade] mb-1.5">
+                <label htmlFor="promo-name" className="block text-xs font-semibold text-[#181a22] mb-1.5">
                   Nombre Completo o Empresa *
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7d5e65]">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#6e6875]">
                     <UserCheck size={16} />
                   </div>
                   <input
@@ -1221,18 +1274,18 @@ Fecha Solicitud: 2026`;
                     placeholder="Ej. Rodrigo San Martín / Transportes del Sur"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-[#07080c] border border-[#281a24] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-2.5 text-[#f5dade] placeholder-[#7d5e65] text-sm transition"
+                    className="w-full bg-[#d6d0d5] border border-[#b8acb5] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-2.5 text-[#181a22] placeholder-[#78727e] text-sm transition"
                   />
                 </div>
               </div>
 
               {/* Email (Email Marketing) */}
               <div>
-                <label htmlFor="promo-email" className="block text-xs font-semibold text-[#f5dade] mb-1.5">
+                <label htmlFor="promo-email" className="block text-xs font-semibold text-[#181a22] mb-1.5">
                   Correo Electrónico Corporativo * (Para entrega de informes y kits)
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7d5e65]">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#6e6875]">
                     <Mail size={16} />
                   </div>
                   <input
@@ -1242,18 +1295,18 @@ Fecha Solicitud: 2026`;
                     placeholder="contacto@tuempresa.cl"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-[#07080c] border border-[#281a24] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-2.5 text-[#f5dade] placeholder-[#7d5e65] text-sm transition"
+                    className="w-full bg-[#d6d0d5] border border-[#b8acb5] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-2.5 text-[#181a22] placeholder-[#78727e] text-sm transition"
                   />
                 </div>
               </div>
 
               {/* WhatsApp (WhatsApp Marketing) */}
               <div>
-                <label htmlFor="promo-phone" className="block text-xs font-semibold text-[#f5dade] mb-1.5">
+                <label htmlFor="promo-phone" className="block text-xs font-semibold text-[#181a22] mb-1.5">
                   WhatsApp Móvil * (Para alertas preventa y soporte técnico directo)
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7d5e65]">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#6e6875]">
                     <Smartphone size={16} />
                   </div>
                   <input
@@ -1263,7 +1316,7 @@ Fecha Solicitud: 2026`;
                     placeholder="+56 9 1234 5678"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full bg-[#07080c] border border-[#281a24] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-2.5 text-[#f5dade] placeholder-[#7d5e65] text-sm font-mono transition"
+                    className="w-full bg-[#d6d0d5] border border-[#b8acb5] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-2.5 text-[#181a22] placeholder-[#78727e] text-sm font-mono transition"
                   />
                 </div>
               </div>
@@ -1275,9 +1328,9 @@ Fecha Solicitud: 2026`;
                   type="checkbox"
                   checked={subscribedMarketing}
                   onChange={(e) => setSubscribedMarketing(e.target.checked)}
-                  className="mt-1 w-4 h-4 rounded border-[#281a24] bg-[#07080c] text-[#721828] focus:ring-[#b82d46] cursor-pointer"
+                  className="mt-1 w-4 h-4 rounded border-[#b8acb5] bg-[#d6d0d5] text-[#721828] focus:ring-[#b82d46] cursor-pointer"
                 />
-                <label htmlFor="promo-consent" className="text-[11px] text-[#c29da5] leading-snug cursor-pointer">
+                <label htmlFor="promo-consent" className="text-[11px] text-[#423e47] leading-snug cursor-pointer">
                   Acepto recibir el diagnóstico o material solicitado, análisis de casos de éxito y notificaciones preferenciales por Email y WhatsApp sobre el lanzamiento de la tienda virtual multi-producto.
                 </label>
               </div>
@@ -1292,7 +1345,7 @@ Fecha Solicitud: 2026`;
                   <span>Registrando tu beneficio en PostgreSQL...</span>
                 ) : (
                   <>
-                    <Zap size={16} className="text-[#f2cf6b]" />
+                    <Zap size={16} className="text-[#7a580e]" />
                     <span>Activar Promoción & Reservar Cupo Preventa</span>
                   </>
                 )}
@@ -1302,24 +1355,24 @@ Fecha Solicitud: 2026`;
         </div>
 
         {/* Anticipación / Preview de la Futura Tienda Virtual Multi-Productos (6 cols) */}
-        <div className="lg:col-span-6 bg-[#0e111a] border border-[#281a24] rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
+        <div className="lg:col-span-6 bg-[#ece6eb] border border-[#b8acb5] rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between mb-3 pb-3 border-b border-[#281a24]">
+            <div className="flex items-center justify-between mb-3 pb-3 border-b border-[#b8acb5]">
               <div className="flex items-center gap-2">
-                <ShoppingBag size={18} className="text-[#f2cf6b]" />
-                <span className="text-xs font-mono font-bold text-[#f2cf6b] uppercase">
+                <ShoppingBag size={18} className="text-[#7a580e]" />
+                <span className="text-xs font-mono font-bold text-[#7a580e] uppercase">
                   Próximo Lanzamiento Oficial
                 </span>
               </div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#721828]/60 text-[#f2cf6b] border border-[#721828] font-bold">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#721828]/60 text-[#7a580e] border border-[#721828] font-bold">
                 Tienda Virtual Multi-SaaS
               </span>
             </div>
 
-            <h3 className="text-xl sm:text-2xl font-bold text-[#ff6b85] mb-2">
+            <h3 className="text-xl sm:text-2xl font-bold text-[#660f1d] mb-2">
               Catálogo de Productos y Soluciones Listas para Conectar
             </h3>
-            <p className="text-xs text-[#c29da5] leading-relaxed mb-6">
+            <p className="text-xs text-[#423e47] leading-relaxed mb-6">
               Estamos consolidando nuestras herramientas más exitosas en paquetes modulares de software accesible para PYMEs chilenas. Al contratar servicios hoy o registrarte en la preventa, aseguras <strong>tarifas congeladas con hasta 30% OFF vitalicio</strong>.
             </p>
 
@@ -1328,24 +1381,24 @@ Fecha Solicitud: 2026`;
               {UPCOMING_PRODUCTS.map((prod, pIdx) => (
                 <div
                   key={pIdx}
-                  className="p-3.5 rounded-xl bg-[#07080c] border border-[#281a24] hover:border-[#b82d46]/50 transition flex flex-col justify-between space-y-2"
+                  className="p-3.5 rounded-xl bg-[#d6d0d5] border border-[#b8acb5] hover:border-[#b82d46]/50 transition flex flex-col justify-between space-y-2"
                 >
                   <div>
-                    <div className="flex items-center justify-between text-[10px] font-mono text-[#f2cf6b] mb-1">
+                    <div className="flex items-center justify-between text-[10px] font-mono text-[#7a580e] mb-1">
                       <span>{prod.badge}</span>
                       <span className="text-emerald-400 font-bold">Preventa</span>
                     </div>
-                    <h4 className="text-xs font-bold text-[#f5dade]">{prod.name}</h4>
-                    <p className="text-[11px] text-[#c29da5] line-clamp-2 mt-1 leading-snug">
+                    <h4 className="text-xs font-bold text-[#181a22]">{prod.name}</h4>
+                    <p className="text-[11px] text-[#423e47] line-clamp-2 mt-1 leading-snug">
                       {prod.desc}
                     </p>
                   </div>
 
-                  <div className="pt-2 border-t border-[#281a24]">
-                    <div className="text-[10px] text-[#7d5e65] line-through font-mono">
+                  <div className="pt-2 border-t border-[#b8acb5]">
+                    <div className="text-[10px] text-[#6e6875] line-through font-mono">
                       {prod.price}
                     </div>
-                    <div className="text-xs font-bold font-mono text-[#f2cf6b]">
+                    <div className="text-xs font-bold font-mono text-[#7a580e]">
                       {prod.discountPrice}
                     </div>
                   </div>
@@ -1356,11 +1409,11 @@ Fecha Solicitud: 2026`;
 
           {/* Banner de Visión y Reinversión */}
           <div className="mt-6 p-4 rounded-2xl bg-gradient-to-r from-[#721828]/30 via-[#141824] to-[#07080c] border border-[#721828] text-xs space-y-2">
-            <div className="flex items-center gap-2 text-[#f2cf6b] font-bold font-mono text-[11px]">
+            <div className="flex items-center gap-2 text-[#7a580e] font-bold font-mono text-[11px]">
               <Sparkles size={14} />
               <span>Modelo de Reinversión & Escalamiento</span>
             </div>
-            <p className="text-[#f5dade] text-[11px] leading-relaxed">
+            <p className="text-[#181a22] text-[11px] leading-relaxed">
               Cada consultoría, automatización y reserva de preventa financia directamente la infraestructura, pasarelas de pago y servidores de nuestra tienda virtual chilena, garantizando un ecosistema digital soberano y de máxima velocidad.
             </p>
           </div>
@@ -1399,17 +1452,17 @@ function TestingPhilosophySection() {
   ];
 
   return (
-    <section id="filosofia-testing" className="py-20 px-4 sm:px-6 bg-[#07080c] border-y border-[#281a24]">
+    <section id="filosofia-testing" className="py-20 px-4 sm:px-6 bg-[#d6d0d5] border-y border-[#b8acb5]">
       <div className="max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#721828]/50 border border-[#cba135]/40 text-xs font-bold text-[#f2cf6b] uppercase">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#721828]/50 border border-[#cba135]/40 text-xs font-bold text-[#7a580e] uppercase">
             <ShieldCheck size={14} />
             Metodología de Validación Extrema
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#ff758f]">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#660f1d]">
             ¿Por qué un sistema no es un éxito sin testing rudo?
           </h2>
-          <p className="text-sm sm:text-base text-[#c29da5]">
+          <p className="text-sm sm:text-base text-[#423e47]">
             En desarrollo de software, la mayoría de los problemas ocurren después de cobrar, cuando el cliente carga sus datos reales. Nosotros probamos bajo condiciones extremas antes de entregar.
           </p>
         </div>
@@ -1418,13 +1471,13 @@ function TestingPhilosophySection() {
           {steps.map((st) => (
             <div
               key={st.step}
-              className="bg-[#0e111a] border border-[#281a24] rounded-2xl p-6 relative overflow-hidden"
+              className="bg-[#ece6eb] border border-[#b8acb5] rounded-2xl p-6 relative overflow-hidden"
             >
               <div className="text-4xl font-black font-mono text-[#80182a]/70 mb-3">
                 {st.step}
               </div>
-              <h3 className="text-base font-bold text-[#ff6b85] mb-2">{st.title}</h3>
-              <p className="text-xs text-[#f5dade] leading-relaxed">{st.desc}</p>
+              <h3 className="text-base font-bold text-[#660f1d] mb-2">{st.title}</h3>
+              <p className="text-xs text-[#181a22] leading-relaxed">{st.desc}</p>
             </div>
           ))}
         </div>
@@ -1447,13 +1500,13 @@ function PortfolioSection({
       <div className="bg-gradient-to-br from-[#0e111a] via-[#141824] to-[#07080c] border border-[#b82d46]/50 rounded-3xl p-8 sm:p-12 shadow-2xl">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
           <div className="space-y-4 max-w-2xl">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#f2cf6b] font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#7a580e] font-bold">
               Portafolio Oficial & Trayectoria
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#ff6b85]">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#660f1d]">
               Pablo Valdés — Desarrollador Backend & Analista Programador
             </h2>
-            <p className="text-sm sm:text-base text-[#f5dade] leading-relaxed">
+            <p className="text-sm sm:text-base text-[#181a22] leading-relaxed">
               Especializado en Python, FastAPI y PostgreSQL. Resuelvo problemas de lógica, persistencia y arquitectura limpia con un enfoque analítico riguroso. Puedes explorar mi portafolio completo en renkaidev, revisar el código en GitHub o descargar mi CV oficial.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
@@ -1470,9 +1523,9 @@ function PortfolioSection({
                 href={CV_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#f5dade] hover:text-[#f2cf6b] bg-[#0e111a] hover:bg-[#181c28] border border-[#281a24] transition-colors flex items-center gap-2"
+                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#181a22] hover:text-[#7a580e] bg-[#ece6eb] hover:bg-[#ded8de] border border-[#b8acb5] transition-colors flex items-center gap-2"
               >
-                <Download size={14} className="text-[#f2cf6b]" />
+                <Download size={14} className="text-[#7a580e]" />
                 <span>Descargar CV</span>
               </a>
               <a
@@ -1488,7 +1541,7 @@ function PortfolioSection({
                 href={GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#f5dade] hover:text-[#f2cf6b] bg-[#0e111a] border border-[#281a24] transition-colors flex items-center gap-2"
+                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#181a22] hover:text-[#7a580e] bg-[#ece6eb] border border-[#b8acb5] transition-colors flex items-center gap-2"
               >
                 <GithubIcon className="w-3.5 h-3.5" />
                 <span>GitHub (naxo16)</span>
@@ -1497,33 +1550,33 @@ function PortfolioSection({
           </div>
 
           {/* Tarjeta de Resumen Técnico */}
-          <div className="w-full lg:w-80 bg-[#07080c] border border-[#281a24] rounded-2xl p-6 space-y-4 text-xs font-mono">
-            <div className="flex items-center justify-between pb-3 border-b border-[#281a24]">
-              <span className="text-[#c29da5]">Estado Profesional:</span>
+          <div className="w-full lg:w-80 bg-[#d6d0d5] border border-[#b8acb5] rounded-2xl p-6 space-y-4 text-xs font-mono">
+            <div className="flex items-center justify-between pb-3 border-b border-[#b8acb5]">
+              <span className="text-[#423e47]">Estado Profesional:</span>
               <span className="text-emerald-400 font-bold flex items-center gap-1">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-ping" />
                 Disponible
               </span>
             </div>
-            <div className="flex items-center justify-between pb-3 border-b border-[#281a24]">
-              <span className="text-[#c29da5]">Core Stack:</span>
-              <span className="text-[#f2cf6b]">FastAPI · Python · PostgreSQL</span>
+            <div className="flex items-center justify-between pb-3 border-b border-[#b8acb5]">
+              <span className="text-[#423e47]">Core Stack:</span>
+              <span className="text-[#7a580e]">FastAPI · Python · PostgreSQL</span>
             </div>
-            <div className="flex items-center justify-between pb-3 border-b border-[#281a24]">
-              <span className="text-[#c29da5]">Teléfono Directo:</span>
-              <a href={`tel:+${PHONE_NUMBER}`} className="text-[#ff6b85] hover:text-[#f2cf6b] font-bold">
+            <div className="flex items-center justify-between pb-3 border-b border-[#b8acb5]">
+              <span className="text-[#423e47]">Teléfono Directo:</span>
+              <a href={`tel:+${PHONE_NUMBER}`} className="text-[#660f1d] hover:text-[#7a580e] font-bold">
                 +{PHONE_NUMBER}
               </a>
             </div>
-            <div className="flex items-center justify-between pb-3 border-b border-[#281a24]">
-              <span className="text-[#c29da5]">Contacto Directo:</span>
-              <a href={`mailto:${EMAIL_DIRECT}`} className="text-[#f5dade] hover:text-[#f2cf6b]">
+            <div className="flex items-center justify-between pb-3 border-b border-[#b8acb5]">
+              <span className="text-[#423e47]">Contacto Directo:</span>
+              <a href={`mailto:${EMAIL_DIRECT}`} className="text-[#181a22] hover:text-[#7a580e]">
                 {EMAIL_DIRECT}
               </a>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-[#c29da5]">Ubicación:</span>
-              <span className="text-[#f5dade]">Chile (Remoto / Presencial)</span>
+              <span className="text-[#423e47]">Ubicación:</span>
+              <span className="text-[#181a22]">Chile (Remoto / Presencial)</span>
             </div>
           </div>
         </div>
@@ -1588,35 +1641,35 @@ function ContactSection({
       <div className="grid lg:grid-cols-2 gap-12 items-start">
         {/* Columna Izquierda */}
         <div className="space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#721828]/50 border border-[#cba135]/40 text-xs font-bold text-[#f2cf6b] uppercase">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#721828]/50 border border-[#cba135]/40 text-xs font-bold text-[#7a580e] uppercase">
             Iniciemos con un análisis serio
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#ff758f]">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#660f1d]">
             Explícame tu cuello de botella y te entrego una solución técnica probada
           </h2>
-          <p className="text-[#f5dade] text-sm sm:text-base leading-relaxed">
+          <p className="text-[#181a22] text-sm sm:text-base leading-relaxed">
             Ya sea una macro en Excel que no para de fallar, una base de datos que tarda una eternidad, o la necesidad de contar con un software propio en modalidad de arriendo: conversemos sin compromiso.
           </p>
 
           <div className="space-y-3 pt-2">
-            <div className="flex items-center gap-3 text-sm text-[#f5dade]">
-              <CheckCircle2 size={18} className="text-[#f2cf6b]" />
+            <div className="flex items-center gap-3 text-sm text-[#181a22]">
+              <CheckCircle2 size={18} className="text-[#7a580e]" />
               <span>Respuesta técnica directa por Pablo Valdés en menos de 24 horas.</span>
             </div>
-            <div className="flex items-center gap-3 text-sm text-[#f5dade]">
-              <CheckCircle2 size={18} className="text-[#f2cf6b]" />
+            <div className="flex items-center gap-3 text-sm text-[#181a22]">
+              <CheckCircle2 size={18} className="text-[#7a580e]" />
               <span>Propuesta con alcance claro, estimación y protocolo de testing riguroso.</span>
             </div>
-            <div className="flex items-center gap-3 text-sm text-[#f5dade]">
-              <CheckCircle2 size={18} className="text-[#f2cf6b]" />
-              <span>Atención telefónica directa al: <strong className="text-[#ff6b85]">+{PHONE_NUMBER}</strong></span>
+            <div className="flex items-center gap-3 text-sm text-[#181a22]">
+              <CheckCircle2 size={18} className="text-[#7a580e]" />
+              <span>Atención telefónica directa al: <strong className="text-[#660f1d]">+{PHONE_NUMBER}</strong></span>
             </div>
           </div>
 
           <div className="pt-4 flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => onOpenAudit("duplicidad")}
-              className="text-xs font-bold uppercase tracking-wider text-[#f2cf6b] hover:text-[#ff758f] underline underline-offset-4 cursor-pointer text-left"
+              className="text-xs font-bold uppercase tracking-wider text-[#7a580e] hover:text-[#660f1d] underline underline-offset-4 cursor-pointer text-left"
             >
               ¿Prefieres el asistente de diagnóstico rápido? Haz clic aquí.
             </button>
@@ -1624,27 +1677,27 @@ function ContactSection({
         </div>
 
         {/* Columna Derecha: Formulario */}
-        <div className="bg-[#0e111a] border border-[#281a24] rounded-2xl p-6 sm:p-8 shadow-xl">
+        <div className="bg-[#ece6eb] border border-[#b8acb5] rounded-2xl p-6 sm:p-8 shadow-xl">
           {success ? (
             <div className="py-12 text-center space-y-4">
-              <CheckCircle2 className="w-16 h-16 text-[#f2cf6b] mx-auto animate-bounce" />
-              <h3 className="text-2xl font-bold text-[#ff6b85]">¡Mensaje Recibido!</h3>
-              <p className="text-sm text-[#f5dade] max-w-sm mx-auto">
+              <CheckCircle2 className="w-16 h-16 text-[#7a580e] mx-auto animate-bounce" />
+              <h3 className="text-2xl font-bold text-[#660f1d]">¡Mensaje Recibido!</h3>
+              <p className="text-sm text-[#181a22] max-w-sm mx-auto">
                 Tu requerimiento fue ingresado exitosamente en nuestra base de datos. Pablo Valdés lo revisará a la brevedad.
               </p>
               <button
                 onClick={() => setSuccess(false)}
-                className="mt-4 px-6 py-2.5 rounded-xl text-xs font-bold text-[#f5dade] hover:text-[#f2cf6b] bg-[#141824] border border-[#281a24]"
+                className="mt-4 px-6 py-2.5 rounded-xl text-xs font-bold text-[#181a22] hover:text-[#7a580e] bg-[#e2dce1] border border-[#b8acb5]"
               >
                 Enviar otro mensaje
               </button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4 text-sm">
-              <h3 className="text-xl font-bold text-[#ff6b85] mb-1">
+              <h3 className="text-xl font-bold text-[#660f1d] mb-1">
                 Formulario de Consulta Técnica
               </h3>
-              <p className="text-xs text-[#c29da5] mb-4">
+              <p className="text-xs text-[#423e47] mb-4">
                 Todos los campos son procesados de forma confidencial.
               </p>
 
@@ -1656,7 +1709,7 @@ function ContactSection({
               )}
 
               <div>
-                <label htmlFor="contact-name" className="block text-xs font-semibold text-[#f5dade] mb-1">
+                <label htmlFor="contact-name" className="block text-xs font-semibold text-[#181a22] mb-1">
                   Nombre o Empresa *
                 </label>
                 <input
@@ -1666,12 +1719,12 @@ function ContactSection({
                   placeholder="Tu nombre o empresa"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-[#07080c] border border-[#281a24] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#f5dade] placeholder-[#7d5e65] text-sm transition"
+                  className="w-full bg-[#d6d0d5] border border-[#b8acb5] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#181a22] placeholder-[#78727e] text-sm transition"
                 />
               </div>
 
               <div>
-                <label htmlFor="contact-email" className="block text-xs font-semibold text-[#f5dade] mb-1">
+                <label htmlFor="contact-email" className="block text-xs font-semibold text-[#181a22] mb-1">
                   Correo Electrónico *
                 </label>
                 <input
@@ -1681,19 +1734,19 @@ function ContactSection({
                   placeholder="ejemplo@empresa.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-[#07080c] border border-[#281a24] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#f5dade] placeholder-[#7d5e65] text-sm transition"
+                  className="w-full bg-[#d6d0d5] border border-[#b8acb5] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#181a22] placeholder-[#78727e] text-sm transition"
                 />
               </div>
 
               <div>
-                <label htmlFor="contact-service" className="block text-xs font-semibold text-[#f5dade] mb-1">
+                <label htmlFor="contact-service" className="block text-xs font-semibold text-[#181a22] mb-1">
                   Área de Interés Principal
                 </label>
                 <select
                   id="contact-service"
                   value={serviceType}
                   onChange={(e) => setServiceType(e.target.value)}
-                  className="w-full bg-[#07080c] border border-[#281a24] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#f5dade] text-sm transition"
+                  className="w-full bg-[#d6d0d5] border border-[#b8acb5] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#181a22] text-sm transition"
                 >
                   <option value="Fiscalis / Terreno">Fiscalis (Inspección y Seguridad en Terreno)</option>
                   <option value="Automatizaciones / Excel">Automatización en Excel / Macros</option>
@@ -1708,7 +1761,7 @@ function ContactSection({
               </div>
 
               <div>
-                <label htmlFor="contact-message" className="block text-xs font-semibold text-[#f5dade] mb-1">
+                <label htmlFor="contact-message" className="block text-xs font-semibold text-[#181a22] mb-1">
                   Describe tu necesidad o problema *
                 </label>
                 <textarea
@@ -1718,7 +1771,7 @@ function ContactSection({
                   placeholder="Detalla qué volumen manejas, cuántas personas sufren el problema o qué objetivo buscas cumplir..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="w-full bg-[#07080c] border border-[#281a24] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2 text-[#f5dade] placeholder-[#7d5e65] text-sm transition resize-none"
+                  className="w-full bg-[#d6d0d5] border border-[#b8acb5] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2 text-[#181a22] placeholder-[#78727e] text-sm transition resize-none"
                 />
               </div>
 
@@ -1750,11 +1803,11 @@ function ContactSection({
 
 function Footer() {
   return (
-    <footer className="border-t border-[#281a24] bg-[#07080c] py-10 px-4 sm:px-6 text-[#c29da5] text-xs">
+    <footer className="border-t border-[#b8acb5] bg-[#d6d0d5] py-10 px-4 sm:px-6 text-[#423e47] text-xs">
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
-          <span className="font-bold text-[#ff6b85] tracking-tight">Pablo Valdés</span> · naxoresuelve / renkaidev
-          <div className="text-[11px] text-[#c29da5] mt-0.5">
+          <span className="font-bold text-[#660f1d] tracking-tight">Pablo Valdés</span> · naxoresuelve / renkaidev
+          <div className="text-[11px] text-[#423e47] mt-0.5">
             Ingeniería de software, persistencia en PostgreSQL, FastAPI y testing riguroso.
           </div>
         </div>
@@ -1764,7 +1817,7 @@ function Footer() {
             href={PORTFOLIO_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-white transition flex items-center gap-1 text-[#f2cf6b]"
+            className="hover:text-white transition flex items-center gap-1 text-[#7a580e]"
           >
             <span>renkaidev.workers.dev</span>
             <ExternalLink size={11} />
@@ -1773,14 +1826,14 @@ function Footer() {
             href={CV_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[#ff758f] transition flex items-center gap-1"
+            className="hover:text-[#660f1d] transition flex items-center gap-1"
           >
             <span>CV</span>
             <Download size={11} />
           </a>
           <a
             href={`tel:+${PHONE_NUMBER}`}
-            className="hover:text-[#f2cf6b] transition flex items-center gap-1 text-[#f5dade]"
+            className="hover:text-[#7a580e] transition flex items-center gap-1 text-[#181a22]"
           >
             <span>+{PHONE_NUMBER}</span>
           </a>
@@ -1788,7 +1841,7 @@ function Footer() {
             href={LINKEDIN_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[#ff758f] transition flex items-center gap-1"
+            className="hover:text-[#660f1d] transition flex items-center gap-1"
           >
             <span>LinkedIn</span>
             <ExternalLink size={11} />
@@ -1797,7 +1850,7 @@ function Footer() {
             href={GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[#ff758f] transition flex items-center gap-1"
+            className="hover:text-[#660f1d] transition flex items-center gap-1"
           >
             <span>GitHub</span>
             <GithubIcon className="w-3 h-3" />
