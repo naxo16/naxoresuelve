@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  /* Fondo 25% claro (charcoal aterciopelado con sutil matiz vino/borgoña de 25% de luminosidad) */
-  --bg-dark: #362f37;
-  --bg-surface: #423943;
-  --bg-card: #423943;
-  --bg-card-hover: #4c424e;
-  --bg-inner: #2a242c;
+  /* Fondo 25% claro (charcoal aterciopelado con sutil matiz platino/blanco de 25% de luminosidad) */
+  --bg-dark: #3a3640;
+  --bg-surface: #45404d;
+  --bg-card: #45404d;
+  --bg-card-hover: #504a58;
+  --bg-inner: #302c36;
 
   /* Tonos Vino Tinto, Rubí y Borgoña de alta visibilidad */
   --color-vino: #80182a;
@@ -23,10 +23,10 @@
   --color-gold-dark: #96741f;
   --color-gold-glow: rgba(203, 161, 53, 0.35);
 
-  /* Texto base tintado cálido de alto contraste AAA */
-  --color-text-main: #f5dade;
-  --color-text-muted: #c29da5;
-  --color-border: #615362;
+  /* Texto base blanco puro y cálido de alto contraste AAA */
+  --color-text-main: #ffffff;
+  --color-text-muted: #dcd0d5;
+  --color-border: #6d6475;
   --color-border-gold: rgba(203, 161, 53, 0.45);
   --color-border-vino: rgba(184, 45, 70, 0.5);
 }
@@ -49,12 +49,18 @@
   --font-sans: var(--font-rajdhani), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+html {
+  font-size: 19px; /* Escala global de fuente +3px a +6px en todos los cálculos rem */
+}
+
 body {
   background-color: var(--bg-dark);
   color: var(--color-text-main);
   font-family: var(--font-rajdhani), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   overflow-x: hidden;
-  letter-spacing: 0.015em;
+  letter-spacing: 0.02em;
+  font-size: 1.15rem; /* ~22px de tamaño base para lectura descansada y ejecutiva */
+  line-height: 1.6;
 }
 
 /* Smooth scroll offset */

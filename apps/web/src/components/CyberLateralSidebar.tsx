@@ -401,13 +401,13 @@ export function CyberLateralSidebar({
       {/* ============================================================ */}
       {/* Backdrop Oscuro Semi-transparente para Cierre Táctil         */}
       {/* ============================================================ */}
-      <div
-        onClick={closeSidebar}
-        className={`fixed inset-0 bg-black/75 backdrop-blur-md z-40 transition-opacity duration-300 ${
-          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
-        aria-hidden="true"
-      />
+      {isOpen && (
+        <div
+          onClick={closeSidebar}
+          className="fixed inset-0 bg-black/70 backdrop-blur-md z-40 animate-in fade-in duration-200 cursor-pointer"
+          aria-hidden="true"
+        />
+      )}
 
       {/* ============================================================ */}
       {/* Panel Lateral Desplegable (Lateral Cyber Navigation Drawer)  */}
@@ -415,8 +415,8 @@ export function CyberLateralSidebar({
       <aside
         role="navigation"
         aria-label={t.menuTitle}
-        className={`fixed top-0 left-0 bottom-0 z-50 w-full sm:w-[380px] md:w-[420px] max-w-[90vw] bg-gradient-to-b from-[#2a242c] via-[#362f37] to-[#141822] border-r-2 border-[#cba135] shadow-[0_0_60px_rgba(0,0,0,0.95)] backdrop-blur-2xl flex flex-col justify-between transition-transform duration-300 ease-out transform ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 left-0 bottom-0 z-50 w-full sm:w-[380px] md:w-[420px] max-w-[90vw] bg-gradient-to-b from-[#302c36] via-[#3a3640] to-[#25222b] border-r-2 border-[#cba135] shadow-[0_0_60px_rgba(0,0,0,0.95)] backdrop-blur-2xl flex flex-col justify-between transition-transform duration-300 ease-out transform ${
+          isOpen ? "translate-x-0 pointer-events-auto" : "-translate-x-full pointer-events-none"
         }`}
       >
         {/* Glow decorativo interior */}

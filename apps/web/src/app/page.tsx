@@ -55,6 +55,7 @@ import { FiscalisCarousel } from "@/components/FiscalisCarousel";
 import { ModernCanvasVideoPlayer } from "@/components/ModernCanvasVideoPlayer";
 import { ServicesQuickModal } from "@/components/ServicesQuickModal";
 import { CyberLateralSidebar } from "@/components/CyberLateralSidebar";
+import { SdlcLifecycleCarousel } from "@/components/SdlcLifecycleCarousel";
 
 /* ------------------------------------------------------------------ */
 /*  Constants & Data                                                  */
@@ -322,8 +323,8 @@ export default function Home() {
 
   return (
     <>
-      {/* Background Decorativo con Objetos Flotantes Seguros */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#362f37]">
+      {/* Background Decorativo con Objetos Flotantes Seguros (25% Luminosidad & Tinte Blanco) */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#3a3640]">
         {/* Cyber grid matizada en vino tenue */}
         <div className="absolute inset-0 cyber-grid opacity-60" />
         {/* Orbes flotantes de gradiente (vino profundo y dorado) */}
@@ -573,36 +574,11 @@ function HeroSection({
 }
 
 /* ------------------------------------------------------------------ */
-/*  Banner de Filosofía de Testing Rudo                               */
+/*  Carrusel del Ciclo de Vida del Software (SDLC) & Resultados       */
 /* ------------------------------------------------------------------ */
 
 function TestingRudoBanner() {
-  return (
-    <div className="w-full bg-gradient-to-r from-[#4d0c17] via-[#423943] to-[#362f37] border-y border-[#b82d46]/40 py-4 px-4 sm:px-6">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-left">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-[#721828] text-[#f2cf6b] border border-[#cba135]/40 shadow-inner">
-            <Award size={22} />
-          </div>
-          <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-[#f2cf6b] block">
-              Gobernanza de Calidad & Protocolo Tester QA
-            </span>
-            <p className="text-sm font-semibold text-[#f5dade]">
-              &ldquo;Código limpio, mantenible y robusto en el desarrollo · Testing rudo e implacable en el aseguramiento de calidad (QA).&rdquo;
-            </p>
-          </div>
-        </div>
-        <a
-          href="#filosofia-testing"
-          className="text-xs font-mono text-[#f2cf6b] hover:underline flex items-center gap-1 group"
-        >
-          <span>Conoce nuestra batería de pruebas extremas</span>
-          <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
-        </a>
-      </div>
-    </div>
-  );
+  return <SdlcLifecycleCarousel />;
 }
 
 /* ------------------------------------------------------------------ */

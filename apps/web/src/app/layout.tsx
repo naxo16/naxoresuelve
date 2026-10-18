@@ -61,7 +61,7 @@ export default function RootLayout({
       lang="es"
       className={`${rajdhani.variable} ${jetbrainsMono.variable} ${geistSans.variable} h-full antialiased scroll-smooth`}
     >
-      <body className="min-h-full flex flex-col bg-[#07080c] text-[#f5dade] font-cyber selection:bg-[#80182a] selection:text-[#f2cf6b]">
+      <body className="min-h-full flex flex-col bg-[#3a3640] text-[#ffffff] font-cyber selection:bg-[#80182a] selection:text-[#f2cf6b]">
         {children}
       </body>
     </html>
