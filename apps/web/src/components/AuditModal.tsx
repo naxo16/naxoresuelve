@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, type FormEvent } from "react";
+import { useState, useEffect, useRef, type FormEvent } from "react";
 import { X, Send, CheckCircle2, ShieldCheck, AlertCircle } from "lucide-react";
 
 interface AuditModalProps {
@@ -67,6 +67,16 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  const handleClose = () => {
+    onClose();
+    if (previousFocusRef.current) {
+      previousFocusRef.current.focus();
+    }
+  };
+
   useEffect(() => {
     if (preselectedTopic) {
       const normalized = normalizeAuditTopic(preselectedTopic);
@@ -74,19 +84,62 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
     }
   }, [preselectedTopic, isOpen]);
 
+  // Manejo de foco al abrir/cerrar y trampa de foco (Focus Trap WCAG 2.1)
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
     if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
       document.body.style.overflow = "hidden";
+
+      const timer = setTimeout(() => {
+        if (modalRef.current) {
+          const firstInput = modalRef.current.querySelector<HTMLElement>(
+            'input, button, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+          firstInput?.focus();
+        }
+      }, 50);
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          handleClose();
+          return;
+        }
+
+        if (e.key === "Tab" && modalRef.current) {
+          const focusables = Array.from(
+            modalRef.current.querySelectorAll<HTMLElement>(
+              'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            )
+          ).filter((el) => !el.hasAttribute("disabled") && el.offsetParent !== null);
+
+          if (focusables.length === 0) return;
+
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+
+          if (e.shiftKey) {
+            if (document.activeElement === first) {
+              e.preventDefault();
+              last.focus();
+            }
+          } else {
+            if (document.activeElement === last) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+        }
+      };
+
       window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        clearTimeout(timer);
+        document.body.style.overflow = "unset";
+        window.removeEventListener("keydown", handleKeyDown);
+      };
     }
-    return () => {
-      document.body.style.overflow = "unset";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -136,6 +189,7 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in"
     >
       <div
+        ref={modalRef}
         className="relative w-full max-w-lg bg-[#362f37] border border-[#b82d46]/60 rounded-2xl p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.9)] text-[#f5dade]"
         onClick={(e) => e.stopPropagation()}
       >
@@ -145,7 +199,7 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
             <div className="flex items-center gap-2 mb-1">
               <span className="w-2 h-2 rounded-full bg-[#f2cf6b] animate-ping" />
               <span className="text-xs font-bold uppercase tracking-wider text-[#f2cf6b]">
-                Auditoría & Diagnóstico Sin Costo
+                Auditoría &amp; Diagnóstico Sin Costo
               </span>
             </div>
             <h3 id="audit-modal-title" className="text-xl font-bold text-[#ff6b85]">
@@ -153,27 +207,27 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
             </h3>
           </div>
           <button
-            onClick={onClose}
-            aria-label="Cerrar modal"
-            className="p-2 text-[#c29da5] hover:text-[#f2cf6b] bg-[#423943] hover:bg-[#721828] rounded-xl transition-all"
+            onClick={handleClose}
+            aria-label="Cerrar modal de auditoría"
+            className="p-2 text-[#c29da5] hover:text-[#f2cf6b] bg-[#423943] hover:bg-[#721828] rounded-xl transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
           >
             <X size={18} />
           </button>
         </div>
 
         {success ? (
-          <div className="py-8 text-center space-y-3">
+          <div role="status" aria-live="polite" className="py-8 text-center space-y-3">
             <CheckCircle2 className="w-14 h-14 text-[#f2cf6b] mx-auto animate-bounce" />
             <h4 className="text-lg font-bold text-[#ff6b85]">¡Solicitud recibida exitosamente!</h4>
-            <p className="text-xs text-[#f5dade] max-w-xs mx-auto">
+            <p className="text-xs sm:text-sm text-[#ffffff] max-w-xs mx-auto">
               Naxo Resuelve revisará la estructura de tu caso y te responderá en breve con un análisis técnico inicial.
             </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4 text-sm">
             {errorMsg && (
-              <div className="p-3 rounded-xl bg-red-950/80 border border-red-800 text-red-200 text-xs flex items-center gap-2">
-                <AlertCircle size={16} />
+              <div role="alert" aria-live="assertive" className="p-3.5 rounded-xl bg-red-950/90 border border-red-800 text-red-100 text-xs sm:text-sm font-medium flex items-center gap-2">
+                <AlertCircle size={18} className="shrink-0 text-red-300" />
                 <span>{errorMsg}</span>
               </div>
             )}
@@ -189,7 +243,7 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
                 placeholder="Ej. Carlos Mendoza / Distribuidora Norte"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-[#423943] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#f5dade] placeholder-[#9e8e97] text-sm transition"
+                className="w-full bg-[#423943] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#ffffff] placeholder-[#dcd0d5] text-sm transition"
               />
             </div>
 
@@ -204,7 +258,7 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
                 placeholder="carlos@empresa.cl"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-[#423943] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#f5dade] placeholder-[#9e8e97] text-sm transition"
+                className="w-full bg-[#423943] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#ffffff] placeholder-[#dcd0d5] text-sm transition"
               />
             </div>
 
@@ -245,7 +299,7 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
                 placeholder="Ej. Manejamos 15 sucursales con Excels de 40.000 filas y se nos duplican los clientes al facturar..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full bg-[#423943] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2 text-[#f5dade] placeholder-[#9e8e97] text-sm transition resize-none"
+                className="w-full bg-[#423943] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2 text-[#ffffff] placeholder-[#dcd0d5] text-sm transition resize-none"
               />
             </div>
 

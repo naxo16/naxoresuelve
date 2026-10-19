@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { X, CheckCircle2, ShieldAlert, Cpu, Activity, ExternalLink } from "lucide-react";
 
 export interface CaseStudyData {
@@ -26,19 +26,69 @@ interface CaseStudyModalProps {
 }
 
 export function CaseStudyModal({ caseStudy, onClose }: CaseStudyModalProps) {
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    if (caseStudy) {
-      document.body.style.overflow = "hidden";
-      window.addEventListener("keydown", handleKeyDown);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  const handleClose = () => {
+    onClose();
+    if (previousFocusRef.current) {
+      previousFocusRef.current.focus();
     }
-    return () => {
-      document.body.style.overflow = "unset";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [caseStudy, onClose]);
+  };
+
+  useEffect(() => {
+    if (caseStudy) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
+      document.body.style.overflow = "hidden";
+
+      const timer = setTimeout(() => {
+        if (modalRef.current) {
+          const closeBtn = modalRef.current.querySelector<HTMLElement>('button[aria-label="Cerrar modal"]');
+          closeBtn?.focus();
+        }
+      }, 50);
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          handleClose();
+          return;
+        }
+
+        if (e.key === "Tab" && modalRef.current) {
+          const focusables = Array.from(
+            modalRef.current.querySelectorAll<HTMLElement>(
+              'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            )
+          ).filter((el) => !el.hasAttribute("disabled") && el.offsetParent !== null);
+
+          if (focusables.length === 0) return;
+
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+
+          if (e.shiftKey) {
+            if (document.activeElement === first) {
+              e.preventDefault();
+              last.focus();
+            }
+          } else {
+            if (document.activeElement === last) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+        }
+      };
+
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        clearTimeout(timer);
+        document.body.style.overflow = "unset";
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [caseStudy]);
 
   if (!caseStudy) return null;
 
@@ -50,6 +100,7 @@ export function CaseStudyModal({ caseStudy, onClose }: CaseStudyModalProps) {
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in"
     >
       <div
+        ref={modalRef}
         className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-[#362f37] border border-[#b82d46]/60 rounded-2xl p-6 sm:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.9)] text-[#f5dade]"
         onClick={(e) => e.stopPropagation()}
       >
@@ -67,9 +118,9 @@ export function CaseStudyModal({ caseStudy, onClose }: CaseStudyModalProps) {
             </h3>
           </div>
           <button
-            onClick={onClose}
-            aria-label="Cerrar modal"
-            className="p-2 text-[#c29da5] hover:text-[#f2cf6b] bg-[#423943] hover:bg-[#721828] rounded-xl transition-all"
+            onClick={handleClose}
+            aria-label="Cerrar modal de caso de estudio"
+            className="p-2 text-[#c29da5] hover:text-[#f2cf6b] bg-[#423943] hover:bg-[#721828] rounded-xl transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
           >
             <X size={20} />
           </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import {
   X,
@@ -280,6 +280,9 @@ export function CyberLateralSidebar({
 
   const t = I18N_NAV[lang];
 
+  const asideRef = useRef<HTMLElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
   const closeSidebar = useCallback(() => {
     document.body.style.overflow = "";
     if (isControlled) {
@@ -288,7 +291,29 @@ export function CyberLateralSidebar({
       setInternalIsOpen(false);
     }
     setShowLangMenu(false);
+    if (previousFocusRef.current) {
+      previousFocusRef.current.focus();
+    }
   }, [isControlled, onClose]);
+
+  // Manejo de foco al abrir/cerrar y trampa de foco (Focus Trap WCAG 2.1)
+  useEffect(() => {
+    if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
+      // Enfocar el primer elemento interactivo del sidebar
+      const timer = setTimeout(() => {
+        if (asideRef.current) {
+          const focusable = asideRef.current.querySelectorAll<HTMLElement>(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+          if (focusable.length > 0) {
+            focusable[0].focus();
+          }
+        }
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
   // Recuperar idioma guardado si existe
   useEffect(() => {
@@ -321,11 +346,40 @@ export function CyberLateralSidebar({
     }
   };
 
-  // Manejo de teclado (Escape para cerrar)
+  // Manejo de teclado (Escape para cerrar y Tab para atrapar el foco dentro del sidebar)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
+      if (!isOpen) return;
+
+      if (e.key === "Escape") {
+        e.preventDefault();
         closeSidebar();
+        return;
+      }
+
+      if (e.key === "Tab" && asideRef.current) {
+        const focusables = Array.from(
+          asideRef.current.querySelectorAll<HTMLElement>(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          )
+        ).filter((el) => !el.hasAttribute("disabled") && el.offsetParent !== null);
+
+        if (focusables.length === 0) return;
+
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -468,8 +522,11 @@ export function CyberLateralSidebar({
       {/* Panel Lateral Desplegable (Lateral Cyber Navigation Drawer)  */}
       {/* ============================================================ */}
       <aside
+        ref={asideRef}
         role="navigation"
         aria-label={t.menuTitle}
+        aria-hidden={!isOpen}
+        inert={!isOpen ? true : undefined}
         className={`fixed top-0 left-0 bottom-0 z-50 w-full sm:w-[380px] md:w-[420px] max-w-[92vw] h-full h-[100dvh] max-h-screen bg-gradient-to-b from-[#302c36] via-[#3a3640] to-[#25222b] border-r-2 border-[#cba135] shadow-[0_0_60px_rgba(0,0,0,0.95)] backdrop-blur-2xl flex flex-col justify-between transition-transform duration-300 ease-out transform ${
           isOpen ? "translate-x-0 pointer-events-auto" : "-translate-x-full pointer-events-none"
         }`}

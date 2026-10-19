@@ -42,8 +42,8 @@ export function FloatingWhatsApp() {
         aria-label="Contactar a Naxo Resuelve por WhatsApp"
         className="relative flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-tr from-[#128C7E] to-[#25D366] text-white shadow-[0_10px_25px_rgba(37,211,102,0.4)] hover:shadow-[0_12px_30px_rgba(203,161,53,0.5)] hover:scale-105 active:scale-95 transition-all duration-300 whatsapp-pulse border-2 border-[#f2cf6b]/50"
       >
-        <MessageSquare className="w-7 h-7 fill-white stroke-none" />
-        <span className="sr-only">Contactar por WhatsApp</span>
+        <MessageSquare className="w-7 h-7 fill-white stroke-none" aria-hidden="true" />
+        <span className="sr-only">Contactar por WhatsApp (se abre en una nueva pestaña)</span>
       </a>
     </aside>
   );

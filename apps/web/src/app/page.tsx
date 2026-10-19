@@ -1313,7 +1313,7 @@ Fecha Solicitud: 2026`;
                     placeholder="contacto@tuempresa.cl"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-2.5 text-[#f5dade] placeholder-[#9e8e97] text-sm transition"
+                    className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-2.5 text-[#ffffff] placeholder-[#dcd0d5] text-sm transition"
                   />
                 </div>
               </div>
@@ -1324,7 +1324,7 @@ Fecha Solicitud: 2026`;
                   WhatsApp Móvil * (Para alertas preventa y soporte técnico directo)
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9e8e97]">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#dcd0d5]">
                     <Smartphone size={16} />
                   </div>
                   <input
@@ -1334,7 +1334,7 @@ Fecha Solicitud: 2026`;
                     placeholder="+56 9 1234 5678"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-2.5 text-[#f5dade] placeholder-[#9e8e97] text-sm font-mono transition"
+                    className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-2.5 text-[#ffffff] placeholder-[#dcd0d5] text-sm font-mono transition"
                   />
                 </div>
               </div>
@@ -1533,7 +1533,8 @@ function PortfolioSection() {
                 className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#721828] to-[#9e233b] hover:from-[#9e233b] hover:to-[#cba135] transition-all flex items-center gap-2 shadow-md border border-[#cba135]/40"
               >
                 <span>Explorar renkaidev.workers.dev</span>
-                <ExternalLink size={14} />
+                <span className="sr-only"> (se abre en una nueva pestaña)</span>
+                <ExternalLink size={14} aria-hidden="true" />
               </a>
               <a
                 href={GITHUB_URL}
@@ -1541,8 +1542,9 @@ function PortfolioSection() {
                 rel="noopener noreferrer"
                 className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#f5dade] hover:text-[#f2cf6b] bg-[#423943] border border-[#615362] transition-colors flex items-center gap-2"
               >
-                <GithubIcon className="w-3.5 h-3.5" />
+                <GithubIcon className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>GitHub Oficial (naxo16)</span>
+                <span className="sr-only"> (se abre en una nueva pestaña)</span>
               </a>
               <a
                 href={`tel:+${PHONE_NUMBER}`}
@@ -1729,15 +1731,16 @@ function ContactSection({
         {/* Columna Derecha: Formulario */}
         <div className="bg-[#423943] border border-[#615362] rounded-2xl p-6 sm:p-8 shadow-xl">
           {success ? (
-            <div className="py-12 text-center space-y-4">
+            <div role="status" aria-live="polite" className="py-12 text-center space-y-4">
               <CheckCircle2 className="w-16 h-16 text-[#f2cf6b] mx-auto animate-bounce" />
               <h3 className="text-2xl font-bold text-[#ff6b85]">¡Mensaje Recibido!</h3>
-              <p className="text-sm text-[#f5dade] max-w-sm mx-auto">
+              <p className="text-sm text-[#ffffff] max-w-sm mx-auto">
                 Tu requerimiento fue ingresado exitosamente en nuestra base de datos. Naxo Resuelve lo revisará a la brevedad.
               </p>
               <button
+                type="button"
                 onClick={() => setSuccess(false)}
-                className="mt-4 px-6 py-2.5 rounded-xl text-xs font-bold text-[#f5dade] hover:text-[#f2cf6b] bg-[#362f37] border border-[#615362]"
+                className="mt-4 px-6 py-2.5 rounded-xl text-xs font-bold text-[#f5dade] hover:text-[#f2cf6b] bg-[#362f37] border border-[#615362] cursor-pointer min-h-[44px]"
               >
                 Enviar otro mensaje
               </button>
@@ -1752,8 +1755,8 @@ function ContactSection({
               </p>
 
               {errorMsg && (
-                <div className="p-3 rounded-xl bg-red-950/80 border border-red-800 text-red-200 text-xs flex items-center gap-2">
-                  <AlertCircle size={16} />
+                <div role="alert" aria-live="assertive" className="p-3.5 rounded-xl bg-red-950/90 border border-red-800 text-red-100 text-xs sm:text-sm font-medium flex items-center gap-2">
+                  <AlertCircle size={18} className="shrink-0 text-red-300" />
                   <span>{errorMsg}</span>
                 </div>
               )}
@@ -1769,7 +1772,7 @@ function ContactSection({
                   placeholder="Tu nombre o empresa"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#f5dade] placeholder-[#9e8e97] text-sm transition"
+                  className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#ffffff] placeholder-[#dcd0d5] text-sm transition"
                 />
               </div>
 
@@ -1784,7 +1787,7 @@ function ContactSection({
                   placeholder="ejemplo@empresa.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#f5dade] placeholder-[#9e8e97] text-sm transition"
+                  className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#ffffff] placeholder-[#dcd0d5] text-sm transition"
                 />
               </div>
 
@@ -1796,20 +1799,20 @@ function ContactSection({
                   id="contact-service"
                   value={serviceType}
                   onChange={(e) => setServiceType(e.target.value)}
-                  className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#f5dade] text-sm transition"
+                  className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#ffffff] text-sm transition"
                 >
                   <option value="Fiscalis / Terreno">Fiscalis (Inspección y Seguridad en Terreno)</option>
                   <option value="Automatizaciones / Excel">Automatización en Excel / Macros</option>
-                  <option value="Electronica / Arduino">Electrónica General & Arduino IoT (Consultoría $15.000 CLP)</option>
-                  <option value="Domotica / Camaras">Domótica & Cámaras de Seguridad CCTV/IP</option>
-                  <option value="Reparacion Hardware">Reparación Computadores, Notebooks & Celulares ($15.000 CLP)</option>
+                  <option value="Electronica / Arduino">Electrónica General &amp; Arduino IoT (Consultoría $15.000 CLP)</option>
+                  <option value="Domotica / Camaras">Domótica &amp; Cámaras de Seguridad CCTV/IP</option>
+                  <option value="Reparacion Hardware">Reparación Computadores, Notebooks &amp; Celulares ($15.000 CLP)</option>
                   <option value="Carga Masiva">Carga Masiva de Archivos y Pipelines</option>
                   <option value="Duplicidad de Datos">Reducción de Duplicidad e Inconsistencias</option>
-                  <option value="Base de Datos">Diseño & Optimización de Base de Datos</option>
-                  <option value="Dashboards">Dashboards Personalizados & Analítica</option>
+                  <option value="Base de Datos">Diseño &amp; Optimización de Base de Datos</option>
+                  <option value="Dashboards">Dashboards Personalizados &amp; Analítica</option>
                   <option value="Arriendo SaaS">Arrendamiento de Software SaaS</option>
-                  <option value="Google Maps / Ads">Posicionamiento Google Maps & Google Ads</option>
-                  <option value="Consultoria">Consultoría & Rescate de Software</option>
+                  <option value="Google Maps / Ads">Posicionamiento Google Maps &amp; Google Ads</option>
+                  <option value="Consultoria">Consultoría &amp; Rescate de Software</option>
                 </select>
               </div>
 
@@ -1824,7 +1827,7 @@ function ContactSection({
                   placeholder="Detalla qué volumen manejas, cuántas personas sufren el problema o qué objetivo buscas cumplir..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2 text-[#f5dade] placeholder-[#9e8e97] text-sm transition resize-none"
+                  className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2 text-[#ffffff] placeholder-[#dcd0d5] text-sm transition resize-none"
                 />
               </div>
 

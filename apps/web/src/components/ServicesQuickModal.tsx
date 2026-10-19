@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
   Sparkles,
   ArrowRight,
@@ -31,19 +31,69 @@ export function ServicesQuickModal({
   onClose,
   onOpenAudit,
 }: ServicesQuickModalProps) {
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-      window.addEventListener("keydown", handleKeyDown);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  const handleClose = () => {
+    onClose();
+    if (previousFocusRef.current) {
+      previousFocusRef.current.focus();
     }
-    return () => {
-      document.body.style.overflow = "unset";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isOpen, onClose]);
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
+      document.body.style.overflow = "hidden";
+
+      const timer = setTimeout(() => {
+        if (modalRef.current) {
+          const closeBtn = modalRef.current.querySelector<HTMLElement>('button[aria-label="Cerrar ventana de servicios"]');
+          closeBtn?.focus();
+        }
+      }, 50);
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          handleClose();
+          return;
+        }
+
+        if (e.key === "Tab" && modalRef.current) {
+          const focusables = Array.from(
+            modalRef.current.querySelectorAll<HTMLElement>(
+              'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            )
+          ).filter((el) => !el.hasAttribute("disabled") && el.offsetParent !== null);
+
+          if (focusables.length === 0) return;
+
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+
+          if (e.shiftKey) {
+            if (document.activeElement === first) {
+              e.preventDefault();
+              last.focus();
+            }
+          } else {
+            if (document.activeElement === last) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+        }
+      };
+
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        clearTimeout(timer);
+        document.body.style.overflow = "unset";
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -129,12 +179,15 @@ export function ServicesQuickModal({
     >
       {/* Backdrop con Blur Aterciopelado */}
       <div
-        onClick={onClose}
+        onClick={handleClose}
         className="fixed inset-0 bg-[#1c181f]/80 backdrop-blur-md transition-opacity animate-in fade-in"
       />
 
       {/* Ventana Modal Popup */}
-      <div className="relative w-full max-w-3xl rounded-3xl bg-gradient-to-br from-[#3d343e] via-[#362f37] to-[#2c262e] border-2 border-[#b82d46]/70 p-6 sm:p-8 shadow-[0_25px_60px_rgba(0,0,0,0.9)] z-10 space-y-6 animate-in zoom-in-95 duration-200">
+      <div
+        ref={modalRef}
+        className="relative w-full max-w-3xl rounded-3xl bg-gradient-to-br from-[#3d343e] via-[#362f37] to-[#2c262e] border-2 border-[#b82d46]/70 p-6 sm:p-8 shadow-[0_25px_60px_rgba(0,0,0,0.9)] z-10 space-y-6 animate-in zoom-in-95 duration-200"
+      >
         
         {/* Cabecera del Popup */}
         <div className="flex items-start justify-between gap-4 pb-4 border-b border-[#615362]">
@@ -147,7 +200,7 @@ export function ServicesQuickModal({
               id="services-modal-title"
               className="text-2xl sm:text-3xl font-black text-[#ff6b85] tracking-tight"
             >
-              Servicios & Resultados con naxo resuelve
+              Servicios &amp; Resultados con naxo resuelve
             </h3>
             <p className="text-xs sm:text-sm text-[#f5dade] leading-relaxed">
               Selecciona tu dolor operativo y recibe una solución de ingeniería probada en simples pasos:
@@ -155,9 +208,9 @@ export function ServicesQuickModal({
           </div>
 
           <button
-            onClick={onClose}
+            onClick={handleClose}
             aria-label="Cerrar ventana de servicios"
-            className="p-2 rounded-xl bg-[#2a242c] hover:bg-[#721828] text-[#c29da5] hover:text-white border border-[#615362] transition cursor-pointer"
+            className="p-2 rounded-xl bg-[#2a242c] hover:bg-[#721828] text-[#c29da5] hover:text-white border border-[#615362] transition cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
           >
             <X size={18} />
           </button>

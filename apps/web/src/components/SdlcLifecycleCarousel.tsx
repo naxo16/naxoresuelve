@@ -13,6 +13,8 @@ import {
   Award,
   ArrowRight,
   Cpu,
+  Pause,
+  Play,
 } from "lucide-react";
 
 interface SdlcPhase {
@@ -151,8 +153,11 @@ export function SdlcLifecycleCarousel() {
   return (
     <section
       aria-label="Ciclo de Vida del Software y Resultados"
+      aria-roledescription="carrusel"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
+      onFocusCapture={() => setIsPaused(true)}
+      onBlurCapture={() => setIsPaused(false)}
       className="w-full bg-gradient-to-r from-[#2c2732] via-[#3a3640] to-[#2c2732] border-y-2 border-[#b82d46]/50 py-7 px-4 sm:px-6 relative overflow-hidden shadow-2xl transition-all"
     >
       {/* Glow ambiental de alta fidelidad */}
@@ -190,23 +195,32 @@ export function SdlcLifecycleCarousel() {
               </button>
             ))}
 
-            {/* Controles Prev / Next */}
-            <div className="flex items-center gap-1 ml-2">
+            {/* Controles Prev / Next / Pause */}
+            <div className="flex items-center gap-1.5 ml-2">
+              <button
+                type="button"
+                onClick={() => setIsPaused((prev) => !prev)}
+                aria-label={isPaused ? "Reanudar rotación automática del SDLC" : "Pausar rotación automática del SDLC"}
+                className="p-1.5 rounded-lg bg-[#302c36] hover:bg-[#721828] border border-[#6d6475] text-[#dcd0d5] hover:text-[#f2cf6b] transition cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
+                title={isPaused ? "Reanudar rotación" : "Pausar rotación"}
+              >
+                {isPaused ? <Play size={14} aria-hidden="true" /> : <Pause size={14} aria-hidden="true" />}
+              </button>
               <button
                 type="button"
                 onClick={prevSlide}
                 aria-label="Fase anterior"
-                className="p-1 rounded-lg bg-[#302c36] hover:bg-[#721828] border border-[#6d6475] text-[#dcd0d5] hover:text-[#f2cf6b] transition cursor-pointer"
+                className="p-1.5 rounded-lg bg-[#302c36] hover:bg-[#721828] border border-[#6d6475] text-[#dcd0d5] hover:text-[#f2cf6b] transition cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
               >
-                <ChevronLeft size={15} />
+                <ChevronLeft size={15} aria-hidden="true" />
               </button>
               <button
                 type="button"
                 onClick={nextSlide}
                 aria-label="Fase siguiente"
-                className="p-1 rounded-lg bg-[#302c36] hover:bg-[#721828] border border-[#6d6475] text-[#dcd0d5] hover:text-[#f2cf6b] transition cursor-pointer"
+                className="p-1.5 rounded-lg bg-[#302c36] hover:bg-[#721828] border border-[#6d6475] text-[#dcd0d5] hover:text-[#f2cf6b] transition cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
               >
-                <ChevronRight size={15} />
+                <ChevronRight size={15} aria-hidden="true" />
               </button>
             </div>
           </div>

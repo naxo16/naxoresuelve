@@ -10,6 +10,8 @@ import {
   KeyRound,
   MapPin,
   Flame,
+  Pause,
+  Play,
 } from "lucide-react";
 
 interface FiscalisSlide {
@@ -124,8 +126,13 @@ export function FiscalisCarousel() {
 
   return (
     <div
+      role="region"
+      aria-roledescription="carrusel"
+      aria-label="Carrusel interactivo: Módulos y Hallazgos QA de Fiscalis"
       onMouseEnter={() => setIsAutoPlaying(false)}
       onMouseLeave={() => setIsAutoPlaying(true)}
+      onFocusCapture={() => setIsAutoPlaying(false)}
+      onBlurCapture={() => setIsAutoPlaying(true)}
       className="relative w-full max-w-5xl mx-auto bg-[#362f37] border-2 border-[#b82d46]/60 rounded-3xl p-6 sm:p-10 shadow-[0_25px_60px_rgba(0,0,0,0.95)] overflow-hidden text-[#f5dade]"
     >
       {/* Background accents */}
@@ -232,19 +239,30 @@ export function FiscalisCarousel() {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Botón accesible de Pausa / Reproducción para WCAG 2.2 (2.2.2) */}
+          <button
+            type="button"
+            onClick={() => setIsAutoPlaying((prev) => !prev)}
+            aria-label={isAutoPlaying ? "Pausar rotación automática del carrusel" : "Reanudar rotación automática del carrusel"}
+            className="p-2.5 rounded-xl bg-[#141822] hover:bg-[#721828] text-[#f2cf6b] border border-[#232a3b] hover:border-[#cba135]/50 transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+            title={isAutoPlaying ? "Pausar carrusel" : "Reanudar carrusel"}
+          >
+            {isAutoPlaying ? <Pause size={18} aria-hidden="true" /> : <Play size={18} aria-hidden="true" />}
+          </button>
+
           <button
             onClick={prevSlide}
             aria-label="Anterior hallazgo"
-            className="p-2.5 rounded-xl bg-[#141822] hover:bg-[#721828] text-white border border-[#232a3b] hover:border-[#cba135]/50 transition-all cursor-pointer"
+            className="p-2.5 rounded-xl bg-[#141822] hover:bg-[#721828] text-white border border-[#232a3b] hover:border-[#cba135]/50 transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
           >
-            <ChevronLeft size={18} />
+            <ChevronLeft size={18} aria-hidden="true" />
           </button>
           <button
             onClick={nextSlide}
             aria-label="Siguiente hallazgo"
-            className="p-2.5 rounded-xl bg-[#141822] hover:bg-[#721828] text-white border border-[#232a3b] hover:border-[#cba135]/50 transition-all cursor-pointer"
+            className="p-2.5 rounded-xl bg-[#141822] hover:bg-[#721828] text-white border border-[#232a3b] hover:border-[#cba135]/50 transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
           >
-            <ChevronRight size={18} />
+            <ChevronRight size={18} aria-hidden="true" />
           </button>
         </div>
       </div>
