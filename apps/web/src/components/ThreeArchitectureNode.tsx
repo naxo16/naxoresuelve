@@ -20,6 +20,7 @@ export function ThreeArchitectureNode() {
     let innerMaterial: THREE.MeshBasicMaterial | null = null;
     let particleGeometry: THREE.BufferGeometry | null = null;
     let particleMaterial: THREE.PointsMaterial | null = null;
+    let timer: THREE.Timer | null = null;
 
     let handleMouseMove: ((event: MouseEvent) => void) | null = null;
     let handleResize: (() => void) | null = null;
@@ -127,12 +128,14 @@ export function ThreeArchitectureNode() {
       };
       window.addEventListener("resize", handleResize);
 
-      // Bucle de animación (60 FPS)
-      const clock = new THREE.Clock();
+      // Bucle de animación (60 FPS) usando THREE.Timer (estándar moderno Three.js)
+      const activeTimer = new THREE.Timer();
+      timer = activeTimer;
 
-      const animate = () => {
+      const animate = (timestamp?: number) => {
         animationFrameId = requestAnimationFrame(animate);
-        const elapsedTime = clock.getElapsedTime();
+        activeTimer.update(timestamp);
+        const elapsedTime = activeTimer.getElapsed();
 
         // Rotación autónoma
         coreMesh.rotation.y = elapsedTime * 0.25;
@@ -178,6 +181,7 @@ export function ThreeArchitectureNode() {
       innerMaterial?.dispose();
       particleGeometry?.dispose();
       particleMaterial?.dispose();
+      timer?.dispose();
     };
   }, []);
 
