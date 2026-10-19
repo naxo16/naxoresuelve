@@ -46,6 +46,7 @@ import dynamic from "next/dynamic";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import type { CaseStudyData } from "@/components/CaseStudyModal";
 import { CyberLateralSidebar } from "@/components/CyberLateralSidebar";
+import { AccessibilityToolbar } from "@/components/AccessibilityToolbar";
 
 // Lazy-loaded heavy modules and modals for maximal Core Web Vitals & client performance
 const ThreeArchitectureNode = dynamic(
@@ -489,6 +490,9 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
                 [HUD]
               </span>
             </button>
+
+            {/* Centro de Accesibilidad Universal y Lectura en Voz Alta */}
+            <AccessibilityToolbar />
 
             <a href="#" className="flex items-center gap-2 group min-w-0">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#721828] to-[#cba135] flex items-center justify-center font-bold text-white shadow-md border border-[#cba135]/40 font-round text-sm group-hover:scale-105 transition-transform shrink-0">
