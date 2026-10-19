@@ -11,10 +11,57 @@ interface AuditModalProps {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
+export function normalizeAuditTopic(rawTopic?: string): string {
+  if (!rawTopic) return "duplicidad";
+  const s = rawTopic.toLowerCase().trim();
+
+  if (s.includes("carga") || s.includes("masiva") || s.includes("streaming") || s.includes("lotes")) {
+    return "carga_masiva";
+  }
+  if (s.includes("excel") || s.includes("macro") || s.includes("planilla")) {
+    return "excel";
+  }
+  if (s.includes("arduino") || s.includes("iot") || s.includes("electrónica") || s.includes("electronica") || s.includes("circuito")) {
+    return "electronica_arduino";
+  }
+  if (s.includes("cámara") || s.includes("camara") || s.includes("cctv") || s.includes("domótica") || s.includes("domotica") || s.includes("seguridad")) {
+    return s.includes("cámara") || s.includes("camara") || s.includes("cctv") ? "domotica_camaras" : "domotica_camaras";
+  }
+  if (s.includes("reparaci") || s.includes("notebook") || s.includes("computador") || s.includes("hardware") || s.includes("celular")) {
+    return "reparacion_hardware";
+  }
+  if (s.includes("fiscalis") || s.includes("terreno") || s.includes("inspecci") || s.includes("acta")) {
+    return "fiscalis";
+  }
+  if (s.includes("pérdida") || s.includes("perdida") || s.includes("respaldo") || s.includes("inmutable")) {
+    return "perdida_info";
+  }
+  if (s.includes("búsqueda") || s.includes("busqueda") || s.includes("caos") || s.includes("disperso")) {
+    return "busqueda_lenta";
+  }
+  if (s.includes("base de datos") || s.includes("postgresql") || s.includes("sql") || s.includes("3fn")) {
+    return "base_datos";
+  }
+  if (s.includes("dashboard") || s.includes("bi") || s.includes("telemetr") || s.includes("métrica") || s.includes("metrica")) {
+    return "dashboards";
+  }
+  if (s.includes("arriendo") || s.includes("arrendamiento") || s.includes("saas")) {
+    return "saas_arriendo";
+  }
+  if (s.includes("maps") || s.includes("ads") || s.includes("google") || s.includes("posicionamiento")) {
+    return "google_maps_ads";
+  }
+  if (s.includes("duplic") || s.includes("clonad") || s.includes("repetid")) {
+    return "duplicidad";
+  }
+
+  return "duplicidad";
+}
+
 export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [topic, setTopic] = useState(preselectedTopic || "duplicidad");
+  const [topic, setTopic] = useState(() => normalizeAuditTopic(preselectedTopic));
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -22,11 +69,10 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
 
   useEffect(() => {
     if (preselectedTopic) {
-      queueMicrotask(() => {
-        setTopic(preselectedTopic);
-      });
+      const normalized = normalizeAuditTopic(preselectedTopic);
+      setTopic(normalized);
     }
-  }, [preselectedTopic]);
+  }, [preselectedTopic, isOpen]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -120,7 +166,7 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
             <CheckCircle2 className="w-14 h-14 text-[#f2cf6b] mx-auto animate-bounce" />
             <h4 className="text-lg font-bold text-[#ff6b85]">¡Solicitud recibida exitosamente!</h4>
             <p className="text-xs text-[#f5dade] max-w-xs mx-auto">
-              Pablo Valdés revisará la estructura de tu caso y te responderá en breve con un análisis técnico inicial.
+              Naxo Resuelve revisará la estructura de tu caso y te responderá en breve con un análisis técnico inicial.
             </p>
           </div>
         ) : (
@@ -205,7 +251,7 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
 
             <div className="flex items-center gap-2 text-[11px] text-[#c29da5]">
               <ShieldCheck size={14} className="text-[#f2cf6b]" />
-              <span>Diagnóstico técnico directo por Pablo Valdés. Confidencialidad garantizada.</span>
+              <span>Diagnóstico técnico directo por Naxo Resuelve. Confidencialidad garantizada.</span>
             </div>
 
             <button

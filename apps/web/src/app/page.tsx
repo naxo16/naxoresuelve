@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import Link from "next/link";
 import {
   FileSpreadsheet,
@@ -42,15 +42,75 @@ import {
   Video,
   Laptop,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
-import { CaseStudyModal, type CaseStudyData } from "@/components/CaseStudyModal";
-import { AuditModal } from "@/components/AuditModal";
-import { ThreeArchitectureNode } from "@/components/ThreeArchitectureNode";
-import { FiscalisCarousel } from "@/components/FiscalisCarousel";
-import { ModernCanvasVideoPlayer } from "@/components/ModernCanvasVideoPlayer";
-import { ServicesQuickModal } from "@/components/ServicesQuickModal";
+import type { CaseStudyData } from "@/components/CaseStudyModal";
 import { CyberLateralSidebar } from "@/components/CyberLateralSidebar";
-import { SdlcLifecycleCarousel } from "@/components/SdlcLifecycleCarousel";
+
+// Lazy-loaded heavy modules and modals for maximal Core Web Vitals & client performance
+const ThreeArchitectureNode = dynamic(
+  () => import("@/components/ThreeArchitectureNode").then((mod) => mod.ThreeArchitectureNode),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-80 flex items-center justify-center bg-[#2a242c] rounded-2xl border border-[#615362] text-xs font-mono text-[#c29da5] animate-pulse">
+        <Boxes size={24} className="text-[#f2cf6b] mr-2 animate-spin" />
+        <span>Cargando nodo 3D...</span>
+      </div>
+    ),
+  }
+);
+
+const CaseStudyModal = dynamic(
+  () => import("@/components/CaseStudyModal").then((mod) => mod.CaseStudyModal),
+  { ssr: false }
+);
+
+const AuditModal = dynamic(
+  () => import("@/components/AuditModal").then((mod) => mod.AuditModal),
+  { ssr: false }
+);
+
+const ServicesQuickModal = dynamic(
+  () => import("@/components/ServicesQuickModal").then((mod) => mod.ServicesQuickModal),
+  { ssr: false }
+);
+
+const FiscalisCarousel = dynamic(
+  () => import("@/components/FiscalisCarousel").then((mod) => mod.FiscalisCarousel),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-64 flex items-center justify-center bg-[#362f37] rounded-2xl border border-[#615362] text-xs text-[#c29da5] animate-pulse">
+        <span>Cargando Fiscalis showcase...</span>
+      </div>
+    ),
+  }
+);
+
+const ModernCanvasVideoPlayer = dynamic(
+  () => import("@/components/ModernCanvasVideoPlayer").then((mod) => mod.ModernCanvasVideoPlayer),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full aspect-video flex items-center justify-center bg-black/80 rounded-2xl border border-[#615362] text-xs text-[#f2cf6b] animate-pulse">
+        <span>Cargando reproductor de video...</span>
+      </div>
+    ),
+  }
+);
+
+const SdlcLifecycleCarousel = dynamic(
+  () => import("@/components/SdlcLifecycleCarousel").then((mod) => mod.SdlcLifecycleCarousel),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-48 flex items-center justify-center bg-[#362f37] rounded-2xl border border-[#615362] text-xs text-[#c29da5] animate-pulse">
+        <span>Cargando ciclo de vida SDLC...</span>
+      </div>
+    ),
+  }
+);
 
 /* ------------------------------------------------------------------ */
 /*  Constants & Data                                                  */
@@ -59,13 +119,11 @@ import { SdlcLifecycleCarousel } from "@/components/SdlcLifecycleCarousel";
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 const PHONE_NUMBER = "56957286145";
-const LINKEDIN_URL = "https://www.linkedin.com/in/pablo-vald%C3%A9s-7a4445430/";
 const PORTFOLIO_URL = "https://renkaidev-web.renkaidev.workers.dev/";
-const CV_URL = "https://renkaidev-web.renkaidev.workers.dev/cv-pablo-valdes.pdf";
 const GITHUB_URL = "https://github.com/naxo16";
-const EMAIL_DIRECT = "pablovaldescontacto@gmail.com";
+const EMAIL_DIRECT = "contacto@naxoresuelve.cl";
 
-// Casos de Estudio Reales de Pablo Valdés con enfoque en "Testing Rudo"
+// Casos de Estudio Reales de Naxo Resuelve con enfoque en "Testing Rudo"
 const CASE_STUDIES: CaseStudyData[] = [
   {
     id: "fiscalis",
@@ -310,9 +368,11 @@ export default function Home() {
   const [auditModalOpen, setAuditModalOpen] = useState(false);
   const [servicesModalOpen, setServicesModalOpen] = useState(false);
   const [auditTopic, setAuditTopic] = useState("duplicidad");
+  const [contactService, setContactService] = useState("Automatizaciones / Excel");
 
   const openAudit = (topic = "duplicidad") => {
     setAuditTopic(topic);
+    setContactService(normalizeContactService(topic));
     setAuditModalOpen(true);
   };
 
@@ -331,7 +391,7 @@ export default function Home() {
       {/* Navbar Superior Formal */}
       <Navbar onOpenAudit={() => openAudit("general")} />
 
-      <main className="relative z-10 flex-1 flex flex-col text-[#f5dade]">
+      <main id="main-content" tabIndex={-1} className="relative z-10 flex-1 flex flex-col text-[#f5dade] focus:outline-none">
         {/* Hero Section con Three.js 3D Interactivo y Popup de Servicios */}
         <HeroSection
           onOpenAudit={() => openAudit("general")}
@@ -359,11 +419,11 @@ export default function Home() {
         {/* El Manifiesto de Pruebas Rudas */}
         <TestingPhilosophySection />
 
-        {/* Portafolio Directo & Credenciales de Pablo Valdés */}
+        {/* Portafolio Directo & Credenciales Técnicas de Naxo Resuelve */}
         <PortfolioSection />
 
         {/* Formulario de Contacto / Cotización */}
-        <ContactSection onOpenAudit={openAudit} />
+        <ContactSection onOpenAudit={openAudit} selectedService={contactService} />
       </main>
 
       {/* Footer */}
@@ -407,9 +467,9 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         onOpenAudit={onOpenAudit}
-        cvUrl={CV_URL}
+        cvUrl="#"
         portfolioUrl={PORTFOLIO_URL}
-        linkedinUrl={LINKEDIN_URL}
+        linkedinUrl="https://github.com/naxo16"
       />
 
       {/* Barra de Estado Minimalista Superior */}
@@ -432,11 +492,11 @@ function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
 
             <a href="#" className="flex items-center gap-2 group min-w-0">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#721828] to-[#cba135] flex items-center justify-center font-bold text-white shadow-md border border-[#cba135]/40 font-round text-sm group-hover:scale-105 transition-transform shrink-0">
-                PV
+                NR
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-xs sm:text-sm font-bold tracking-tight text-[#ff6b85] flex items-center gap-1.5 font-round truncate">
-                  Pablo Valdés
+                  Naxo Resuelve
                   <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#721828]/80 text-[#f2cf6b] border border-[#cba135]/40 shrink-0">
                     naxoresuelve
                   </span>
@@ -492,23 +552,23 @@ function HeroSection({
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#423943] border border-[#b82d46]/50 shadow-inner">
             <Terminal size={14} className="text-[#f2cf6b]" />
             <span className="text-xs font-mono font-medium text-[#f5dade]">
-              Pablo Valdés · Sistemas con Código Limpio, Mantenible & Arquitectura Robusta
+              Naxo Resuelve · Sistemas con Código Limpio, Mantenible & Arquitectura Robusta
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           </div>
 
-          {/* Título Principal: Código Limpio, Mantenible, Robusto + Resultados */}
+          {/* Título Principal: Naxo Resuelve - Código Limpio, Mantenible, Robusto + Resultados */}
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[#f5dade] leading-tight drop-shadow-sm">
-            Sistemas con código limpio y mantenible:{" "}
+            Naxo Resuelve:{" "}
             <span className="glitch-hover inline-block vino-gradient-text cursor-default font-black">
-              Arquitectura robusta certificada con testing rudo para erradicar errores
+              Sistemas con código limpio, arquitectura robusta y testing rudo
             </span>
           </h1>
 
           {/* Subtítulo de propuesta de valor natural y directa solicitada */}
           <div className="p-4 rounded-2xl bg-[#423943]/95 border border-[#615362] backdrop-blur-md">
             <p className="text-sm sm:text-base text-[#f5dade] leading-relaxed font-normal">
-              Reduce errores en tu negocio en simples pasos con soluciones de motor rápido, ahorra tiempo, perder dinero, y calentarte menos la cabeza con <strong className="text-[#ff6b85] font-black">naxo resuelve</strong>.{" "}
+              Reduce errores en tu negocio en simples pasos con soluciones de motor rápido, ahorra tiempo, perder dinero, y calentarte menos la cabeza con <strong className="text-[#ff6b85] font-black">Naxo Resuelve</strong>.{" "}
               <span className="text-[#f2cf6b] font-medium block mt-1.5">
                 Automatizaciones en Python, bases de datos PostgreSQL optimizadas y aplicaciones en terreno (Fiscalis) para que tu empresa opere sin caídas ni descalces.
               </span>
@@ -659,30 +719,18 @@ function CanvasVideoDemonstrationSection() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[250px] bg-[#cba135]/15 blur-[140px] pointer-events-none -z-10" />
 
       <div className="text-center max-w-5xl mx-auto mb-16 space-y-6">
-        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#721828]/90 via-[#423943] to-[#721828]/90 border-2 border-[#cba135] text-xs sm:text-sm font-bold text-[#f2cf6b] uppercase tracking-widest shadow-[0_0_25px_rgba(203,161,53,0.35)]">
+        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#721828]/90 via-[#423943] to-[#721828]/90 border-2 border-[#cba135] text-xs sm:text-sm font-bold text-[#f2cf6b] uppercase tracking-wider shadow-[0_0_25px_rgba(203,161,53,0.35)]">
           <span className="w-2.5 h-2.5 rounded-full bg-[#f2cf6b] shadow-[0_0_10px_#f2cf6b] animate-ping" />
           <Play size={15} className="text-[#f2cf6b] fill-[#f2cf6b]" />
-          <span>[ LIVE DEMO // RENDER CANVAS 2D & GUÍA VOZ IA SINTETIZADA ]</span>
+          <span>Demo interactiva · Clic para reproducir</span>
         </div>
 
-        <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#ff6b85] to-[#f2cf6b] tracking-tight leading-[1.08] drop-shadow-[0_4px_30px_rgba(184,45,70,0.5)] font-cyber">
-          Demostración en Vivo: Dashboard Agrícola & Automatización de Contratistas
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#ff6b85] to-[#f2cf6b] tracking-tight leading-[1.15] drop-shadow-[0_4px_30px_rgba(184,45,70,0.5)] font-cyber">
+          Demo de Dashboard Agrícola & Control de Contratistas
         </h2>
 
-        <p className="text-lg sm:text-xl md:text-2xl text-[#f5dade] max-w-4xl mx-auto leading-relaxed font-medium">
-          Examina cómo erradicamos el{" "}
-          <strong className="text-[#f2cf6b] font-bold px-2 py-0.5 rounded bg-[#721828]/50 border border-[#cba135]/50 shadow-[0_0_12px_rgba(203,161,53,0.3)]">
-            100% de errores de duplicidad
-          </strong>{" "}
-          y rescatamos más de{" "}
-          <strong className="text-[#ff6b85] font-bold px-2 py-0.5 rounded bg-[#721828]/50 border border-[#b82d46]/50 shadow-[0_0_12px_rgba(184,45,70,0.3)]">
-            38 horas semanales
-          </strong>{" "}
-          en faenas agrícolas. Haz clic en el botón superior del reproductor o en el teleprompter para escuchar la{" "}
-          <strong className="text-[#f2cf6b] font-bold underline decoration-[#cba135] decoration-2 underline-offset-4">
-            Voz IA guiando la solución
-          </strong>{" "}
-          en tiempo real con voz natural en español.
+        <p className="text-base sm:text-lg text-[#f5dade] max-w-3xl mx-auto leading-relaxed">
+          Haz clic en el reproductor para ver la demo en acción. Esta solución centraliza el registro de faenas agrícolas, cruza jornadas laborales automáticamente y erradica el 100% de errores por duplicidad de datos en planillas.
         </p>
       </div>
 
@@ -706,7 +754,7 @@ function CaseStudiesSection({
       <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#721828]/50 border border-[#cba135]/40 text-xs font-bold text-[#f2cf6b] uppercase tracking-wider">
           <FlaskConical size={13} />
-          Casos de Estudio Reales de Pablo Valdés
+          Casos de Estudio Reales de Naxo Resuelve
         </div>
         <h2 className="text-3xl sm:text-4xl font-extrabold text-[#ff6b85]">
           Sistemas sometidos a pruebas rudas antes de tocar producción
@@ -717,51 +765,62 @@ function CaseStudiesSection({
       </div>
 
       <div className="grid md:grid-cols-3 gap-6">
-        {CASE_STUDIES.map((c) => (
-          <div
-            key={c.id}
-            onClick={() => onSelectCase(c)}
-            className="group relative bg-[#423943] hover:bg-[#362f37] border border-[#615362] hover:border-[#b82d46]/70 rounded-2xl p-6 transition-all duration-300 shadow-lg hover:shadow-[0_10px_35px_rgba(114,24,40,0.4)] cursor-pointer flex flex-col justify-between"
-          >
-            {/* Header Card */}
-            <div>
-              <div className="flex items-center justify-between text-xs text-[#c29da5] mb-3">
-                <span className="font-mono text-[#f2cf6b]">PROYECTO #{c.id.toUpperCase()}</span>
-                <span className="px-2 py-0.5 rounded bg-[#721828]/70 text-[#f2cf6b] text-[10px] font-bold">
-                  TESTING CERTIFICADO
+        {CASE_STUDIES.map((c, idx) => {
+          const caseTitleId = `case-title-${c.id}`;
+          return (
+            <article
+              key={c.id}
+              tabIndex={0}
+              aria-labelledby={caseTitleId}
+              onClick={() => onSelectCase(c)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onSelectCase(c);
+                }
+              }}
+              className="group relative bg-[#423943] hover:bg-[#362f37] border-2 border-[#615362] hover:border-[#f2cf6b] focus:border-[#f2cf6b] focus:ring-2 focus:ring-[#f2cf6b] focus:outline-none rounded-3xl p-6 sm:p-7 transition-all duration-300 shadow-lg hover:shadow-[0_12px_35px_rgba(114,24,40,0.4)] cursor-pointer flex flex-col justify-between"
+            >
+              {/* Header Card */}
+              <div>
+                <div className="flex items-center justify-between text-xs text-[#dcd0d5] mb-3">
+                  <span className="font-mono text-[#f2cf6b] font-bold">PROYECTO #{c.id.toUpperCase()}</span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#721828] text-[#f2cf6b] text-xs font-bold border border-[#cba135]/40">
+                    TESTING CERTIFICADO
+                  </span>
+                </div>
+                <h3 id={caseTitleId} className="text-xl font-bold text-[#ff859b] group-hover:text-[#f2cf6b] transition-colors mb-3 leading-snug">
+                  {c.title}
+                </h3>
+                <p className="text-sm text-[#ffffff] mb-5 line-clamp-3 leading-relaxed font-normal">
+                  {c.problem}
+                </p>
+
+                {/* Batería resumida */}
+                <div className="space-y-2 mb-4 bg-[#302c36] p-3.5 rounded-2xl border border-[#615362]">
+                  <div className="text-xs font-bold text-[#ff859b] uppercase tracking-wider flex items-center gap-1.5">
+                    <CheckCircle2 size={15} className="text-emerald-400" aria-hidden="true" />
+                    <span>Prueba de Estrés Superada:</span>
+                  </div>
+                  <div className="text-xs font-mono text-[#f2cf6b] font-semibold truncate">
+                    {c.rudaTest[0].metrics}
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer Card */}
+              <div className="pt-4 border-t border-[#615362] flex items-center justify-between">
+                <span className="text-sm font-bold text-[#f5dade] group-hover:text-[#f2cf6b] flex items-center gap-1">
+                  <span>Ver expediente y demo</span>
+                  <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                </span>
+                <span className="text-xs text-[#dcd0d5] font-mono">
+                  {c.technologies.slice(0, 2).join(" · ")}
                 </span>
               </div>
-              <h3 className="text-lg font-bold text-[#ff6b85] group-hover:text-[#f2cf6b] transition-colors mb-2">
-                {c.title}
-              </h3>
-              <p className="text-xs text-[#f5dade] mb-4 line-clamp-3 leading-relaxed">
-                {c.problem}
-              </p>
-
-              {/* Batería resumida */}
-              <div className="space-y-2 mb-4 bg-[#362f37] p-3 rounded-xl border border-[#615362]">
-                <div className="text-[11px] font-bold text-[#ff6b85] uppercase tracking-wider flex items-center gap-1.5">
-                  <CheckCircle2 size={13} className="text-emerald-400" />
-                  Prueba de Estrés Superada:
-                </div>
-                <div className="text-xs font-mono text-[#f2cf6b] truncate">
-                  {c.rudaTest[0].metrics}
-                </div>
-              </div>
-            </div>
-
-            {/* Footer Card */}
-            <div className="pt-3 border-t border-[#615362] flex items-center justify-between">
-              <span className="text-xs font-semibold text-[#f5dade] group-hover:text-[#f2cf6b] flex items-center gap-1">
-                Ver expediente y demo
-                <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
-              </span>
-              <span className="text-xs text-[#c29da5] font-mono">
-                {c.technologies.slice(0, 2).join(" · ")}
-              </span>
-            </div>
-          </div>
-        ))}
+            </article>
+          );
+        })}
       </div>
     </section>
   );
@@ -829,55 +888,66 @@ function ServicesSection({
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {SERVICES_DATA.map((s, idx) => {
           const Icon = s.icon;
+          const cardId = `service-title-${idx}`;
           return (
-            <div
+            <article
               key={idx}
-              className="bg-[#423943] border border-[#615362] hover:border-[#b82d46]/60 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-[0_10px_30px_rgba(0,0,0,0.7)] flex flex-col justify-between"
+              aria-labelledby={cardId}
+              className="bg-[#423943] border-2 border-[#615362] hover:border-[#f2cf6b] focus-within:border-[#f2cf6b] focus-within:ring-2 focus-within:ring-[#f2cf6b] rounded-3xl p-6 sm:p-7 transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-[0_12px_35px_rgba(0,0,0,0.8)] flex flex-col justify-between"
             >
               <div>
                 {/* Header */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 rounded-xl bg-gradient-to-br from-[#721828] to-[#0e111a] text-[#f2cf6b] border border-[#cba135]/40">
-                    <Icon size={22} />
+                <div className="flex items-center justify-between gap-3 mb-4">
+                  <div 
+                    aria-hidden="true"
+                    className="p-3.5 rounded-2xl bg-gradient-to-br from-[#721828] to-[#1c1822] text-[#f2cf6b] border border-[#cba135]/50 shadow-md"
+                  >
+                    <Icon size={26} />
                   </div>
-                  <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#4c424e] text-[#f2cf6b] border border-[#615362]">
+                  <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-[#302c36] text-[#f2cf6b] border border-[#cba135]/60 shadow-sm">
                     {s.badge}
                   </span>
                 </div>
 
-                <h3 className="text-lg font-bold text-[#ff6b85] mb-1">{s.title}</h3>
-                <span className="text-xs text-[#f2cf6b] font-semibold block mb-4">
+                <h3 id={cardId} className="text-xl sm:text-2xl font-black text-[#ff859b] tracking-tight mb-2 leading-snug">
+                  {s.title}
+                </h3>
+                <span className="text-sm font-semibold text-[#f2cf6b] block mb-5">
                   {s.tag}
                 </span>
 
                 {/* El Dolor (Pain Point) */}
-                <div className="mb-3 p-3 rounded-xl bg-red-950/30 border border-red-900/40 text-xs">
-                  <span className="font-bold text-[#ff6b85] block mb-1">
-                    El Dolor Real:
+                <div className="mb-4 p-4 rounded-2xl bg-red-950/40 border border-red-700/60 text-sm">
+                  <span className="font-bold text-[#ff6b85] text-sm uppercase tracking-wide block mb-1.5 flex items-center gap-1.5">
+                    <span aria-hidden="true">⚠️</span>
+                    <span>El Dolor Real:</span>
                   </span>
-                  <p className="text-[#f5dade] leading-relaxed">{s.problem}</p>
+                  <p className="text-[#ffffff] leading-relaxed font-normal">{s.problem}</p>
                 </div>
 
                 {/* La Solución */}
-                <div className="p-3 rounded-xl bg-emerald-950/30 border border-emerald-900/40 text-xs">
-                  <span className="font-bold text-emerald-300 block mb-1">
-                    Solución de Ingeniería:
+                <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-600/60 text-sm">
+                  <span className="font-bold text-emerald-300 text-sm uppercase tracking-wide block mb-1.5 flex items-center gap-1.5">
+                    <span aria-hidden="true">✓</span>
+                    <span>Solución de Ingeniería:</span>
                   </span>
-                  <p className="text-[#f5dade] leading-relaxed">{s.solution}</p>
+                  <p className="text-[#ffffff] leading-relaxed font-normal">{s.solution}</p>
                 </div>
               </div>
 
-              {/* Botón rápido de cotizar */}
-              <div className="pt-4 mt-4 border-t border-[#615362] flex items-center justify-between">
+              {/* Botón de cotizar / diagnosticar accesible con tamaño táctil adecuado */}
+              <div className="pt-5 mt-5 border-t border-[#615362] flex items-center justify-between">
                 <button
+                  type="button"
                   onClick={() => onOpenAudit(s.title)}
-                  className="text-xs font-bold text-[#f2cf6b] hover:text-[#ff6b85] flex items-center gap-1 transition-colors cursor-pointer"
+                  aria-label={`Diagnosticar mi caso de ${s.title}`}
+                  className="w-full py-3 px-4 rounded-xl text-sm font-bold text-[#07080c] bg-gradient-to-r from-[#f2cf6b] via-[#e2b747] to-[#cba135] hover:brightness-110 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-white flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md"
                 >
                   <span>Diagnosticar mi caso</span>
-                  <ChevronRight size={14} />
+                  <ChevronRight size={18} aria-hidden="true" />
                 </button>
               </div>
-            </div>
+            </article>
           );
         })}
       </div>
@@ -1037,7 +1107,7 @@ Fecha Solicitud: 2026`;
   }
 
   const whatsappPromoLink = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(
-    `Hola Pablo, acabo de registrarme en la promoción de naxoresuelve para asegurar mi beneficio de "${selectedPromo}". Mi nombre es ${name || "Cliente"} y mi correo es ${email || "mi correo"}.`
+    `Hola Naxo Resuelve, acabo de registrarme en la promoción de naxoresuelve para asegurar mi beneficio de "${selectedPromo}". Mi nombre es ${name || "Cliente"} y mi correo es ${email || "mi correo"}.`
   )}`;
 
   return (
@@ -1324,33 +1394,33 @@ Fecha Solicitud: 2026`;
               Estamos consolidando nuestras herramientas más exitosas en paquetes modulares de software accesible para PYMEs chilenas. Al contratar servicios hoy o registrarte en la preventa, aseguras <strong>tarifas congeladas con hasta 30% OFF vitalicio</strong>.
             </p>
 
-            {/* Listado de 4 Productos de la Tienda */}
-            <div className="grid sm:grid-cols-2 gap-3.5">
+            {/* Listado de 4 Productos de la Tienda con Fuentes Grandes y Legibles */}
+            <div className="grid sm:grid-cols-2 gap-4" role="region" aria-label="Productos en preventa">
               {UPCOMING_PRODUCTS.map((prod, pIdx) => (
-                <div
+                <article
                   key={pIdx}
-                  className="p-3.5 rounded-xl bg-[#362f37] border border-[#615362] hover:border-[#b82d46]/50 transition flex flex-col justify-between space-y-2"
+                  className="p-4 rounded-xl bg-[#362f37] border border-[#615362] hover:border-[#b82d46]/70 transition flex flex-col justify-between space-y-2.5 shadow-sm"
                 >
                   <div>
-                    <div className="flex items-center justify-between text-[10px] font-mono text-[#f2cf6b] mb-1">
+                    <div className="flex items-center justify-between text-xs font-mono text-[#f2cf6b] mb-1 font-bold">
                       <span>{prod.badge}</span>
                       <span className="text-emerald-400 font-bold">Preventa</span>
                     </div>
-                    <h4 className="text-xs font-bold text-[#f5dade]">{prod.name}</h4>
-                    <p className="text-[11px] text-[#c29da5] line-clamp-2 mt-1 leading-snug">
+                    <h4 className="text-sm sm:text-base font-bold text-[#ffffff]">{prod.name}</h4>
+                    <p className="text-xs sm:text-sm text-[#dcd0d5] line-clamp-2 mt-1.5 leading-relaxed font-normal">
                       {prod.desc}
                     </p>
                   </div>
 
-                  <div className="pt-2 border-t border-[#615362]">
-                    <div className="text-[10px] text-[#9e8e97] line-through font-mono">
+                  <div className="pt-2.5 border-t border-[#615362]">
+                    <div className="text-xs text-[#9e8e97] line-through font-mono">
                       {prod.price}
                     </div>
-                    <div className="text-xs font-bold font-mono text-[#f2cf6b]">
+                    <div className="text-sm sm:text-base font-bold font-mono text-[#f2cf6b]">
                       {prod.discountPrice}
                     </div>
                   </div>
-                </div>
+                </article>
               ))}
             </div>
           </div>
@@ -1415,18 +1485,20 @@ function TestingPhilosophySection() {
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" role="region" aria-label="Pilares de testing riguroso">
           {steps.map((st) => (
-            <div
+            <article
               key={st.step}
-              className="bg-[#423943] border border-[#615362] rounded-2xl p-6 relative overflow-hidden"
+              className="bg-[#423943] border border-[#615362] rounded-2xl p-6 relative overflow-hidden shadow-md flex flex-col justify-between"
             >
-              <div className="text-4xl font-black font-mono text-[#80182a]/70 mb-3">
-                {st.step}
+              <div>
+                <div className="text-4xl font-black font-mono text-[#ff859b]/80 mb-3" aria-hidden="true">
+                  {st.step}
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold text-[#ff859b] mb-2 leading-snug">{st.title}</h3>
+                <p className="text-sm sm:text-base text-[#ffffff] leading-relaxed font-normal">{st.desc}</p>
               </div>
-              <h3 className="text-base font-bold text-[#ff6b85] mb-2">{st.title}</h3>
-              <p className="text-xs text-[#f5dade] leading-relaxed">{st.desc}</p>
-            </div>
+            </article>
           ))}
         </div>
       </div>
@@ -1448,10 +1520,10 @@ function PortfolioSection() {
               Portafolio Oficial & Trayectoria
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-[#ff6b85]">
-              Pablo Valdés — Desarrollador Backend & Analista Programador
+              Naxo Resuelve — Arquitectura Backend, Automatización & Testing Rudo
             </h2>
             <p className="text-sm sm:text-base text-[#f5dade] leading-relaxed">
-              Especializado en Python, FastAPI y PostgreSQL. Resuelvo problemas de lógica, persistencia y arquitectura limpia con un enfoque analítico riguroso. Puedes explorar mi portafolio completo en renkaidev, revisar el código en GitHub o descargar mi CV oficial.
+              Especializado en Python, FastAPI y PostgreSQL. Resuelvo problemas de lógica, persistencia y arquitectura limpia con un enfoque analítico riguroso. Puedes explorar los desarrollos en renkaidev o revisar el código fuente en GitHub.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
               <a
@@ -1464,31 +1536,20 @@ function PortfolioSection() {
                 <ExternalLink size={14} />
               </a>
               <a
-                href={CV_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#f5dade] hover:text-[#f2cf6b] bg-[#423943] hover:bg-[#4c424e] border border-[#615362] transition-colors flex items-center gap-2"
-              >
-                <Download size={14} className="text-[#f2cf6b]" />
-                <span>Descargar CV</span>
-              </a>
-              <a
-                href={LINKEDIN_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-[#0A66C2] hover:bg-[#004182] transition-colors flex items-center gap-2 shadow-md"
-              >
-                <span>LinkedIn</span>
-                <ExternalLink size={14} />
-              </a>
-              <a
                 href={GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#f5dade] hover:text-[#f2cf6b] bg-[#423943] border border-[#615362] transition-colors flex items-center gap-2"
               >
                 <GithubIcon className="w-3.5 h-3.5" />
-                <span>GitHub (naxo16)</span>
+                <span>GitHub Oficial (naxo16)</span>
+              </a>
+              <a
+                href={`tel:+${PHONE_NUMBER}`}
+                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#f5dade] hover:text-[#f2cf6b] bg-[#423943] border border-[#615362] transition-colors flex items-center gap-2"
+              >
+                <Smartphone size={14} className="text-[#f2cf6b]" />
+                <span>Llamada Directa</span>
               </a>
             </div>
           </div>
@@ -1529,22 +1590,67 @@ function PortfolioSection() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Formulario de Contacto / Cotización Directa                        */
-/* ------------------------------------------------------------------ */
+export function normalizeContactService(rawTopic?: string): string {
+  if (!rawTopic) return "Automatizaciones / Excel";
+  const s = rawTopic.toLowerCase().trim();
+
+  if (s.includes("carga") || s.includes("masiva") || s.includes("pipeline") || s.includes("streaming")) {
+    return "Carga Masiva";
+  }
+  if (s.includes("excel") || s.includes("macro") || s.includes("planilla")) {
+    return "Automatizaciones / Excel";
+  }
+  if (s.includes("arduino") || s.includes("iot") || s.includes("electrónica") || s.includes("electronica")) {
+    return "Electronica / Arduino";
+  }
+  if (s.includes("domotica") || s.includes("domótica") || s.includes("camara") || s.includes("cámara") || s.includes("cctv")) {
+    return "Domotica / Camaras";
+  }
+  if (s.includes("reparacion") || s.includes("reparación") || s.includes("notebook") || s.includes("computador") || s.includes("hardware") || s.includes("celular")) {
+    return "Reparacion Hardware";
+  }
+  if (s.includes("fiscalis") || s.includes("terreno") || s.includes("inspeccion") || s.includes("inspección")) {
+    return "Fiscalis / Terreno";
+  }
+  if (s.includes("duplicidad") || s.includes("clonad") || s.includes("repetid")) {
+    return "Duplicidad de Datos";
+  }
+  if (s.includes("base de datos") || s.includes("postgresql") || s.includes("sql") || s.includes("3fn")) {
+    return "Base de Datos";
+  }
+  if (s.includes("dashboard") || s.includes("bi") || s.includes("telemetr")) {
+    return "Dashboards";
+  }
+  if (s.includes("arriendo") || s.includes("arrendamiento") || s.includes("saas")) {
+    return "Arriendo SaaS";
+  }
+  if (s.includes("maps") || s.includes("ads") || s.includes("google")) {
+    return "Google Maps / Ads";
+  }
+
+  return "Automatizaciones / Excel";
+}
 
 function ContactSection({
   onOpenAudit,
+  selectedService,
 }: {
   onOpenAudit: (topic: string) => void;
+  selectedService?: string;
 }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [serviceType, setServiceType] = useState("Automatizaciones / Excel");
+  const [serviceType, setServiceType] = useState(() => normalizeContactService(selectedService));
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    if (selectedService) {
+      setServiceType(normalizeContactService(selectedService));
+    }
+  }, [selectedService]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -1598,7 +1704,7 @@ function ContactSection({
           <div className="space-y-3 pt-2">
             <div className="flex items-center gap-3 text-sm text-[#f5dade]">
               <CheckCircle2 size={18} className="text-[#f2cf6b]" />
-              <span>Respuesta técnica directa por Pablo Valdés en menos de 24 horas.</span>
+              <span>Respuesta técnica directa por Naxo Resuelve en menos de 24 horas.</span>
             </div>
             <div className="flex items-center gap-3 text-sm text-[#f5dade]">
               <CheckCircle2 size={18} className="text-[#f2cf6b]" />
@@ -1627,7 +1733,7 @@ function ContactSection({
               <CheckCircle2 className="w-16 h-16 text-[#f2cf6b] mx-auto animate-bounce" />
               <h3 className="text-2xl font-bold text-[#ff6b85]">¡Mensaje Recibido!</h3>
               <p className="text-sm text-[#f5dade] max-w-sm mx-auto">
-                Tu requerimiento fue ingresado exitosamente en nuestra base de datos. Pablo Valdés lo revisará a la brevedad.
+                Tu requerimiento fue ingresado exitosamente en nuestra base de datos. Naxo Resuelve lo revisará a la brevedad.
               </p>
               <button
                 onClick={() => setSuccess(false)}
@@ -1732,7 +1838,7 @@ function ContactSection({
                 ) : (
                   <>
                     <Send size={16} />
-                    <span>Enviar Consulta a Pablo Valdés</span>
+                    <span>Enviar Consulta a Naxo Resuelve</span>
                   </>
                 )}
               </button>
@@ -1753,7 +1859,7 @@ function Footer() {
     <footer className="border-t border-[#615362] bg-[#362f37] py-10 px-4 sm:px-6 text-[#c29da5] text-xs">
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
-          <span className="font-bold text-[#ff6b85] tracking-tight">Pablo Valdés</span> · naxoresuelve / renkaidev
+          <span className="font-bold text-[#ff6b85] tracking-tight">Naxo Resuelve</span> · naxoresuelve / renkaidev
           <div className="text-[11px] text-[#c29da5] mt-0.5">
             Ingeniería de software, persistencia en PostgreSQL, FastAPI y testing riguroso.
           </div>
@@ -1770,28 +1876,10 @@ function Footer() {
             <ExternalLink size={11} />
           </a>
           <a
-            href={CV_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-[#ff6b85] transition flex items-center gap-1"
-          >
-            <span>CV</span>
-            <Download size={11} />
-          </a>
-          <a
             href={`tel:+${PHONE_NUMBER}`}
             className="hover:text-[#f2cf6b] transition flex items-center gap-1 text-[#f5dade]"
           >
             <span>+{PHONE_NUMBER}</span>
-          </a>
-          <a
-            href={LINKEDIN_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-[#ff6b85] transition flex items-center gap-1"
-          >
-            <span>LinkedIn</span>
-            <ExternalLink size={11} />
           </a>
           <a
             href={GITHUB_URL}

@@ -437,7 +437,7 @@ MATRIZ DE CUMPLIMIENTO OWASP:
 ${AUDIT_CHECKLIST.map((a) => `- ${a.code} [${a.category}]: ${a.title} -> ${a.status} (${a.metric})`).join("\n")}
 
 ========================================================================
-Firma Digital de Integridad Criptográfica: Pablo Valdés · naxoresuelve
+Firma Digital de Integridad Criptográfica: Naxo Resuelve · naxoresuelve
 Testing Rudo 100% Verificado · Cero Regresiones · 3FN PostgreSQL
 ========================================================================`;
 
@@ -1170,7 +1170,7 @@ Testing Rudo 100% Verificado · Cero Regresiones · 3FN PostgreSQL
       <footer className="border-t border-[#615362]/40 bg-[#0a0c10] py-6 px-4 sm:px-8 text-xs text-[#c29da5]">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <div>
-            <strong className="text-white">Pablo Valdés</strong> · naxoresuelve Portal de Clientes &copy; 2026
+            <strong className="text-white">Naxo Resuelve</strong> · naxoresuelve Portal de Clientes &copy; 2026
           </div>
           <div className="flex items-center gap-4 text-[11px] font-mono">
             <span>Cumplimiento Ley 19.628 / 21.719</span>

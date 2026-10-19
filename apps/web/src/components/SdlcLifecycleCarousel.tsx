@@ -243,23 +243,23 @@ export function SdlcLifecycleCarousel() {
             </div>
 
             {/* Doble Perspectiva: Rigor Técnico vs Solución de Negocio */}
-            <div className="grid sm:grid-cols-2 gap-3 pt-1">
-              <div className="p-3 rounded-xl bg-[#302c36]/90 border border-[#6d6475]/70 space-y-1">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#ff6b85] flex items-center gap-1">
-                  <Cpu size={12} />
+            <div className="grid sm:grid-cols-2 gap-3.5 pt-1">
+              <div className="p-4 rounded-xl bg-[#302c36]/95 border border-[#6d6475] space-y-1.5 shadow-sm">
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#ff859b] flex items-center gap-1.5">
+                  <Cpu size={14} aria-hidden="true" />
                   <span>Enfoque de Ingeniería Limpia</span>
                 </span>
-                <p className="text-xs text-[#dcd0d5] leading-relaxed">
+                <p className="text-sm text-[#ffffff] leading-relaxed font-normal">
                   {currentPhase.engineeringFocus}
                 </p>
               </div>
 
-              <div className="p-3 rounded-xl bg-[#302c36]/90 border border-[#cba135]/40 space-y-1">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#f2cf6b] flex items-center gap-1">
-                  <CheckCircle2 size={12} />
+              <div className="p-4 rounded-xl bg-[#302c36]/95 border border-[#cba135]/60 space-y-1.5 shadow-sm">
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#f2cf6b] flex items-center gap-1.5">
+                  <CheckCircle2 size={14} aria-hidden="true" />
                   <span>Solución &amp; Impacto de Negocio</span>
                 </span>
-                <p className="text-xs text-white leading-relaxed">
+                <p className="text-sm text-[#ffffff] leading-relaxed font-normal">
                   {currentPhase.businessSolution}
                 </p>
               </div>
@@ -267,31 +267,31 @@ export function SdlcLifecycleCarousel() {
           </div>
 
           {/* Bloque Derecho: Métricas Reales & Resultados (5 cols) */}
-          <div className="lg:col-span-5 bg-[#302c36]/95 border-2 border-[#cba135]/50 rounded-2xl p-4 shadow-xl space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-[#6d6475]">
-              <span className="text-xs font-cyber font-bold uppercase tracking-wider text-[#f2cf6b] flex items-center gap-1.5">
-                <Award size={14} className="text-[#f2cf6b]" />
+          <div className="lg:col-span-5 bg-[#302c36]/95 border-2 border-[#cba135]/60 rounded-2xl p-5 shadow-xl space-y-3.5" role="region" aria-label="Métricas de la fase seleccionada">
+            <div className="flex items-center justify-between pb-2.5 border-b border-[#6d6475]">
+              <span className="text-xs sm:text-sm font-cyber font-bold uppercase tracking-wider text-[#f2cf6b] flex items-center gap-1.5">
+                <Award size={16} className="text-[#f2cf6b]" aria-hidden="true" />
                 <span>Resultados Comprobables de la Fase</span>
               </span>
-              <span className="text-[10px] font-mono text-emerald-400 font-bold flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span className="text-xs font-mono text-emerald-400 font-bold flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-emerald-400" aria-hidden="true" />
                 VERIFICADO
               </span>
             </div>
 
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2.5">
               {currentPhase.metrics.map((m, mIdx) => (
                 <div
                   key={mIdx}
-                  className="p-2.5 rounded-xl bg-[#3a3640] border border-[#6d6475]/60 flex flex-col justify-between"
+                  className="p-3 rounded-xl bg-[#3a3640] border border-[#6d6475] flex flex-col justify-between"
                 >
-                  <span className="text-[10px] text-[#dcd0d5] font-medium line-clamp-1">
+                  <span className="text-xs text-[#ffffff] font-semibold line-clamp-1">
                     {m.label}
                   </span>
-                  <div className="text-sm sm:text-base font-cyber font-black text-white my-1">
+                  <div className="text-base sm:text-lg font-cyber font-black text-[#ff859b] my-1">
                     {m.value}
                   </div>
-                  <span className="text-[9px] text-[#f2cf6b] font-mono leading-tight">
+                  <span className="text-xs text-[#f2cf6b] font-mono leading-tight font-medium">
                     {m.highlight}
                   </span>
                 </div>

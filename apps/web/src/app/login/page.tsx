@@ -280,7 +280,7 @@ export default function LoginPage() {
 
           <div className="flex items-center gap-3">
             <span className="text-xs font-bold text-[#ff6b85] hidden sm:inline">
-              Pablo Valdés · naxoresuelve
+              Naxo Resuelve · naxoresuelve
             </span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#721828]/60 text-[#f2cf6b] border border-[#721828]">
               Ley 19.628 / 21.719 & Ley 21.663
@@ -352,7 +352,7 @@ export default function LoginPage() {
               ¿Requieres asistencia directa?{" "}
               <a
                 href={`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(
-                  "Hola Pablo, tengo una consulta sobre mi cuenta en el portal de naxoresuelve."
+                  "Hola Naxo Resuelve, tengo una consulta sobre mi cuenta en el portal de naxoresuelve."
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -571,7 +571,7 @@ export default function LoginPage() {
                         <input
                           type="text"
                           required
-                          placeholder="Pablo Valdés"
+                          placeholder="Ej. Innovación & Software SpA"
                           value={fullName}
                           onChange={(e) => setFullName(e.target.value)}
                           className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-3 text-[#f5dade] placeholder-[#9e8e97] text-sm transition"
@@ -857,7 +857,7 @@ export default function LoginPage() {
                       onClick={() => fillDemoCredentials("admin")}
                       className="px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-[#721828]/40 hover:bg-[#721828]/70 text-[#f2cf6b] border border-[#721828] transition cursor-pointer"
                     >
-                      Autocompletar Admin (Pablo Valdés)
+                      Autocompletar Admin Demo
                     </button>
                   </div>
                 </div>
@@ -871,7 +871,7 @@ export default function LoginPage() {
       <footer className="relative z-10 border-t border-[#615362] bg-[#362f37] py-6 px-4 text-center text-xs text-[#c29da5]">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <span>
-            Pablo Valdés · <strong className="text-[#ff6b85]">naxoresuelve</strong> &copy; 2026
+            Naxo Resuelve · <strong className="text-[#ff6b85]">naxoresuelve</strong> &copy; 2026
           </span>
           <div className="flex items-center gap-4 text-[11px]">
             <span>Arquitectura FastAPI + PostgreSQL</span>

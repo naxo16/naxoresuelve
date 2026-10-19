@@ -402,7 +402,7 @@ export function ModernCanvasVideoPlayer() {
       ctx.font = "bold 12px monospace";
       ctx.textAlign = "left";
       ctx.fillStyle = "#ff758f"; // Vino
-      ctx.fillText("● TELEMETRÍA EN VIVO · PABLO VALDÉS", margin + 10, margin + 22);
+      ctx.fillText("● TELEMETRÍA EN VIVO · NAXO RESUELVE", margin + 10, margin + 22);
 
       ctx.fillStyle = "#f2cf6b"; // Dorado
       const isPaused = !video || video.paused;
@@ -755,8 +755,8 @@ export function ModernCanvasVideoPlayer() {
                 <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#721828] via-[#9e233b] to-[#cba135] flex items-center justify-center text-white shadow-[0_0_35px_rgba(184,45,70,0.9)] border-2 border-[#f2cf6b] transform group-hover:scale-110 transition-transform">
                   <Play size={36} className="ml-1 text-white fill-white" />
                 </div>
-                <span className="mt-3 px-3.5 py-1 rounded-full bg-black/85 border border-[#cba135]/70 text-xs font-mono font-bold text-[#f2cf6b] tracking-wider uppercase shadow-lg">
-                  ▶ Iniciar Demostración en Video con Audio
+                <span className="mt-3 px-4 py-1.5 rounded-full bg-black/85 border border-[#cba135]/70 text-xs font-mono font-bold text-[#f2cf6b] tracking-wider uppercase shadow-lg">
+                  ▶ Clic aquí para ver la demo
                 </span>
               </div>
             )}
@@ -853,10 +853,11 @@ export function ModernCanvasVideoPlayer() {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={togglePlay}
-                    className="p-2 rounded-xl bg-[#423943] hover:bg-[#4c424e] border border-[#615362] text-[#f2cf6b] transition cursor-pointer"
+                    aria-label={isPlaying ? "Pausar reproducción del video" : "Iniciar reproducción del video"}
+                    className="p-2.5 rounded-xl bg-[#423943] hover:bg-[#4c424e] border border-[#615362] text-[#f2cf6b] transition cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center"
                     title={isPlaying ? "Pausar" : "Reproducir"}
                   >
-                    {isPlaying ? <Pause size={15} /> : <Play size={15} />}
+                    {isPlaying ? <Pause size={18} aria-hidden="true" /> : <Play size={18} aria-hidden="true" />}
                   </button>
 
                   <button
@@ -866,26 +867,33 @@ export function ModernCanvasVideoPlayer() {
                         videoRef.current.play();
                       }
                     }}
-                    className="p-2 rounded-xl bg-[#423943] hover:bg-[#4c424e] border border-[#615362] text-[#c29da5] hover:text-[#f5dade] transition cursor-pointer"
+                    aria-label="Reiniciar video desde el inicio"
+                    className="p-2.5 rounded-xl bg-[#423943] hover:bg-[#4c424e] border border-[#615362] text-[#c29da5] hover:text-[#f5dade] transition cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center"
                     title="Reiniciar Video"
                   >
-                    <RotateCcw size={15} />
+                    <RotateCcw size={18} aria-hidden="true" />
                   </button>
 
                   <button
                     onClick={toggleMute}
-                    className="p-2 rounded-xl bg-[#423943] hover:bg-[#4c424e] border border-[#615362] text-[#c29da5] hover:text-[#f5dade] transition cursor-pointer"
+                    aria-label={isMuted ? "Activar sonido del video" : "Silenciar sonido del video"}
+                    className="p-2.5 rounded-xl bg-[#423943] hover:bg-[#4c424e] border border-[#615362] text-[#c29da5] hover:text-[#f5dade] transition cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center"
                     title={isMuted ? "Activar Audio Video" : "Silenciar Video"}
                   >
-                    {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} className="text-[#f2cf6b]" />}
+                    {isMuted ? <VolumeX size={18} aria-hidden="true" /> : <Volume2 size={18} className="text-[#f2cf6b]" aria-hidden="true" />}
                   </button>
 
+                  <label htmlFor="video-volume-slider" className="sr-only">
+                    Control de volumen del reproductor
+                  </label>
                   <input
+                    id="video-volume-slider"
                     type="range"
                     min="0"
                     max="1"
                     step="0.05"
                     value={isMuted ? 0 : volume}
+                    aria-label="Volumen del video"
                     onChange={(e) => {
                       const newVol = parseFloat(e.target.value);
                       setVolume(newVol);
@@ -895,11 +903,11 @@ export function ModernCanvasVideoPlayer() {
                         setIsMuted(newVol === 0);
                       }
                     }}
-                    className="w-16 h-1.5 accent-[#cba135] bg-[#281a24] rounded-lg cursor-pointer"
+                    className="w-16 h-2 accent-[#cba135] bg-[#281a24] rounded-lg cursor-pointer"
                     title="Control de Volumen del Video"
                   />
 
-                  <span className="text-[11px] text-[#c29da5]">
+                  <span className="text-xs text-[#c29da5]" aria-label="Tiempo transcurrido y duración total">
                     {Math.floor(currentTime / 60)}:
                     {Math.floor(currentTime % 60)
                       .toString()
@@ -914,13 +922,13 @@ export function ModernCanvasVideoPlayer() {
                 {/* Badge Indicador de Voz IA */}
                 <div className="flex items-center gap-2">
                   {voiceSpeaking && (
-                    <span className="flex items-center gap-1.5 text-[10px] text-[#f2cf6b] font-bold animate-pulse">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                    <span className="flex items-center gap-1.5 text-xs text-[#f2cf6b] font-bold animate-pulse" role="status" aria-live="polite">
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" aria-hidden="true" />
                       <span>IA NARRANDO</span>
                     </span>
                   )}
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-[#721828]/60 text-[#f2cf6b] border border-[#721828]">
-                    Canvas 2D Hardware-Accelerated
+                  <span className="text-xs px-2.5 py-1 rounded bg-[#721828]/60 text-[#f2cf6b] border border-[#721828]">
+                    Canvas 2D Hardware
                   </span>
                 </div>
               </div>
@@ -929,24 +937,25 @@ export function ModernCanvasVideoPlayer() {
 
           {/* Capítulos y Timestamps Interactivos */}
           <div className="bg-[#423943] border border-[#615362] rounded-2xl p-4 space-y-2">
-            <span className="text-[11px] font-mono text-[#f2cf6b] font-bold uppercase tracking-wider block">
-              Capítulos Interactivos con Guía Auditiva:
+            <span className="text-xs font-mono text-[#f2cf6b] font-bold uppercase tracking-wider block">
+              Capítulos Interactivos con Guía Auditiva &amp; Transcripción:
             </span>
-            <div className="grid sm:grid-cols-3 gap-2">
+            <div className="grid sm:grid-cols-3 gap-2" role="region" aria-label="Selector de capítulos del video">
               {activeTrack.chapters.map((ch, idx) => (
                 <button
                   key={idx}
                   onClick={() => jumpToChapter(ch.time, idx)}
-                  className={`text-left p-2.5 rounded-xl border text-xs transition cursor-pointer flex flex-col justify-between ${
+                  aria-label={`Ir al capítulo ${ch.title}`}
+                  className={`text-left p-3 rounded-xl border text-xs transition cursor-pointer flex flex-col justify-between min-h-[50px] ${
                     currentChapterIdx === idx
                       ? "bg-[#721828]/40 border-[#cba135] text-[#f5dade] shadow-sm"
                       : "bg-[#362f37] border-[#615362] text-[#c29da5] hover:text-[#f5dade] hover:border-[#721828]"
                   }`}
                 >
-                  <div className="font-bold font-mono text-[#ff6b85] text-[11px] mb-1">
+                  <div className="font-bold font-mono text-[#ff859b] text-xs mb-1">
                     {ch.title}
                   </div>
-                  <div className="text-[10px] text-[#c29da5] line-clamp-1">
+                  <div className="text-xs text-[#ffffff] line-clamp-2">
                     {ch.persuasiveHighlight}
                   </div>
                 </button>
@@ -958,42 +967,49 @@ export function ModernCanvasVideoPlayer() {
         {/* Columna Derecha: Teleprompter de Voz IA + Métricas de Impacto (5 cols) */}
         <div className="lg:col-span-5 space-y-5">
           
-          {/* Teleprompter / Subtítulos HUD de la Voz IA */}
-          <div className="bg-gradient-to-br from-[#141824] via-[#0e111a] to-[#07080c] border border-[#b82d46]/60 rounded-3xl p-6 sm:p-7 shadow-xl relative overflow-hidden">
+          {/* Teleprompter / Subtítulos HUD de la Voz IA (Accesibilidad para personas sordas o con discapacidad auditiva) */}
+          <div
+            role="region"
+            aria-live="polite"
+            aria-label="Subtítulos y transcripción en texto accesible para personas sordas o con discapacidad auditiva"
+            className="bg-gradient-to-br from-[#141824] via-[#0e111a] to-[#07080c] border-2 border-[#b82d46]/70 rounded-3xl p-6 sm:p-7 shadow-xl relative overflow-hidden"
+          >
             <div className="flex items-center justify-between pb-3 border-b border-[#615362] mb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#721828] to-[#cba135] flex items-center justify-center text-white">
-                  <Mic size={14} />
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#721828] to-[#cba135] flex items-center justify-center text-white shrink-0">
+                  <Mic size={16} aria-hidden="true" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-[#ff6b85]">
-                    Guía Auditiva de Inteligencia Artificial
+                  <h4 className="text-sm font-bold text-[#ff859b]">
+                    Transcripción &amp; Subtítulos en Vivo (Accesible)
                   </h4>
-                  <span className="text-[10px] text-[#c29da5] font-mono">
-                    Síntesis Vocal en Tiempo Real (es-CL)
+                  <span className="text-xs text-[#f2cf6b] font-mono">
+                    Lectura sincronizada para personas sordas y con discapacidad auditiva
                   </span>
                 </div>
               </div>
 
               <button
+                type="button"
                 onClick={toggleVoiceGuide}
-                className="text-[10px] font-mono px-2 py-1 rounded bg-[#721828]/50 text-[#f2cf6b] hover:bg-[#721828] transition border border-[#721828]"
+                aria-label={isVoiceActive ? "Silenciar narración de voz IA" : "Activar narración de voz IA"}
+                className="text-xs font-mono px-3 py-1.5 rounded-lg bg-[#721828]/60 text-[#f2cf6b] hover:bg-[#721828] transition border border-[#721828] cursor-pointer min-h-[36px]"
               >
-                {isVoiceActive ? "Silenciar" : "Activar"}
+                {isVoiceActive ? "Silenciar Voz" : "Activar Voz"}
               </button>
             </div>
 
-            {/* Texto que la IA está diciendo */}
-            <div className="min-h-[100px] flex flex-col justify-center">
-              <p className="text-xs sm:text-sm text-[#f5dade] leading-relaxed italic">
-                &quot;{currentSubtitle}&quot;
+            {/* Texto que la IA está diciendo: Fuente Grande, legible y de alto contraste AAA */}
+            <div className="min-h-[110px] flex flex-col justify-center bg-[#1c1822]/80 p-4 rounded-2xl border border-[#615362]/60">
+              <p className="text-sm sm:text-base text-[#ffffff] font-medium leading-relaxed">
+                &ldquo;{currentSubtitle}&rdquo;
               </p>
             </div>
 
             {/* Fila de Valor Persuasivo */}
             <div className="mt-4 pt-3 border-t border-[#615362] flex items-center gap-2 text-xs">
-              <Sparkles size={14} className="text-[#f2cf6b] shrink-0" />
-              <span className="text-[#f2cf6b] font-semibold text-[11px]">
+              <Sparkles size={16} className="text-[#f2cf6b] shrink-0" aria-hidden="true" />
+              <span className="text-[#f2cf6b] font-semibold text-xs sm:text-sm">
                 {currentHighlight}
               </span>
             </div>
@@ -1009,7 +1025,8 @@ export function ModernCanvasVideoPlayer() {
                     handleDirectSpeak();
                   }
                 }}
-                className={`w-full sm:w-auto px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 border transition-all cursor-pointer shadow-md ${
+                aria-label={voiceSpeaking ? "Pausar narración por voz IA" : "Escuchar explicación de la solución con voz IA"}
+                className={`w-full sm:w-auto px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 border transition-all cursor-pointer shadow-md min-h-[44px] ${
                   voiceSpeaking
                     ? "bg-[#721828] text-[#f2cf6b] border-[#cba135] shadow-[0_0_15px_rgba(203,161,53,0.4)] animate-pulse"
                     : "bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] text-white border-[#f2cf6b]/50 hover:scale-[1.02]"
@@ -1017,58 +1034,58 @@ export function ModernCanvasVideoPlayer() {
               >
                 {voiceSpeaking ? (
                   <>
-                    <VolumeX size={15} />
+                    <VolumeX size={16} aria-hidden="true" />
                     <span>Pausar Explicación IA</span>
                   </>
                 ) : (
                   <>
-                    <Volume2 size={15} className="text-[#f2cf6b]" />
-                    <span>▶️ Escuchar Explicación de la Solución</span>
+                    <Volume2 size={16} className="text-[#f2cf6b]" aria-hidden="true" />
+                    <span>▶️ Escuchar Explicación por Voz IA</span>
                   </>
                 )}
               </button>
 
-              <span className="text-[11px] text-[#c29da5] font-mono text-center sm:text-right">
+              <span className="text-xs text-[#dcd0d5] font-mono text-center sm:text-right">
                 {voiceSpeaking ? "🔊 Relatando solución en tiempo real" : "Voz natural en español (es-CL)"}
               </span>
             </div>
           </div>
 
-          {/* Métricas de Implementación y Reducción de Errores */}
-          <div className="bg-[#423943] border border-[#615362] rounded-3xl p-6 space-y-4">
+          {/* Métricas de Implementación y Reducción de Errores con Tipografía Aumentada */}
+          <div className="bg-[#423943] border border-[#615362] rounded-3xl p-6 space-y-4" role="region" aria-label="Métricas de resultados comprobados">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold text-[#f2cf6b] uppercase tracking-wider font-mono flex items-center gap-1.5">
-                <CheckCircle2 size={14} className="text-[#f2cf6b]" />
+              <h4 className="text-xs sm:text-sm font-bold text-[#f2cf6b] uppercase tracking-wider font-mono flex items-center gap-1.5">
+                <CheckCircle2 size={16} className="text-[#f2cf6b]" aria-hidden="true" />
                 <span>Resultados Comprobados en Producción</span>
               </h4>
-              <span className="text-[10px] text-[#c29da5] font-mono">
+              <span className="text-xs text-[#dcd0d5] font-mono">
                 Métricas Reales
               </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3.5">
               {activeTrack.metrics.map((m, idx) => (
-                <div
+                <article
                   key={idx}
-                  className="p-3.5 rounded-xl bg-[#362f37] border border-[#615362] flex flex-col justify-between"
+                  className="p-4 rounded-xl bg-[#362f37] border border-[#615362] flex flex-col justify-between space-y-1.5"
                 >
-                  <span className="text-[10px] text-[#c29da5] uppercase font-mono tracking-tight">
+                  <span className="text-xs text-[#f2cf6b] font-bold uppercase font-mono tracking-tight">
                     {m.label}
                   </span>
-                  <div className="text-xl sm:text-2xl font-black font-mono text-[#ff6b85] my-1">
+                  <div className="text-2xl sm:text-3xl font-black font-mono text-[#ff859b] my-1">
                     {m.value}
                   </div>
-                  <span className="text-[10px] text-[#f2cf6b] font-medium leading-tight">
+                  <span className="text-xs text-[#ffffff] font-medium leading-normal">
                     {m.desc}
                   </span>
-                </div>
+                </article>
               ))}
             </div>
 
-            <div className="p-3 rounded-xl bg-[#721828]/25 border border-[#721828] text-xs text-[#f5dade] flex items-start gap-2.5">
-              <ShieldCheck size={16} className="text-[#f2cf6b] mt-0.5 shrink-0" />
-              <p className="text-[11px] leading-relaxed">
-                <strong>Garantía de Implementación:</strong> Si el sistema no elimina los cuellos de botella en la primera semana de despliegue, refactorizamos la arquitectura sin costo adicional.
+            <div className="p-3.5 rounded-xl bg-[#721828]/35 border border-[#721828] text-xs sm:text-sm text-[#ffffff] flex items-start gap-2.5">
+              <ShieldCheck size={18} className="text-[#f2cf6b] mt-0.5 shrink-0" aria-hidden="true" />
+              <p className="text-xs sm:text-sm leading-relaxed">
+                <strong className="text-[#f2cf6b]">Garantía de Implementación:</strong> Si el sistema no elimina los cuellos de botella en la primera semana de despliegue, refactorizamos la arquitectura sin costo adicional.
               </p>
             </div>
           </div>

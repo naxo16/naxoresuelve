@@ -84,7 +84,7 @@ export const I18N_NAV: Record<Language, NavTranslation> = {
       presale: "Preventa -30%",
     },
     quickActions: "Acciones Ejecutivas",
-    footerRights: "Pablo Valdés · naxoresuelve / renkaidev",
+    footerRights: "Naxo Resuelve · naxoresuelve / renkaidev",
     openAria: "Abrir menú lateral de navegación",
     closeAria: "Cerrar menú lateral",
   },
@@ -146,7 +146,7 @@ export const I18N_NAV: Record<Language, NavTranslation> = {
       presale: "Pré-venda -30%",
     },
     quickActions: "Ações Rápidas",
-    footerRights: "Pablo Valdés · naxoresuelve / renkaidev",
+    footerRights: "Naxo Resuelve · naxoresuelve / renkaidev",
     openAria: "Abrir menu lateral",
     closeAria: "Fechar menu lateral",
   },
@@ -165,7 +165,7 @@ export const I18N_NAV: Record<Language, NavTranslation> = {
       methodology: "Metodologia di Test Rigoroso",
       portfolio: "Portfolio Progetti",
       clientPortal: "Portale Clienti",
-      downloadCv: "Scarica Curriculum (CV)",
+      downloadCv: "Consulenza e Soluzioni",
       requestAudit: "Richiedi Diagnosi ($0 CLP)",
       contact: "Contatto Diretto (+56957286145)",
     },
@@ -177,7 +177,7 @@ export const I18N_NAV: Record<Language, NavTranslation> = {
       presale: "Prevendita -30%",
     },
     quickActions: "Azioni Principali",
-    footerRights: "Pablo Valdés · naxoresuelve / renkaidev",
+    footerRights: "Naxo Resuelve · naxoresuelve / renkaidev",
     openAria: "Apri menu laterale",
     closeAria: "Chiudi menu laterale",
   },
@@ -208,7 +208,7 @@ export const I18N_NAV: Record<Language, NavTranslation> = {
       presale: "Presale 30% OFF",
     },
     quickActions: "Executive Actions",
-    footerRights: "Pablo Valdés · naxoresuelve / renkaidev",
+    footerRights: "Naxo Resuelve · naxoresuelve / renkaidev",
     openAria: "Open sidebar navigation",
     closeAria: "Close sidebar navigation",
   },
@@ -239,7 +239,7 @@ export const I18N_NAV: Record<Language, NavTranslation> = {
       presale: "Vorverkauf -30%",
     },
     quickActions: "Aktionen",
-    footerRights: "Pablo Valdés · naxoresuelve / renkaidev",
+    footerRights: "Naxo Resuelve · naxoresuelve / renkaidev",
     openAria: "Seitenleiste öffnen",
     closeAria: "Seitenleiste schließen",
   },
@@ -481,11 +481,11 @@ export function CyberLateralSidebar({
         <div className="p-4 sm:p-5 border-b border-[#615362] flex items-center justify-between shrink-0 bg-[#2a242c]/90">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#721828] to-[#cba135] flex items-center justify-center font-bold text-white shadow-lg border border-[#f2cf6b]/50 font-round text-base">
-              PV
+              NR
             </div>
             <div className="flex flex-col">
               <span className="font-round text-lg font-bold text-white flex items-center gap-1.5 leading-tight">
-                Pablo Valdés
+                Naxo Resuelve
                 <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#721828] text-[#f2cf6b] border border-[#cba135]/50">
                   naxoresuelve
                 </span>
@@ -702,19 +702,20 @@ export function CyberLateralSidebar({
             <span>{t.links.clientPortal}</span>
           </Link>
 
-          {/* Descargar CV */}
-          <a
-            href={cvUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={closeSidebar}
-            className="flex items-center gap-3 p-2.5 sm:p-3 rounded-2xl bg-[#423943] hover:bg-[#4c424e] border border-[#615362] text-xs font-bold text-[#f5dade] hover:text-white transition-all font-round"
+          {/* Soluciones & Consultoría Directa */}
+          <button
+            type="button"
+            onClick={() => {
+              closeSidebar();
+              onOpenAudit();
+            }}
+            className="flex items-center gap-3 p-2.5 sm:p-3 rounded-2xl bg-[#423943] hover:bg-[#4c424e] border border-[#615362] text-xs font-bold text-[#f5dade] hover:text-[#f2cf6b] transition-all font-round w-full text-left cursor-pointer"
           >
             <span className="w-7 h-7 rounded-lg bg-[#2a242c] flex items-center justify-center text-[#f2cf6b]">
-              <Download size={14} />
+              <Sparkles size={14} />
             </span>
-            <span>{t.links.downloadCv}</span>
-          </a>
+            <span>{t.links.requestAudit}</span>
+          </button>
 
           {/* Enlaces Externos: renkaidev & LinkedIn */}
           <div className="grid grid-cols-2 gap-2 pt-1">

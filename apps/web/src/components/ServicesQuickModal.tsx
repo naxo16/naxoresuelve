@@ -164,18 +164,18 @@ export function ServicesQuickModal({
         </div>
 
         {/* Banner Especial: Consultoría y Diagnóstico Electrónica / Hardware por $15.000 CLP */}
-        <div className="p-3.5 rounded-2xl bg-gradient-to-r from-[#721828]/60 via-[#423943] to-[#2a242c] border border-[#cba135]/50 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-inner">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-[#721828] text-[#f2cf6b] border border-[#cba135]/40 shrink-0">
-              <Cpu size={18} />
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-[#721828]/70 via-[#423943] to-[#2a242c] border border-[#cba135]/60 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-inner">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-[#721828] text-[#f2cf6b] border border-[#cba135]/40 shrink-0">
+              <Cpu size={22} aria-hidden="true" />
             </div>
             <div>
-              <div className="text-xs font-bold text-[#f2cf6b] uppercase tracking-wider font-mono flex items-center gap-1.5">
-                <Tag size={13} className="text-[#f2cf6b]" />
+              <div className="text-xs sm:text-sm font-bold text-[#f2cf6b] uppercase tracking-wider font-mono flex items-center gap-1.5">
+                <Tag size={14} className="text-[#f2cf6b]" aria-hidden="true" />
                 <span>Electrónica, Domótica & Soporte Técnico Hardware</span>
               </div>
-              <p className="text-[11px] text-[#f5dade] leading-snug">
-                Revisión de circuitos, Arduino, domótica, cámaras, notebooks y celulares. <strong>Consultoría y diagnóstico inicial por solo $15.000 CLP</strong> (se descuenta del costo final si apruebas la reparación o instalación).
+              <p className="text-sm text-[#ffffff] leading-relaxed mt-0.5">
+                Revisión de circuitos, Arduino, domótica, cámaras, notebooks y celulares. <strong className="text-[#f2cf6b]">Consultoría y diagnóstico inicial por solo $15.000 CLP</strong> (se descuenta del costo final si apruebas la reparación o instalación).
               </p>
             </div>
           </div>
@@ -185,34 +185,37 @@ export function ServicesQuickModal({
               onClose();
               onOpenAudit("Consultoría Electrónica ($15.000 CLP)");
             }}
-            className="w-full sm:w-auto px-3.5 py-2 rounded-xl bg-[#cba135] hover:bg-[#dfb547] text-[#1c181f] text-xs font-bold whitespace-nowrap transition cursor-pointer shadow-sm shrink-0"
+            aria-label="Agendar consultoría de electrónica y hardware por $15.000 CLP"
+            className="w-full sm:w-auto px-5 py-3 rounded-xl bg-[#cba135] hover:bg-[#dfb547] text-[#1c181f] text-sm font-bold whitespace-nowrap transition cursor-pointer shadow-md shrink-0 min-h-[44px] flex items-center justify-center"
           >
             Agendar por $15.000 CLP
           </button>
         </div>
 
-        {/* Grid de Servicios destacados */}
-        <div className="grid sm:grid-cols-2 gap-3.5 max-h-[50vh] overflow-y-auto pr-1">
+        {/* Grid de Servicios destacados con fuentes grandes y legibles */}
+        <div className="grid sm:grid-cols-2 gap-4 max-h-[50vh] overflow-y-auto pr-1" role="region" aria-label="Tarjetas de soluciones disponibles">
           {HIGHLIGHTED_SERVICES.map((srv, idx) => {
             const Icon = srv.icon;
+            const headingId = `srv-modal-title-${idx}`;
             return (
-              <div
+              <article
                 key={idx}
-                className="p-4 rounded-2xl bg-[#423943] border border-[#615362] hover:border-[#b82d46] transition-all flex flex-col justify-between space-y-3 group shadow-md"
+                aria-labelledby={headingId}
+                className="p-5 rounded-2xl bg-[#423943] border border-[#615362] hover:border-[#b82d46] transition-all flex flex-col justify-between space-y-3.5 group shadow-md"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="p-2 rounded-xl bg-[#2a242c] text-[#f2cf6b] border border-[#615362] group-hover:scale-105 transition-transform">
-                      <Icon size={18} />
+                  <div className="flex items-center justify-between mb-2.5 gap-2">
+                    <div className="p-2.5 rounded-xl bg-[#2a242c] text-[#f2cf6b] border border-[#615362] group-hover:scale-105 transition-transform shrink-0">
+                      <Icon size={20} aria-hidden="true" />
                     </div>
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#721828]/60 text-[#f2cf6b] border border-[#721828]">
+                    <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-[#721828]/80 text-[#f2cf6b] border border-[#721828] text-right">
                       {srv.result}
                     </span>
                   </div>
-                  <h4 className="text-sm font-bold text-[#ff6b85] group-hover:text-[#f2cf6b] transition-colors">
+                  <h4 id={headingId} className="text-base sm:text-lg font-bold text-[#ff859b] group-hover:text-[#f2cf6b] transition-colors leading-snug">
                     {srv.title}
                   </h4>
-                  <p className="text-xs text-[#f5dade] leading-relaxed mt-1">
+                  <p className="text-sm text-[#ffffff] leading-relaxed mt-2 font-normal">
                     {srv.desc}
                   </p>
                 </div>
@@ -223,12 +226,13 @@ export function ServicesQuickModal({
                     onClose();
                     onOpenAudit(srv.topic);
                   }}
-                  className="w-full pt-2 mt-1 border-t border-[#615362] flex items-center justify-between text-xs font-bold text-[#f2cf6b] hover:text-[#ff6b85] transition-colors cursor-pointer"
+                  aria-label={`Diagnosticar mi caso de ${srv.title}`}
+                  className="w-full pt-3 mt-1 border-t border-[#615362] flex items-center justify-between text-sm font-bold text-[#f2cf6b] hover:text-[#ff859b] transition-colors cursor-pointer min-h-[44px]"
                 >
                   <span>Diagnosticar mi caso</span>
-                  <ChevronRight size={14} />
+                  <ChevronRight size={18} aria-hidden="true" />
                 </button>
-              </div>
+              </article>
             );
           })}
         </div>

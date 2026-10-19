@@ -177,38 +177,38 @@ export function FiscalisCarousel() {
           </h3>
         </div>
 
-        {/* Comparison Grid */}
+        {/* Comparison Grid con Tipografía Aumentada y Alto Contraste */}
         <div className="grid md:grid-cols-2 gap-4">
-          <div className="p-4 rounded-2xl bg-[#423943] border border-red-900/50">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#ff6b85] block mb-1">
+          <div className="p-5 rounded-2xl bg-[#423943] border border-red-900/60 shadow-md">
+            <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#ff859b] block mb-2 font-mono">
               Fallo de Sistema Detectado en QA:
             </span>
-            <p className="text-xs sm:text-sm text-[#f5dade] leading-relaxed">
+            <p className="text-sm sm:text-base text-[#ffffff] leading-relaxed font-normal">
               {slide.problem}
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-[#423943] border border-[#cba135]/50">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#f2cf6b] block mb-1">
-              Ingeniería Aplicada (Pablo Valdés):
+          <div className="p-5 rounded-2xl bg-[#423943] border border-[#cba135]/60 shadow-md">
+            <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#f2cf6b] block mb-2 font-mono">
+              Ingeniería Aplicada (Naxo Resuelve):
             </span>
-            <p className="text-xs sm:text-sm text-[#f5dade] leading-relaxed">
+            <p className="text-sm sm:text-base text-[#ffffff] leading-relaxed font-normal">
               {slide.solution}
             </p>
           </div>
         </div>
 
         {/* Metrics & Highlight Footer of Slide */}
-        <div className="p-3.5 rounded-xl bg-gradient-to-r from-[#721828]/40 via-[#141822] to-[#0a0c10] border border-[#232a3b] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+        <div className="p-4 rounded-xl bg-gradient-to-r from-[#721828]/50 via-[#1c1824] to-[#0a0c10] border border-[#615362] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs sm:text-sm">
           <div>
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+            <span className="text-xs font-bold text-[#f2cf6b] uppercase tracking-wider block font-mono">
               Métrica de Validación:
             </span>
-            <span className="font-mono text-emerald-400 font-semibold">
+            <span className="font-mono text-emerald-300 font-bold text-xs sm:text-sm">
               ✓ {slide.metrics}
             </span>
           </div>
-          <div className="font-mono text-[11px] px-2.5 py-1 rounded bg-[#0a0c10] text-[#f2cf6b] border border-[#cba135]/30">
+          <div className="font-mono text-xs px-3 py-1.5 rounded-lg bg-[#0a0c10] text-[#f2cf6b] border border-[#cba135]/40 font-semibold">
             {slide.highlight}
           </div>
         </div>
