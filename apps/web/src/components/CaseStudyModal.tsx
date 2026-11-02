@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { X, CheckCircle2, ShieldAlert, Cpu, Activity, ExternalLink } from "lucide-react";
 
 export interface CaseStudyData {
@@ -29,12 +29,12 @@ export function CaseStudyModal({ caseStudy, onClose }: CaseStudyModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     onClose();
     if (previousFocusRef.current) {
       previousFocusRef.current.focus();
     }
-  };
+  }, [onClose]);
 
   useEffect(() => {
     if (caseStudy) {
@@ -88,7 +88,7 @@ export function CaseStudyModal({ caseStudy, onClose }: CaseStudyModalProps) {
         window.removeEventListener("keydown", handleKeyDown);
       };
     }
-  }, [caseStudy]);
+  }, [caseStudy, handleClose]);
 
   if (!caseStudy) return null;
 

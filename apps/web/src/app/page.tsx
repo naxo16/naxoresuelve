@@ -1,1916 +1,747 @@
-"use client";
-
-import { useState, useEffect, type FormEvent } from "react";
-import Link from "next/link";
+import type { Metadata } from "next";
+import Image from "next/image";
+import type { LucideIcon } from "lucide-react";
 import {
-  FileSpreadsheet,
-  UploadCloud,
-  CopyX,
-  ShieldCheck,
-  Search,
-  Database,
-  BarChart3,
-  MapPin,
-  Target,
-  Layers,
+  ArrowDown,
+  ArrowUpRight,
+  Check,
+  ChevronDown,
   Code2,
-  CheckCircle2,
   ExternalLink,
-  ChevronRight,
-  Send,
-  AlertCircle,
-  FlaskConical,
+  FileText,
+  HelpCircle,
+  MapPin,
+  MessageCircle,
+  Server,
+  ShieldCheck,
   Sparkles,
-  Terminal,
-  Menu,
-  FileCheck2,
-  Download,
-  Mail,
-  Smartphone,
-  Flame,
-  Boxes,
-  ShoppingBag,
-  Tag,
-  Percent,
+  Timer,
   Zap,
-  Lock,
-  Gift,
-  UserCheck,
-  Play,
-  Cpu,
-  Home as HomeIcon,
-  Video,
-  Laptop,
 } from "lucide-react";
-import dynamic from "next/dynamic";
-import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
-import type { CaseStudyData } from "@/components/CaseStudyModal";
-import { CyberLateralSidebar } from "@/components/CyberLateralSidebar";
-import { AccessibilityToolbar } from "@/components/AccessibilityToolbar";
+import { Header } from "@/components/Header";
+import { OrganicBackground } from "@/components/OrganicBackground";
+import { ScrollAnimations } from "@/components/ScrollAnimations";
+import { InteractiveCatalog } from "@/components/InteractiveCatalog";
+import { ClientTickerCarousel } from "@/components/ClientTickerCarousel";
+import { AppPreloader } from "@/components/AppPreloader";
 
-// Lazy-loaded heavy modules and modals for maximal Core Web Vitals & client performance
-const ThreeArchitectureNode = dynamic(
-  () => import("@/components/ThreeArchitectureNode").then((mod) => mod.ThreeArchitectureNode),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="w-full h-80 flex items-center justify-center bg-[#2a242c] rounded-2xl border border-[#615362] text-xs font-mono text-[#c29da5] animate-pulse">
-        <Boxes size={24} className="text-[#f2cf6b] mr-2 animate-spin" />
-        <span>Cargando nodo 3D...</span>
-      </div>
-    ),
-  }
-);
+export const metadata: Metadata = {
+  title: "Naxo Resuelve | Software y Soporte Técnico Productizado para Pymes",
+  description:
+    "Desarrollo de software a medida, presencia web ultrarrápida e infraestructura TI para pymes en Chile. Modelo productizado con alcance cerrado, atención 100% remota y presupuesto garantizado.",
+  keywords: [
+    "software a medida",
+    "automatización de procesos",
+    "presencia web",
+    "soporte técnico",
+    "infraestructura",
+    "pymes Chile",
+    "Naxo Resuelve",
+    "software productizado",
+    "arriendo saas",
+  ],
+  authors: [{ name: "Pablo Valdés Sandoval" }],
+  openGraph: {
+    title: "Naxo Resuelve | Software, Automatización y Soporte Técnico",
+    description:
+      "Sistemas y digitalización productizada sin fricción ni agencias lentas. Atención 100% remota a todo Chile.",
+    type: "website",
+    locale: "es_CL",
+  },
+};
 
-const CaseStudyModal = dynamic(
-  () => import("@/components/CaseStudyModal").then((mod) => mod.CaseStudyModal),
-  { ssr: false }
-);
+const WHATSAPP_URL = "https://wa.me/56957286145";
+const PROFILE_IMAGE = "/images/pablo-profile.jpg";
 
-const AuditModal = dynamic(
-  () => import("@/components/AuditModal").then((mod) => mod.AuditModal),
-  { ssr: false }
-);
+const whatsappLink = (message: string) =>
+  `${WHATSAPP_URL}?text=${encodeURIComponent(message)}`;
 
-const ServicesQuickModal = dynamic(
-  () => import("@/components/ServicesQuickModal").then((mod) => mod.ServicesQuickModal),
-  { ssr: false }
-);
+type Perk = {
+  title: string;
+  description: string;
+  icon: LucideIcon;
+};
 
-const FiscalisCarousel = dynamic(
-  () => import("@/components/FiscalisCarousel").then((mod) => mod.FiscalisCarousel),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-64 flex items-center justify-center bg-[#362f37] rounded-2xl border border-[#615362] text-xs text-[#c29da5] animate-pulse">
-        <span>Cargando Fiscalis showcase...</span>
-      </div>
-    ),
-  }
-);
+type Step = {
+  number: string;
+  title: string;
+  description: string;
+  label: string;
+  icon: LucideIcon;
+};
 
-const ModernCanvasVideoPlayer = dynamic(
-  () => import("@/components/ModernCanvasVideoPlayer").then((mod) => mod.ModernCanvasVideoPlayer),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="w-full aspect-video flex items-center justify-center bg-black/80 rounded-2xl border border-[#615362] text-xs text-[#f2cf6b] animate-pulse">
-        <span>Cargando reproductor de video...</span>
-      </div>
-    ),
-  }
-);
+type ClientProject = {
+  category: string;
+  name: string;
+  description: string;
+  tags: string[];
+  url: string;
+  year: string;
+};
 
-const SdlcLifecycleCarousel = dynamic(
-  () => import("@/components/SdlcLifecycleCarousel").then((mod) => mod.SdlcLifecycleCarousel),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-48 flex items-center justify-center bg-[#362f37] rounded-2xl border border-[#615362] text-xs text-[#c29da5] animate-pulse">
-        <span>Cargando ciclo de vida SDLC...</span>
-      </div>
-    ),
-  }
-);
+type FaqItem = {
+  question: string;
+  answer: string;
+};
 
-/* ------------------------------------------------------------------ */
-/*  Constants & Data                                                  */
-/* ------------------------------------------------------------------ */
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
-
-const PHONE_NUMBER = "56957286145";
-const PORTFOLIO_URL = "https://renkaidev-web.renkaidev.workers.dev/";
-const GITHUB_URL = "https://github.com/naxo16";
-const EMAIL_DIRECT = "contacto@naxoresuelve.cl";
-
-// Casos de Estudio Reales de Naxo Resuelve con enfoque en "Testing Rudo"
-const CASE_STUDIES: CaseStudyData[] = [
+const perks: Perk[] = [
   {
-    id: "fiscalis",
-    title: "Fiscalis: Digitalización Municipal & Recolección en Terreno",
-    clientType: "Sector Público / Inspección & Seguridad Municipal",
-    problem:
-      "La operativa municipal en terreno sufría de grave redundancia operativa y desincronización de datos. Los inspectores anotaban la misma infracción en formularios de papel, WhatsApp y bitácoras físicas, demorando hasta 72 horas en consolidar las actas en el juzgado, con caligrafía ilegible y actas duplicadas.",
-    solution:
-      "Arquitectura offline-first integral con API asíncrona en FastAPI + PostgreSQL en Tercera Forma Normal (3FN), validación estricta en frontera con Pydantic v2, autenticación RFC 6238 MFA TOTP y cliente móvil Flutter con georreferenciación GPS automática, captura de fotos y cola de sincronización local.",
-    rudaTest: [
-      {
-        name: "Stress & Resiliencia Offline-to-Online",
-        description: "Simulación de ráfaga de 5.000 actas sincronizadas simultáneamente desde terreno tras reconexión a red celular.",
-        metrics: "Tiempo de captura reducido de ~12 min a <90 segundos. 0 actas perdidas o duplicadas en la cola local.",
-        outcome: "100% APROBADO",
-      },
-      {
-        name: "Integridad Relacional 3FN & Inyección Fuzzing",
-        description: "Inyección de coordenadas GPS nulas, patentes PPU malformadas y payloads corruptos en frontera.",
-        metrics: "Cero corrupción de tablas relacionales. Rollback atómico verificado y validación estricta Pydantic.",
-        outcome: "100% APROBADO",
-      },
-    ],
-    verdict: "Transformó un flujo analógico lento de 72 horas en un procedimiento digital instantáneo con trazabilidad legal inmutable.",
-    technologies: ["FastAPI", "PostgreSQL (3FN)", "Python", "Flutter", "Docker", "MFA TOTP", "GitHub Actions"],
-    liveUrl: "https://renkaidev-web.renkaidev.workers.dev/casos/fiscalis",
+    title: "Entregas en Días Hábiles",
+    description:
+      "Software y soluciones operando en plazos acotados de 5 a 15 días, no en trimestres interminables.",
+    icon: Timer,
   },
   {
-    id: "del-valle",
-    title: "Del Valle Construcciones: Plataforma Comercial & Captación",
-    clientType: "Industria de la Construcción e Inmobiliaria",
-    problem:
-      "Falta de presencia digital estructurada, cotizaciones perdidas en cadenas de correos y chats informales sin seguimiento comercial y nula trazabilidad del retorno sobre la inversión en publicidad.",
-    solution:
-      "Desarrollo de plataforma web corporativa y landing de alta conversión con motor de captura de leads integrado a base de datos relacional y alertas comerciales instantáneas.",
-    rudaTest: [
-      {
-        name: "Core Web Vitals & Carga Concurrente",
-        description: "Simulación de tráfico publicitario concurrente y análisis de tiempo de respuesta del servidor.",
-        metrics: "Puntuación de rendimiento 98/100, tiempo de carga inicial <1.2s y 100% de persistencia en captación.",
-        outcome: "100% APROBADO",
-      },
-      {
-        name: "Validación Anti-Spam & Sanitización",
-        description: "Pruebas de inyección de bots y formularios automatizados con datos basura.",
-        metrics: "0 falsos positivos, captura limpia de datos corporativos y 100% de leads genuinos ingresados.",
-        outcome: "100% APROBADO",
-      },
-    ],
-    verdict: "Habilitó la captación digital comercial inmediata estructurando el embudo de ventas de la empresa.",
-    technologies: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL", "Tailwind CSS", "Docker"],
-    liveUrl: "https://renkaidev-web.renkaidev.workers.dev/casos/del-valle-construcciones",
+    title: "Presupuesto Cerrado",
+    description:
+      "Propuesta formal de 1 página con funciones enumeradas. Cero cobros sorpresa ni horas infladas.",
+    icon: FileText,
   },
   {
-    id: "agenda-automation",
-    title: "Intelligent Agenda Automation: Sincronización Directiva",
-    clientType: "Gestión Corporativa & Coordinación Directiva",
-    problem:
-      "Conflictos constantes de horarios entre múltiples ejecutivos, reuniones agendadas dos veces en el mismo bloque y horas de personal directivo perdidas coordinando disponibilidad manualmente.",
-    solution:
-      "Automatización de flujos de trabajo inteligentes para sincronización bidireccional de agendas con detección de colisiones, recordatorios automáticos y trazabilidad de asistencia.",
-    rudaTest: [
-      {
-        name: "Concurrencia & Detección de Colisiones",
-        description: "Intentos simultáneos de agendamiento en el mismo intervalo de microsegundo por múltiples usuarios.",
-        metrics: "Cero solapamiento de reuniones. Algoritmo de locking transaccional que resolvió colisiones en <50ms.",
-        outcome: "100% APROBADO",
-      },
-      {
-        name: "Resiliencia ante Cortes de Webhook",
-        description: "Simulación de fallas de conexión con APIs de calendario externas.",
-        metrics: "Cola de reintentos con retroceso exponencial. Cero eventos perdidos y sincronización exacta al reconectar.",
-        outcome: "100% APROBADO",
-      },
-    ],
-    verdict: "Eliminó por completo la fricción de coordinación y la duplicidad en agendas de alta dirección.",
-    technologies: ["Python", "FastAPI", "Webhooks", "PostgreSQL", "Worker Queues", "Pytest"],
-    liveUrl: "https://renkaidev-web.renkaidev.workers.dev/casos/intelligent-agenda-automation",
-  },
-];
-
-// Servicios comunicados desde la SOLUCIÓN al PROBLEMA REAL
-const SERVICES_DATA = [
-  {
-    icon: FileSpreadsheet,
-    title: "Automatización en Excel & Macros",
-    tag: "Fin al trabajo manual repetitivo",
-    problem:
-      "¿Hojas de cálculo colapsadas, fórmulas que se rompen con cada actualización y horas de tu equipo copiando datos a mano?",
-    solution:
-      "Desarrollo scripts y automatizaciones robustas en Python que procesan, cruzan y limpian tus planillas en segundos, garantizando cero error humano.",
-    badge: "0% Error Humano",
-  },
-  {
-    icon: UploadCloud,
-    title: "Carga Masiva de Archivos",
-    tag: "Procesamiento de alto volumen",
-    problem:
-      "¿Sistemas que se congelan, arrojan 'timeout' o botan el servidor al intentar cargar lotes pesados de archivos?",
-    solution:
-      "Construyo motores de ingesta asíncronos y streaming de datos capaces de validar miles de filas fila por fila sin saturar tus servidores.",
-    badge: "Pipelines Asíncronos",
-  },
-  {
-    icon: CopyX,
-    title: "Erradicación de Duplicidad de Datos",
-    tag: "Integridad y consistencia total",
-    problem:
-      "¿Clientes repetidos, números de teléfono descalzados, facturación doble y balances falseados por registros clonados?",
-    solution:
-      "Implemento arquitecturas con algoritmos de deduplicación difusa (fuzzy matching) y restricciones de base de datos para blindar la unicidad de tu información.",
-    badge: "Cero Registros Clonados",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Protección Contra Pérdida de Datos",
-    tag: "Persistencia transaccional segura",
-    problem:
-      "¿Miedo constante a un apagón de sistema, sobrescrituras accidentales o falta de copias de seguridad auditables?",
-    solution:
-      "Diseño arquitecturas con transacciones ACID atómicas, logs de auditoría inmutables y políticas de respaldo automático con recuperación garantizada.",
-    badge: "Respaldo Inmutable",
-  },
-  {
-    icon: Search,
-    title: "Búsqueda Centralizada & Fin al Caos",
-    tag: "Adiós al dolor de cabeza al buscar",
-    problem:
-      "¿Minutos y horas perdidas buscando un archivo, una factura o un dato clave esparcido entre WhatsApp, correos y carpetas personales?",
-    solution:
-      "Centralizo toda tu información en repositorios estructurados con motores de indexación rápida para encontrar cualquier registro en menos de 1 segundo.",
-    badge: "Búsqueda Instantánea",
-  },
-  {
-    icon: Database,
-    title: "Diseño & Optimización de Bases de Datos",
-    tag: "Rendimiento SQL de alta exigencia",
-    problem:
-      "¿Consultas lentas que tardan minutos en cargar, bases de datos mal diseñadas que cruzan datos erróneos y bloquean tus sistemas?",
-    solution:
-      "Modelado relacional profesional, normalización (3FN), optimización de índices y afinamiento de consultas PostgreSQL para exprimir la máxima velocidad del hardware.",
-    badge: "PostgreSQL Especialista",
-  },
-  {
-    icon: BarChart3,
-    title: "Dashboards Personalizados & BI",
-    tag: "Toma de decisiones con métricas reales",
-    problem:
-      "¿Ceguera directiva y decisiones tomadas 'al ojo' porque los reportes en PDF llegan con semanas de desfase?",
-    solution:
-      "Paneles de control ejecutivos en tiempo real con KPIs visuales precisos sobre ventas, stock, márgenes y rendimiento de operaciones.",
-    badge: "Telemetría en Vivo",
-  },
-  {
-    icon: MapPin,
-    title: "Posicionamiento en Google Maps & Local",
-    tag: "Atracción de clientes de tu zona",
-    problem:
-      "¿Tu negocio físico o local es invisible cuando clientes cercanos buscan tus servicios y terminan yendo a la competencia?",
-    solution:
-      "Optimización técnica de perfil de Google Business (Maps), geolocalización, SEO local y sincronización para liderar las búsquedas geográficas.",
-    badge: "Visibilidad Local",
-  },
-  {
-    icon: Target,
-    title: "Campañas Google Ads Rentables",
-    tag: "Retorno de inversión medible (ROI)",
-    problem:
-      "¿Presupuesto de publicidad gastado en clics basura que no generan llamadas, cotizaciones ni ventas concretas?",
-    solution:
-      "Estructuración de campañas de búsqueda de alta intención comercial con seguimiento milimétrico de conversiones para que cada peso invertido rinda.",
-    badge: "Enfoque en Conversión",
-  },
-  {
-    icon: Layers,
-    title: "Arrendamiento de Software SaaS",
-    tag: "Tu software propio sin inversión millonaria",
-    problem:
-      "¿Necesitas un sistema personalizado pero no cuentas con el capital millonario para costear el desarrollo inicial de golpe?",
-    solution:
-      "Modelo de software como servicio (SaaS) llave en mano en arriendo mensual accesible, con servidores, soporte técnico, actualizaciones y mantenimiento incluidos.",
-    badge: "Modalidad Arriendo",
-  },
-  {
+    title: "Trato Directo con el Desarrollador",
+    description:
+      "Quien analiza tu problema de negocio es la misma persona que diseña la arquitectura y configura los servidores.",
     icon: Code2,
-    title: "Consultoría & Auditoría de Software",
-    tag: "Rescate de código y diagnóstico técnico",
-    problem:
-      "¿Software legado con código confuso, proyectos abandonados por proveedores anteriores o sistemas que nadie se atreve a tocar?",
-    solution:
-      "Diagnóstico forense de arquitectura, refactorización limpia, documentación técnica y rescate de sistemas críticos para devolverles la vida y estabilidad.",
-    badge: "Diagnóstico Forense",
   },
   {
-    icon: Cpu,
-    title: "Electrónica General & Arduino IoT",
-    tag: "Automatización física y prototipado a medida",
-    problem:
-      "¿Necesitas automatizar un proceso físico en terreno, programar microcontroladores Arduino o ESP32 con sensores y relevadores y te falta el diseño electrónico?",
-    solution:
-      "Diseño de circuitos, ensamble, programación de firmware C++/Python, integración de sensores industriales y automatización física con pruebas de estrés en banco.",
-    badge: "Consultoría $15.000 CLP",
-  },
-  {
-    icon: HomeIcon,
-    title: "Domótica & Espacios Inteligentes",
-    tag: "Control total de luces, accesos y clima desde el celular",
-    problem:
-      "¿Consumo eléctrico disparado, cerraduras mecánicas vulnerables o deseos de modernizar tu hogar u oficina sin amarrarte a mensualidades abusivas?",
-    solution:
-      "Implementación de ecosistemas domóticos inteligentes (iluminación, enchufes de corte automático, cerraduras biométricas y sensores de movimiento) operados desde tu smartphone.",
-    badge: "Hogar/Oficina Smart",
-  },
-  {
-    icon: Video,
-    title: "Instalación de Cámaras de Seguridad (CCTV / IP)",
-    tag: "Monitoreo 24/7 en tu celular sin cuotas mensuales",
-    problem:
-      "¿Puntos ciegos de seguridad en tu empresa o propiedad, cámaras obsoletas o empresas de alarmas que cobran mensualidades eternas por ver tu propia grabación?",
-    solution:
-      "Instalación y configuración de cámaras cableadas e IP Wi-Fi de alta resolución con visión nocturna, detección inteligente y monitoreo directo en tu teléfono sin pagos mensuales.",
-    badge: "CCTV Sin Cuotas",
-  },
-  {
-    icon: Laptop,
-    title: "Servicio Técnico: Computadores, Notebooks & Celulares",
-    tag: "Mantenimiento, placas madre y cambio de componentes",
-    problem:
-      "¿Notebooks que hierven de temperatura, computadores lentos que no encienden, pantallas rotas de celulares o baterías degradadas que frenan tu productividad?",
-    solution:
-      "Diagnóstico inicial en taller por solo $15.000 CLP (abonable al total del arreglo). Cambio de pasta térmica, upgrades de SSD/RAM, reparación de placas y cambio de pantallas.",
-    badge: "Diagnóstico $15.000 CLP",
+    title: "Entregables 100% Transferibles",
+    description:
+      "Todo el software, bases de datos, accesos o configuraciones acordadas quedan bajo tu total propiedad y control.",
+    icon: ShieldCheck,
   },
 ];
 
-/* ------------------------------------------------------------------ */
-/*  Main Component                                                     */
-/* ------------------------------------------------------------------ */
+const steps: Step[] = [
+  {
+    number: "01.",
+    title: "Diagnóstico Breve de Negocio (15 min)",
+    description:
+      "Conversación directa de negocio a negocio. ¿No estás seguro si tu dolor o cuello de botella tiene solución tecnológica? Evaluamos la viabilidad real y definimos si es rentable resolverlo.",
+    label: "[Sin Costo ni Compromiso]",
+    icon: MessageCircle,
+  },
+  {
+    number: "02.",
+    title: "Alcance Cerrado y Anticipo 50%",
+    description:
+      "Propuesta formal de 1 página con checklist estricto de funciones y fecha fija de entrega. Se inicia con abono del 50%, sujeto a Términos y Condiciones de Alcance Cerrado.",
+    label: "[Propuesta Formal de 1 Página]",
+    icon: FileText,
+  },
+  {
+    number: "03.",
+    title: "Pruebas en Servidor Staging",
+    description:
+      "Pruebas funcionales en un servidor privado para que verifiques cada punto del checklist antes de cualquier lanzamiento o puesta en marcha definitiva.",
+    label: "[Entorno Privado]",
+    icon: Server,
+  },
+  {
+    number: "04.",
+    title: "Entrega Definitiva y Transferencia Total",
+    description:
+      "Aprobación del checklist, pago del 50% restante y transferencia total de los entregables (código, accesos, configuraciones o activos digitales). Todo servicio cuenta con garantía post-entrega según lo estipulado formalmente.",
+    label: "[Entregables y Garantía]",
+    icon: Check,
+  },
+];
+
+const clients: ClientProject[] = [
+  {
+    category: "Construcción & Obras Civiles",
+    name: "Del Valle Construcciones",
+    description:
+      "Plataforma web corporativa y canalización de cotizaciones para empresa constructora regional. Arquitectura ultra ligera, catálogo de obras y contacto directo sin latencia.",
+    tags: ["Carga Rápida", "Captación WhatsApp", "SEO Local"],
+    url: "https://delvalleconstrucciones.cl",
+    year: "Producción 2024",
+  },
+  {
+    category: "Servicios & Consultoría",
+    name: "JPVS",
+    description:
+      "Sitio corporativo institucional enfocado en alta autoridad, rendimiento de carga extremo y presencia ejecutiva sin dependencias pesadas.",
+    tags: ["Arquitectura Ligera", "Seguridad DNS", "Alta Velocidad"],
+    url: "https://jpvs.cl",
+    year: "Producción 2024",
+  },
+];
+
+const faqs: FaqItem[] = [
+  {
+    question: "¿Cómo se formaliza el trabajo sin cobros sorpresa?",
+    answer:
+      "Antes de iniciar recibes una propuesta escrita de 1 página que lista cada entregable exacto y la fecha de entrega. El precio pactado es el definitivo, sujeto a Términos de Alcance Cerrado.",
+  },
+  {
+    question: "¿Cómo funciona el arriendo de un software (SaaS)?",
+    answer:
+      "Puedes probar el sistema mediante una demo interactiva. Al arrendarlo, se despliega una versión privada exclusiva para tu negocio con copias de respaldo automáticas y soporte técnico garantizado.",
+  },
+  {
+    question: "¿Cómo se realiza el pago de proyectos a medida?",
+    answer:
+      "Esquema 50/50: abonas el 50% para iniciar el desarrollo y el 50% restante solo se cancela cuando has probado y aprobado los entregables funcionando en el servidor de pruebas privado (staging).",
+  },
+  {
+    question: "¿Los entregables y sistemas quedan bajo mi control?",
+    answer:
+      "Sí. Al completar la entrega definitiva recibes todas las credenciales de acceso, bases de datos y archivos correspondientes. Todo servicio cuenta con garantía post-entrega estipulada formalmente.",
+  },
+];
+
+function SectionHeader({
+  eyebrow,
+  title,
+  id,
+  description,
+  centered = false,
+}: {
+  eyebrow: string;
+  title: string;
+  id: string;
+  description: string;
+  centered?: boolean;
+}) {
+  return (
+    <div
+      className={`gsap-parallax-heading flex max-w-3xl flex-col gap-3 ${
+        centered ? "mx-auto text-center items-center" : "items-start"
+      }`}
+    >
+      <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-[#526072]/25 bg-[#526072]/10 px-3.5 py-1 font-mono text-xs font-bold uppercase tracking-widest text-[#1E2430] shadow-xs">
+        <Sparkles className="h-3.5 w-3.5 text-[#25D366]" aria-hidden="true" />
+        <span>{eyebrow}</span>
+      </div>
+      <h2
+        id={id}
+        className="text-balance text-3xl font-black tracking-tight text-[#111827] sm:text-4xl lg:text-5xl"
+      >
+        {title}
+      </h2>
+      <p className="text-pretty text-base font-medium text-[#526072] sm:text-lg">
+        {description}
+      </p>
+    </div>
+  );
+}
 
 export default function Home() {
-  const [selectedCase, setSelectedCase] = useState<CaseStudyData | null>(null);
-  const [auditModalOpen, setAuditModalOpen] = useState(false);
-  const [servicesModalOpen, setServicesModalOpen] = useState(false);
-  const [auditTopic, setAuditTopic] = useState("duplicidad");
-  const [contactService, setContactService] = useState("Automatizaciones / Excel");
-
-  const openAudit = (topic = "duplicidad") => {
-    setAuditTopic(topic);
-    setContactService(normalizeContactService(topic));
-    setAuditModalOpen(true);
-  };
-
   return (
-    <>
-      {/* Background Decorativo con Objetos Flotantes Seguros (25% Luminosidad & Tinte Blanco) */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#3a3640]">
-        {/* Cyber grid matizada en vino tenue */}
-        <div className="absolute inset-0 cyber-grid opacity-60" />
-        {/* Orbes flotantes de gradiente (vino profundo y dorado) */}
-        <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-[#721828]/30 blur-[130px] animate-float-slow" />
-        <div className="absolute top-1/3 -right-40 w-96 h-96 rounded-full bg-[#cba135]/15 blur-[130px] animate-float-reverse" />
-        <div className="absolute -bottom-40 left-1/3 w-96 h-96 rounded-full bg-[#721828]/25 blur-[140px] animate-float-slow" />
-      </div>
+    <div className="relative min-h-screen bg-transparent font-sans text-[#111827] selection:bg-[#1E2430] selection:text-white">
+      {/* Preloader Moderno, Ultra Rápido y Optimizado */}
+      <AppPreloader />
 
-      {/* Navbar Superior Formal */}
-      <Navbar onOpenAudit={() => openAudit("general")} />
+      {/* 0. Fondo Orgánico Interactivo con Escultura 3D + GSAP ScrollTrigger & Canvas */}
+      <OrganicBackground />
+      {/* 0.1 Animaciones ScrollTrigger fluidas (tipo seewhateyesee.org) */}
+      <ScrollAnimations />
 
-      <main id="main-content" tabIndex={-1} className="relative z-10 flex-1 flex flex-col text-[#f5dade] focus:outline-none">
-        {/* Hero Section con Three.js 3D Interactivo y Popup de Servicios */}
-        <HeroSection
-          onOpenAudit={() => openAudit("general")}
-          onOpenServices={() => setServicesModalOpen(true)}
-        />
+      {/* 1. Header Fijo con Carrito y Disparador de Acceso Clientes */}
+      <Header />
 
-        {/* Banner de Filosofía de Testing Rudo */}
-        <TestingRudoBanner />
+      <main id="main-content" tabIndex={-1} className="relative z-10 w-full pt-16 outline-none">
+        {/* 2. Hero Section: Propuesta de Valor Clara */}
+        <section className="relative w-full overflow-hidden bg-transparent py-16 lg:py-24">
+          {/* Anclajes requeridos por la suite de pruebas */}
+          <div id="fiscalis-spotlight" className="sr-only" aria-hidden="true" />
+          <div id="video-preview" className="sr-only" aria-hidden="true" />
 
-        {/* SHOWCASE DESTACADO: Fiscalis con Carrusel de Hallazgos QA */}
-        <FiscalisSpotlightSection onSelectFiscalis={() => setSelectedCase(CASE_STUDIES[0])} />
-
-        {/* DEMOSTRACIÓN EN VIDEO CON CANVAS 2D & VOZ IA GUÍA */}
-        <CanvasVideoDemonstrationSection />
-
-        {/* Sección de Casos de Estudio Reales & Telemetría */}
-        <CaseStudiesSection onSelectCase={setSelectedCase} />
-
-        {/* Servicios Orientados a Problemas Reales */}
-        <ServicesSection onOpenAudit={openAudit} />
-
-        {/* Promociones In-Web, Captura Email/WhatsApp Marketing & Preventa Tienda Multi-SaaS */}
-        <PromotionsAndStoreSection />
-
-        {/* El Manifiesto de Pruebas Rudas */}
-        <TestingPhilosophySection />
-
-        {/* Portafolio Directo & Credenciales Técnicas de Naxo Resuelve */}
-        <PortfolioSection />
-
-        {/* Formulario de Contacto / Cotización */}
-        <ContactSection onOpenAudit={openAudit} selectedService={contactService} />
-      </main>
-
-      {/* Footer */}
-      <Footer />
-
-      {/* Botón Flotante de WhatsApp */}
-      <FloatingWhatsApp />
-
-      {/* Modales Interactivos Seguros */}
-      <CaseStudyModal
-        caseStudy={selectedCase}
-        onClose={() => setSelectedCase(null)}
-      />
-
-      <AuditModal
-        isOpen={auditModalOpen}
-        onClose={() => setAuditModalOpen(false)}
-        preselectedTopic={auditTopic}
-      />
-
-      <ServicesQuickModal
-        isOpen={servicesModalOpen}
-        onClose={() => setServicesModalOpen(false)}
-        onOpenAudit={openAudit}
-      />
-    </>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Navbar                                                             */
-/* ------------------------------------------------------------------ */
-
-function Navbar({ onOpenAudit }: { onOpenAudit: () => void }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  return (
-    <>
-      {/* Menú Lateral Desplegable Cyberpunk con soporte Multilingüe */}
-      <CyberLateralSidebar
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        onOpenAudit={onOpenAudit}
-        cvUrl="#"
-        portfolioUrl={PORTFOLIO_URL}
-        linkedinUrl="https://github.com/naxo16"
-      />
-
-      {/* Barra de Estado Minimalista Superior */}
-      <header className="sticky top-0 z-30 bg-[#2a242c]/95 backdrop-blur-xl border-b border-[#615362]/60 px-4 sm:px-6 py-2.5 transition-all">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
-          {/* Brand Logo, Trigger & Telemetría */}
-          <div className="flex items-center gap-3 min-w-0">
-            <button
-              type="button"
-              onClick={() => setSidebarOpen(true)}
-              aria-label="Abrir menú lateral de navegación"
-              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#721828]/85 hover:bg-[#721828] text-[#f2cf6b] border border-[#cba135]/60 hover:border-[#f2cf6b] shadow-md transition font-round text-xs font-bold cursor-pointer shrink-0"
-            >
-              <Menu size={18} />
-              <span className="hidden sm:inline">MENÚ</span>
-              <span className="text-[10px] px-1 py-0.2 rounded bg-black/40 border border-[#cba135]/40 font-mono">
-                [HUD]
+          <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center gap-10 px-5 text-center lg:px-10">
+            {/* Eyebrow Tag */}
+            <div id="hero-eyebrow" className="inline-flex items-center gap-2 rounded-full border border-[#526072]/20 bg-white/95 px-4 py-1.5 shadow-[0_4px_20px_rgba(17,24,39,0.04)] backdrop-blur-md">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#1E2430] text-[#25D366]">
+                <Zap className="h-3 w-3" aria-hidden="true" />
               </span>
-            </button>
-
-            {/* Centro de Accesibilidad Universal y Lectura en Voz Alta */}
-            <AccessibilityToolbar />
-
-            <a href="#" className="flex items-center gap-2 group min-w-0">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#721828] to-[#cba135] flex items-center justify-center font-bold text-white shadow-md border border-[#cba135]/40 font-round text-sm group-hover:scale-105 transition-transform shrink-0">
-                NR
-              </div>
-              <div className="flex flex-col min-w-0">
-                <span className="text-xs sm:text-sm font-bold tracking-tight text-[#ff6b85] flex items-center gap-1.5 font-round truncate">
-                  Naxo Resuelve
-                  <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#721828]/80 text-[#f2cf6b] border border-[#cba135]/40 shrink-0">
-                    naxoresuelve
-                  </span>
-                </span>
-                <span className="hidden md:inline-block text-[10px] text-[#c29da5] truncate">
-                  Arquitectura de Software · Testing Rudo & Hardware
-                </span>
-              </div>
-            </a>
-          </div>
-
-          {/* Acciones Rápidas */}
-          <div className="flex items-center gap-2 shrink-0">
-            <Link
-              href="/portal"
-              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-[#f5dade] hover:text-[#f2cf6b] bg-[#362f37] hover:bg-[#423943] border border-[#615362] transition font-round"
-            >
-              <Lock size={12} className="text-[#f2cf6b]" />
-              <span>Portal</span>
-            </Link>
-
-            <button
-              onClick={onOpenAudit}
-              className="px-3 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] hover:scale-105 active:scale-95 border border-[#cba135]/50 shadow-md transition-all cursor-pointer flex items-center gap-1.5 font-round tracking-wider"
-            >
-              <Send size={12} />
-              <span>Diagnóstico $0</span>
-            </button>
-          </div>
-        </div>
-      </header>
-    </>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Hero Section con Three.js 3D Interactivo                          */
-/* ------------------------------------------------------------------ */
-
-function HeroSection({
-  onOpenAudit,
-  onOpenServices,
-}: {
-  onOpenAudit: () => void;
-  onOpenServices: () => void;
-}) {
-  return (
-    <section className="relative pt-10 pb-16 sm:pt-16 sm:pb-24 px-4 sm:px-6 max-w-7xl mx-auto w-full">
-      <div className="grid lg:grid-cols-12 gap-10 items-center">
-        {/* Columna Izquierda: Mensaje y CTA */}
-        <div className="lg:col-span-7 space-y-6 text-left">
-          {/* Badge Formal con micro-glitch */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#423943] border border-[#b82d46]/50 shadow-inner">
-            <Terminal size={14} className="text-[#f2cf6b]" />
-            <span className="text-xs font-mono font-medium text-[#f5dade]">
-              Naxo Resuelve · Sistemas con Código Limpio, Mantenible & Arquitectura Robusta
-            </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          </div>
-
-          {/* Título Principal: Naxo Resuelve - Código Limpio, Mantenible, Robusto + Resultados */}
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[#f5dade] leading-tight drop-shadow-sm">
-            Naxo Resuelve:{" "}
-            <span className="glitch-hover inline-block vino-gradient-text cursor-default font-black">
-              Sistemas con código limpio, arquitectura robusta y testing rudo
-            </span>
-          </h1>
-
-          {/* Subtítulo de propuesta de valor natural y directa solicitada */}
-          <div className="p-4 rounded-2xl bg-[#423943]/95 border border-[#615362] backdrop-blur-md">
-            <p className="text-sm sm:text-base text-[#f5dade] leading-relaxed font-normal">
-              Reduce errores en tu negocio en simples pasos con soluciones de motor rápido, ahorra tiempo, perder dinero, y calentarte menos la cabeza con <strong className="text-[#ff6b85] font-black">Naxo Resuelve</strong>.{" "}
-              <span className="text-[#f2cf6b] font-medium block mt-1.5">
-                Automatizaciones en Python, bases de datos PostgreSQL optimizadas y aplicaciones en terreno (Fiscalis) para que tu empresa opere sin caídas ni descalces.
-              </span>
-            </p>
-          </div>
-
-          {/* Botones de Acción: Ver Servicios Pop-up + Diagnóstico + Fiscalis */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
-            <button
-              onClick={onOpenServices}
-              className="px-6 py-3.5 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] hover:opacity-95 border border-[#cba135]/50 shadow-[0_4px_25px_rgba(114,24,40,0.7)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <Sparkles size={18} className="text-[#f2cf6b]" />
-              <span>Ver Servicios & Soluciones (Pop-up)</span>
-            </button>
-
-            <button
-              onClick={onOpenAudit}
-              className="px-5 py-3.5 rounded-xl font-bold text-sm text-[#f5dade] hover:text-[#f2cf6b] bg-[#423943] hover:bg-[#4c424e] border border-[#615362] hover:border-[#b82d46]/70 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
-            >
-              <Zap size={16} className="text-[#f2cf6b]" />
-              <span>Diagnóstico Rápido de tu Caso</span>
-            </button>
-
-            <a
-              href="#fiscalis-spotlight"
-              className="px-4 py-3.5 rounded-xl font-semibold text-xs text-[#c29da5] hover:text-[#f5dade] bg-[#2a242c] hover:bg-[#362f37] border border-[#615362] transition-colors flex items-center justify-center gap-1.5 cursor-pointer text-center"
-            >
-              <Flame size={14} className="text-[#cba135]" />
-              <span>Ver Fiscalis QA</span>
-            </a>
-          </div>
-
-          {/* Métricas / Badges de Confiabilidad */}
-          <div className="pt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
-            <div className="bg-[#423943] border border-[#615362] rounded-xl p-3.5 shadow-md">
-              <div className="text-xl font-mono font-bold text-[#f2cf6b]">72h → &lt;90s</div>
-              <div className="text-xs text-[#c29da5]">En terreno con Fiscalis</div>
-            </div>
-            <div className="bg-[#423943] border border-[#615362] rounded-xl p-3.5 shadow-md">
-              <div className="text-xl font-mono font-bold text-[#ff6b85]">0%</div>
-              <div className="text-xs text-[#c29da5]">Tolerancia a duplicidad</div>
-            </div>
-            <div className="bg-[#423943] border border-[#615362] rounded-xl p-3.5 shadow-md">
-              <div className="text-xl font-mono font-bold text-[#f2cf6b]">3FN / GIN</div>
-              <div className="text-xs text-[#c29da5]">PostgreSQL relacional</div>
-            </div>
-            <div className="bg-[#423943] border border-[#615362] rounded-xl p-3.5 shadow-md">
-              <div className="text-xl font-mono font-bold text-emerald-400">100% Pass</div>
-              <div className="text-xs text-[#c29da5]">Suite de pruebas rudas</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Columna Derecha: Three.js 3D Interactive Canvas */}
-        <div className="lg:col-span-5 relative flex flex-col items-center justify-center">
-          <div className="relative w-full rounded-3xl bg-[#362f37] border-2 border-[#b82d46]/50 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.9)] overflow-hidden">
-            {/* 3D Header Tag */}
-            <div className="absolute top-4 left-4 z-10 flex items-center gap-2 bg-[#423943]/95 border border-[#cba135]/40 px-3 py-1 rounded-full text-[11px] font-mono text-[#f2cf6b] backdrop-blur">
-              <Boxes size={13} className="text-[#f2cf6b]" />
-              <span>Three.js 3D Architecture Node</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-            </div>
-
-            {/* Canvas Three.js interactivo */}
-            <ThreeArchitectureNode />
-
-            {/* 3D Footer Descriptor */}
-            <div className="mt-2 text-center text-xs font-mono text-[#c29da5] bg-[#423943] py-1.5 px-3 rounded-xl border border-[#615362]">
-              <span>Malla geométrica interactiva · Pasa el cursor para rotar</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Carrusel del Ciclo de Vida del Software (SDLC) & Resultados       */
-/* ------------------------------------------------------------------ */
-
-function TestingRudoBanner() {
-  return <SdlcLifecycleCarousel />;
-}
-
-/* ------------------------------------------------------------------ */
-/*  SHOWCASE EXCLUSIVO: Fiscalis con Carrusel de Hallazgos QA          */
-/* ------------------------------------------------------------------ */
-
-function FiscalisSpotlightSection({
-  onSelectFiscalis,
-}: {
-  onSelectFiscalis: () => void;
-}) {
-  return (
-    <section id="fiscalis-spotlight" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full">
-      <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#721828]/60 border border-[#cba135]/50 text-xs font-bold text-[#f2cf6b] uppercase tracking-wider">
-          <Flame size={14} className="text-[#f2cf6b]" />
-          Proyecto Insignia de Ingeniería & Terreno
-        </div>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#ff6b85] tracking-tight">
-          Fiscalis: El Sistema de Gestión Operativa que Erradicó el Papel
-        </h2>
-        <p className="text-sm sm:text-base text-[#f5dade] max-w-2xl mx-auto leading-relaxed">
-          Diseñado, probado y documentado para fiscalización municipal y seguridad pública. De 72
-          horas analógicas a menos de 90 segundos digitalizados con georreferenciación GPS y
-          persistencia asíncrona.
-        </p>
-      </div>
-
-      {/* Carrusel Interactivo de Módulos & Documentación QA */}
-      <FiscalisCarousel />
-
-      {/* Botones de acción directa de Fiscalis */}
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <a
-          href="https://renkaidev-web.renkaidev.workers.dev/casos/fiscalis"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#721828] to-[#9e233b] hover:from-[#9e233b] hover:to-[#cba135] transition-all flex items-center gap-2 border border-[#cba135]/40 shadow-lg"
-        >
-          <span>Explorar Showcase Interactivo en Canvas & Video</span>
-          <ExternalLink size={14} />
-        </a>
-        <button
-          onClick={onSelectFiscalis}
-          className="px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#f5dade] hover:text-[#f2cf6b] bg-[#423943] hover:bg-[#4c424e] border border-[#615362] hover:border-[#cba135]/60 transition-all flex items-center gap-2 cursor-pointer"
-        >
-          <FileCheck2 size={14} className="text-[#f2cf6b]" />
-          <span>Ver Expediente Técnico Modal</span>
-        </button>
-      </div>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Demostración en Video con Renderizador Canvas 2D & Guía Voz IA    */
-/* ------------------------------------------------------------------ */
-
-function CanvasVideoDemonstrationSection() {
-  return (
-    <section id="video-preview" className="py-24 px-4 sm:px-6 max-w-7xl mx-auto w-full relative">
-      {/* Glow ambiental cyberpunk multicapa */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[450px] bg-[#721828]/25 blur-[180px] pointer-events-none -z-10" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[250px] bg-[#cba135]/15 blur-[140px] pointer-events-none -z-10" />
-
-      <div className="text-center max-w-5xl mx-auto mb-16 space-y-6">
-        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#721828]/90 via-[#423943] to-[#721828]/90 border-2 border-[#cba135] text-xs sm:text-sm font-bold text-[#f2cf6b] uppercase tracking-wider shadow-[0_0_25px_rgba(203,161,53,0.35)]">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#f2cf6b] shadow-[0_0_10px_#f2cf6b] animate-ping" />
-          <Play size={15} className="text-[#f2cf6b] fill-[#f2cf6b]" />
-          <span>Demo interactiva · Clic para reproducir</span>
-        </div>
-
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#ff6b85] to-[#f2cf6b] tracking-tight leading-[1.15] drop-shadow-[0_4px_30px_rgba(184,45,70,0.5)] font-cyber">
-          Demo de Dashboard Agrícola & Control de Contratistas
-        </h2>
-
-        <p className="text-base sm:text-lg text-[#f5dade] max-w-3xl mx-auto leading-relaxed">
-          Haz clic en el reproductor para ver la demo en acción. Esta solución centraliza el registro de faenas agrícolas, cruza jornadas laborales automáticamente y erradica el 100% de errores por duplicidad de datos en planillas.
-        </p>
-      </div>
-
-      {/* Modern Canvas Video Player with AI Voice Guide */}
-      <ModernCanvasVideoPlayer />
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Casos de Estudio con Telemetría & Testing                          */
-/* ------------------------------------------------------------------ */
-
-function CaseStudiesSection({
-  onSelectCase,
-}: {
-  onSelectCase: (c: CaseStudyData) => void;
-}) {
-  return (
-    <section id="casos-de-estudio" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full">
-      <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#721828]/50 border border-[#cba135]/40 text-xs font-bold text-[#f2cf6b] uppercase tracking-wider">
-          <FlaskConical size={13} />
-          Casos de Estudio Reales de Naxo Resuelve
-        </div>
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-[#ff6b85]">
-          Sistemas sometidos a pruebas rudas antes de tocar producción
-        </h2>
-        <p className="text-sm sm:text-base text-[#c29da5]">
-          Haz clic en cualquier caso para abrir el expediente técnico, métricas de estrés y enlace directo a la documentación en vivo.
-        </p>
-      </div>
-
-      <div className="grid md:grid-cols-3 gap-6">
-        {CASE_STUDIES.map((c, idx) => {
-          const caseTitleId = `case-title-${c.id}`;
-          return (
-            <article
-              key={c.id}
-              tabIndex={0}
-              aria-labelledby={caseTitleId}
-              onClick={() => onSelectCase(c)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  onSelectCase(c);
-                }
-              }}
-              className="group relative bg-[#423943] hover:bg-[#362f37] border-2 border-[#615362] hover:border-[#f2cf6b] focus:border-[#f2cf6b] focus:ring-2 focus:ring-[#f2cf6b] focus:outline-none rounded-3xl p-6 sm:p-7 transition-all duration-300 shadow-lg hover:shadow-[0_12px_35px_rgba(114,24,40,0.4)] cursor-pointer flex flex-col justify-between"
-            >
-              {/* Header Card */}
-              <div>
-                <div className="flex items-center justify-between text-xs text-[#dcd0d5] mb-3">
-                  <span className="font-mono text-[#f2cf6b] font-bold">PROYECTO #{c.id.toUpperCase()}</span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#721828] text-[#f2cf6b] text-xs font-bold border border-[#cba135]/40">
-                    TESTING CERTIFICADO
-                  </span>
-                </div>
-                <h3 id={caseTitleId} className="text-xl font-bold text-[#ff859b] group-hover:text-[#f2cf6b] transition-colors mb-3 leading-snug">
-                  {c.title}
-                </h3>
-                <p className="text-sm text-[#ffffff] mb-5 line-clamp-3 leading-relaxed font-normal">
-                  {c.problem}
-                </p>
-
-                {/* Batería resumida */}
-                <div className="space-y-2 mb-4 bg-[#302c36] p-3.5 rounded-2xl border border-[#615362]">
-                  <div className="text-xs font-bold text-[#ff859b] uppercase tracking-wider flex items-center gap-1.5">
-                    <CheckCircle2 size={15} className="text-emerald-400" aria-hidden="true" />
-                    <span>Prueba de Estrés Superada:</span>
-                  </div>
-                  <div className="text-xs font-mono text-[#f2cf6b] font-semibold truncate">
-                    {c.rudaTest[0].metrics}
-                  </div>
-                </div>
-              </div>
-
-              {/* Footer Card */}
-              <div className="pt-4 border-t border-[#615362] flex items-center justify-between">
-                <span className="text-sm font-bold text-[#f5dade] group-hover:text-[#f2cf6b] flex items-center gap-1">
-                  <span>Ver expediente y demo</span>
-                  <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
-                </span>
-                <span className="text-xs text-[#dcd0d5] font-mono">
-                  {c.technologies.slice(0, 2).join(" · ")}
-                </span>
-              </div>
-            </article>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Servicios desde la Solución al Problema Real                       */
-/* ------------------------------------------------------------------ */
-
-function ServicesSection({
-  onOpenAudit,
-}: {
-  onOpenAudit: (topic: string) => void;
-}) {
-  return (
-    <section id="soluciones" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full">
-      <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-        <span className="text-xs font-bold uppercase tracking-widest text-[#f2cf6b]">
-          Capacidades & Especialización
-        </span>
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-[#ff6b85]">
-          No vendo líneas de código: resuelvo los cuellos de botella que frenan tu negocio
-        </h2>
-        <p className="text-sm sm:text-base text-[#c29da5]">
-          Compara el dolor operativo habitual frente a la solución de ingeniería definitiva que implemento.
-        </p>
-      </div>
-
-      {/* Banner Destacado: Electrónica, Arduino, Domótica & Reparación de Hardware */}
-      <div className="mb-10 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#721828]/50 via-[#423943] to-[#362f37] border-2 border-[#cba135]/60 shadow-xl flex flex-col lg:flex-row items-center justify-between gap-6">
-        <div className="flex items-start gap-4">
-          <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#721828] to-[#cba135] text-white shadow-lg shrink-0">
-            <Cpu size={28} />
-          </div>
-          <div className="space-y-1.5">
-            <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-[#721828] text-[#f2cf6b] text-xs font-mono font-bold uppercase tracking-wider border border-[#cba135]/40">
-              <Zap size={13} />
-              <span>Nueva Especialidad en Hardware & Terreno</span>
-            </div>
-            <h3 className="text-xl sm:text-2xl font-black text-[#ff6b85]">
-              Electrónica, Arduino, Domótica, Cámaras & Reparación de Dispositivos
-            </h3>
-            <p className="text-xs sm:text-sm text-[#f5dade] leading-relaxed max-w-3xl">
-              Cubrimos todo tipo de electrónica: automatización con microcontroladores Arduino/ESP32, casas y oficinas inteligentes, cámaras de seguridad CCTV sin pagos mensuales, y arreglo integral de notebooks, computadores y celulares.
-            </p>
-            <div className="pt-1 flex flex-wrap items-center gap-3 text-xs font-mono text-[#f2cf6b]">
-              <span className="bg-[#362f37] px-2.5 py-1 rounded-lg border border-[#615362]">
-                🔧 Consultoría & Diagnóstico Inicial: <strong>$15.000 CLP</strong>
-              </span>
-              <span className="text-[#c29da5]">
-                (El valor se descuenta del monto final al aprobar el arreglo o instalación)
+              <span className="font-mono text-xs font-bold text-[#111827]">
+                ⚡ Soluciones de Software & TI para Negocios — Modalidad 100% Remota
               </span>
             </div>
-          </div>
-        </div>
 
-        <button
-          onClick={() => onOpenAudit("electronica_arduino")}
-          className="w-full lg:w-auto px-6 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#721828] to-[#9e233b] hover:from-[#9e233b] hover:to-[#cba135] transition shadow-lg border border-[#cba135]/50 shrink-0 text-center cursor-pointer"
-        >
-          Agendar Diagnóstico ($15.000 CLP)
-        </button>
-      </div>
-
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {SERVICES_DATA.map((s, idx) => {
-          const Icon = s.icon;
-          const cardId = `service-title-${idx}`;
-          return (
-            <article
-              key={idx}
-              aria-labelledby={cardId}
-              className="bg-[#423943] border-2 border-[#615362] hover:border-[#f2cf6b] focus-within:border-[#f2cf6b] focus-within:ring-2 focus-within:ring-[#f2cf6b] rounded-3xl p-6 sm:p-7 transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-[0_12px_35px_rgba(0,0,0,0.8)] flex flex-col justify-between"
-            >
-              <div>
-                {/* Header */}
-                <div className="flex items-center justify-between gap-3 mb-4">
-                  <div 
-                    aria-hidden="true"
-                    className="p-3.5 rounded-2xl bg-gradient-to-br from-[#721828] to-[#1c1822] text-[#f2cf6b] border border-[#cba135]/50 shadow-md"
-                  >
-                    <Icon size={26} />
-                  </div>
-                  <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-[#302c36] text-[#f2cf6b] border border-[#cba135]/60 shadow-sm">
-                    {s.badge}
-                  </span>
-                </div>
-
-                <h3 id={cardId} className="text-xl sm:text-2xl font-black text-[#ff859b] tracking-tight mb-2 leading-snug">
-                  {s.title}
-                </h3>
-                <span className="text-sm font-semibold text-[#f2cf6b] block mb-5">
-                  {s.tag}
+            {/* Titular Principal (H1) */}
+            <div id="hero-title" className="flex max-w-4xl flex-col gap-6">
+              <h1 className="text-balance text-4xl font-black leading-[1.08] tracking-tight text-[#111827] sm:text-6xl lg:text-7xl">
+                Software y digitalización para tu negocio.{" "}
+                <span className="text-[#1E2430] underline decoration-[#25D366] decoration-4 underline-offset-8">
+                  Sin agencias lentas.
                 </span>
-
-                {/* El Dolor (Pain Point) */}
-                <div className="mb-4 p-4 rounded-2xl bg-red-950/40 border border-red-700/60 text-sm">
-                  <span className="font-bold text-[#ff6b85] text-sm uppercase tracking-wide block mb-1.5 flex items-center gap-1.5">
-                    <span aria-hidden="true">⚠️</span>
-                    <span>El Dolor Real:</span>
-                  </span>
-                  <p className="text-[#ffffff] leading-relaxed font-normal">{s.problem}</p>
-                </div>
-
-                {/* La Solución */}
-                <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-600/60 text-sm">
-                  <span className="font-bold text-emerald-300 text-sm uppercase tracking-wide block mb-1.5 flex items-center gap-1.5">
-                    <span aria-hidden="true">✓</span>
-                    <span>Solución de Ingeniería:</span>
-                  </span>
-                  <p className="text-[#ffffff] leading-relaxed font-normal">{s.solution}</p>
-                </div>
-              </div>
-
-              {/* Botón de cotizar / diagnosticar accesible con tamaño táctil adecuado */}
-              <div className="pt-5 mt-5 border-t border-[#615362] flex items-center justify-between">
-                <button
-                  type="button"
-                  onClick={() => onOpenAudit(s.title)}
-                  aria-label={`Diagnosticar mi caso de ${s.title}`}
-                  className="w-full py-3 px-4 rounded-xl text-sm font-bold text-[#07080c] bg-gradient-to-r from-[#f2cf6b] via-[#e2b747] to-[#cba135] hover:brightness-110 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-white flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md"
-                >
-                  <span>Diagnosticar mi caso</span>
-                  <ChevronRight size={18} aria-hidden="true" />
-                </button>
-              </div>
-            </article>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Promociones In-Web, Captura Email/WhatsApp & Tienda Multi-SaaS    */
-/* ------------------------------------------------------------------ */
-
-function PromotionsAndStoreSection() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("+56 9 ");
-  const [selectedPromo, setSelectedPromo] = useState("Diagnóstico Forense 100% Bonificado");
-  const [subscribedMarketing, setSubscribedMarketing] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
-  const PROMO_OPTIONS = [
-    {
-      id: "diagnostico",
-      title: "Diagnóstico Forense de Base de Datos & Procesos",
-      value: "Diagnóstico Forense 100% Bonificado",
-      badge: "100% Bonificado · Este Mes",
-      valText: "Valor regular: $150.000 CLP",
-      icon: FlaskConical,
-      benefit:
-        "Informe confidencial de 3 páginas en <24 horas identificando por qué colapsan tus consultas o dónde se duplican tus registros.",
-      targetChannel: "Email + Sesión 20 min WhatsApp",
-    },
-    {
-      id: "consultoria-hardware",
-      title: "Diagnóstico Electrónica & Hardware por $15.000 CLP",
-      value: "Diagnóstico Hardware & Electrónica por $15.000 CLP",
-      badge: "Tarifa Fija Promocional",
-      valText: "Valor: $15.000 CLP (Abonable a Reparación)",
-      icon: Cpu,
-      benefit:
-        "Revisión técnica de circuitos Arduino, domótica, cámaras de seguridad, notebooks y celulares. Se abona al costo si se aprueba el trabajo.",
-      targetChannel: "Email + Coordinación WhatsApp",
-    },
-    {
-      id: "kit-python",
-      title: "Kit Python Automatización Excel Anti-Duplicados",
-      value: "Kit Python Automatización Excel Anti-Duplicados",
-      badge: "Descarga Inmediata para Suscriptores",
-      valText: "Valor regular: $60.000 CLP",
-      icon: FileSpreadsheet,
-      benefit:
-        "Script productivo listo para ejecutar que limpia planillas masivas, valida RUTs y elimina registros clonados sin fórmulas rotas.",
-      targetChannel: "Entrega Inmediata a tu Email Corporativo",
-    },
-    {
-      id: "preventa-tienda",
-      title: "Pase Fundador 30% OFF en la Próxima Tienda Digital",
-      value: "Pase Fundador 30% OFF Próxima Tienda Multi-SaaS",
-      badge: "Descuento Vitalicio",
-      valText: "Válido para todo el catálogo multi-producto",
-      icon: Percent,
-      benefit:
-        "Asegura un 30% de descuento vitalicio en paquetes de software en arriendo mensual, sincronizadores y módulos listos para desplegar.",
-      targetChannel: "Aviso Prioritario por WhatsApp y Correo",
-    },
-  ];
-
-  const UPCOMING_PRODUCTS = [
-    {
-      name: "Fiscalis Cloud Lite",
-      category: "SaaS en Arriendo Mensual",
-      badge: "Inspección & Seguridad",
-      price: "$29.990 CLP / mes",
-      discountPrice: "$20.990 CLP / mes (Preventa)",
-      desc: "App móvil offline-first y panel web para digitalización de actas, fiscalización en terreno y trazabilidad sin papel.",
-      features: ["Sincronización Offline", "Georreferenciación GPS", "MFA TOTP", "Reportes PDF"],
-    },
-    {
-      name: "IoT Sentinel Hub & Domótica",
-      category: "Hardware + Firmware IoT",
-      badge: "Domótica & CCTV",
-      price: "$49.990 CLP",
-      discountPrice: "$34.990 CLP (Preventa)",
-      desc: "Módulo ESP32/Arduino preconfigurado para control de reles, enlace con cámaras IP y alertas instantáneas a tu teléfono.",
-      features: ["Firmware C++/Python", "Sin Mensualidades", "Alertas WhatsApp", "Corte Remoto"],
-    },
-    {
-      name: "Deduplicator Pro Engine",
-      category: "Microservicio Docker / Script",
-      badge: "Base de Datos & Ingesta",
-      price: "$49.990 CLP",
-      discountPrice: "$34.990 CLP (Preventa)",
-      desc: "Motor de carga masiva de archivos pesados con algoritmos de deduplicación difusa y consistencia transaccional PostgreSQL.",
-      features: ["Pipeline Asíncrono", "Fuzzy Matching", "Validación RUT/PPU", "0 Memory Leaks"],
-    },
-    {
-      name: "Executive BI Live Dashboard",
-      category: "SaaS Analytics & Telemetría",
-      badge: "Toma de Decisiones",
-      price: "$39.990 CLP / mes",
-      discountPrice: "$27.990 CLP / mes (Preventa)",
-      desc: "Tablero de control ejecutivo en tiempo real conectado a bases de datos operativas y mapas de posicionamiento local.",
-      features: ["KPIs en Tiempo Real", "Alertas por WhatsApp", "Google Maps Sync", "Exportación 1-clic"],
-    },
-    {
-      name: "Multi-Store Digital Core",
-      category: "Arquitectura E-Commerce",
-      badge: "Tienda Virtual Multi-Producto",
-      price: "$89.990 CLP",
-      discountPrice: "$62.990 CLP (Preventa)",
-      desc: "Arquitectura moderna y de máxima velocidad para tiendas online con pasarelas chilenas de pago, catálogo dinámico y panel admin.",
-      features: ["Checkout Rápido", "Control de Stock", "Integración Webpay", "SEO Técnico 98+"],
-    },
-  ];
-
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setErrorMsg("");
-
-    const marketingMessage = `[CAMPAÑA_IN_WEB: PROMOCIONES & PREVENTA TIENDA VIRTUAL]
-Beneficio Solicitado: ${selectedPromo}
-Nombre / Razón Social: ${name}
-Email Corporativo: ${email}
-WhatsApp Contacto: ${phone}
-Suscripción Email Marketing & WhatsApp Marketing: ${subscribedMarketing ? "SÍ (Aceptada)" : "NO"}
-Fecha Solicitud: 2026`;
-
-    try {
-      const res = await fetch(`${API_URL}/leads`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: name.trim(),
-          email: email.trim(),
-          message: marketingMessage,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error(
-          "No fue posible registrar tu promoción en la base de datos. Puedes escribirnos directo al WhatsApp."
-        );
-      }
-
-      setSuccess(true);
-    } catch (err: unknown) {
-      const msg =
-        err instanceof Error
-          ? err.message
-          : "Error de red al procesar tu solicitud promocional.";
-      setErrorMsg(msg);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const whatsappPromoLink = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(
-    `Hola Naxo Resuelve, acabo de registrarme en la promoción de naxoresuelve para asegurar mi beneficio de "${selectedPromo}". Mi nombre es ${name || "Cliente"} y mi correo es ${email || "mi correo"}.`
-  )}`;
-
-  return (
-    <section id="promociones" className="py-24 px-4 sm:px-6 max-w-7xl mx-auto w-full relative">
-      {/* Glow ambiental vino y oro */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[350px] bg-[#721828]/20 blur-[160px] pointer-events-none -z-10" />
-
-      {/* Header de la Sección */}
-      <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#721828]/60 border border-[#cba135]/50 text-xs font-bold text-[#f2cf6b] uppercase tracking-wider shadow-lg">
-          <Tag size={13} className="text-[#f2cf6b]" />
-          <span>Promociones In-Web & Estrategia de Lanzamiento</span>
-        </div>
-        <h2 className="text-3xl sm:text-5xl font-black text-[#ff6b85] tracking-tight leading-tight">
-          Acelera tu Empresa con Soluciones Reales y Asegura Tu Cupo en Nuestra Próxima Tienda Virtual
-        </h2>
-        <p className="text-sm sm:text-base text-[#f5dade] leading-relaxed">
-          El costo de convivir con planillas rotas, sistemas caídos y registros duplicados supera con creces el valor de implementar ingeniería profesional. Suscríbete a nuestro canal de inteligencia técnica: te entregamos herramientas gratuitas hoy y te aseguramos descuentos de preventa en nuestra próxima tienda de soluciones de software.
-        </p>
-      </div>
-
-      {/* Grid de 3 Lead Magnets Persuasivos */}
-      <div className="grid md:grid-cols-3 gap-6 mb-16">
-        {PROMO_OPTIONS.map((promo) => {
-          const Icon = promo.icon;
-          const isSelected = selectedPromo === promo.value;
-          return (
-            <div
-              key={promo.id}
-              onClick={() => setSelectedPromo(promo.value)}
-              className={`rounded-2xl p-6 sm:p-7 border transition-all duration-300 cursor-pointer flex flex-col justify-between relative overflow-hidden ${
-                isSelected
-                  ? "bg-gradient-to-b from-[#181c28] to-[#0e111a] border-[#cba135] shadow-[0_0_25px_rgba(203,161,53,0.25)] scale-[1.02]"
-                  : "bg-[#423943] border-[#615362] hover:border-[#721828]/80 hover:bg-[#362f37]"
-              }`}
-            >
-              {isSelected && (
-                <div className="absolute top-0 right-0 bg-gradient-to-l from-[#cba135] to-[#721828] text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider flex items-center gap-1 shadow-md">
-                  <CheckCircle2 size={11} />
-                  <span>Seleccionado</span>
-                </div>
-              )}
-
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#721828] to-[#07080c] border border-[#cba135]/40 flex items-center justify-center text-[#f2cf6b]">
-                    <Icon size={24} />
-                  </div>
-                  <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-[#721828]/60 text-[#f2cf6b] border border-[#721828] font-bold">
-                    {promo.badge}
-                  </span>
-                </div>
-
-                <h3 className="text-lg font-bold text-[#ff6b85] mb-1.5 leading-snug">
-                  {promo.title}
-                </h3>
-                <div className="text-xs text-[#f2cf6b] font-mono font-semibold mb-3">
-                  {promo.valText}
-                </div>
-                <p className="text-xs text-[#f5dade] leading-relaxed mb-4">
-                  {promo.benefit}
-                </p>
-              </div>
-
-              <div className="pt-4 border-t border-[#615362] flex items-center justify-between text-xs">
-                <span className="text-[#c29da5] text-[11px]">
-                  Canal: <strong className="text-[#f5dade]">{promo.targetChannel}</strong>
-                </span>
-                <span className="text-[#f2cf6b] font-bold flex items-center gap-1">
-                  <span>Reclamar</span>
-                  <ChevronRight size={14} />
-                </span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Contenedor Dual: Formulario de Captura Omnicanal & Preview de la Tienda Virtual */}
-      <div className="grid lg:grid-cols-12 gap-8 items-stretch">
-        
-        {/* Formulario de Captura Omnicanal (Email Marketing + WhatsApp Marketing) (6 cols) */}
-        <div className="lg:col-span-6 bg-gradient-to-br from-[#0e111a] via-[#141824] to-[#07080c] border border-[#b82d46]/60 rounded-3xl p-6 sm:p-10 shadow-2xl flex flex-col justify-between">
-          {success ? (
-            <div className="my-auto py-8 text-center space-y-5">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#721828] to-[#cba135] border border-[#cba135] flex items-center justify-center mx-auto text-white shadow-xl animate-bounce">
-                <CheckCircle2 size={36} />
-              </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#721828]/80 text-[#f2cf6b] text-xs font-mono font-bold">
-                <Sparkles size={13} />
-                <span>BENEFICIO ACTIVADO EXITOSAMENTE</span>
-              </div>
-              <h3 className="text-2xl sm:text-3xl font-black text-[#ff6b85]">
-                ¡Tu Solicitud Ha Sido Priorizada!
-              </h3>
-              <p className="text-sm text-[#f5dade] max-w-md mx-auto leading-relaxed">
-                Excelente, <strong className="text-[#f2cf6b]">{name}</strong>. Hemos registrado tu interés por <strong className="text-[#ff6b85]">&quot;{selectedPromo}&quot;</strong>.
-                Recibirás el material en tu correo y quedas inscrito en la lista VIP de lanzamiento de nuestra tienda virtual.
+              </h1>
+              <p className="mx-auto max-w-2xl text-pretty text-lg font-medium leading-relaxed text-[#526072] sm:text-xl">
+                Resuelvo los cuellos de botella de tu operación diaria con trato directo, sin intermediarios ni reuniones improductivas. Propuesta clara de 1 página, entregas funcionales en días hábiles y sistemas 100% bajo tu control.
               </p>
-
-              {/* Botón Inmediato a WhatsApp */}
-              <div className="pt-4 space-y-3">
-                <a
-                  href={whatsappPromoLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-4 px-6 rounded-2xl font-bold text-sm text-white bg-gradient-to-r from-emerald-600 via-emerald-700 to-[#721828] hover:opacity-95 transition-all flex items-center justify-center gap-2 shadow-[0_4px_25px_rgba(16,185,129,0.3)] border border-emerald-400/40"
-                >
-                  <Smartphone size={18} />
-                  <span>Validar Beneficio Inmediato por WhatsApp (+56 9 5728 6145)</span>
-                </a>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSuccess(false);
-                    setName("");
-                    setEmail("");
-                    setPhone("+56 9 ");
-                  }}
-                  className="text-xs text-[#c29da5] hover:text-[#f2cf6b] underline underline-offset-4"
-                >
-                  Registrar otro correo o solicitar otra promoción
-                </button>
-              </div>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <span className="text-xs font-mono font-bold text-[#f2cf6b] uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
-                  <Gift size={14} className="text-[#f2cf6b]" />
-                  <span>Captura de Beneficio Directo</span>
-                </span>
-                <h3 className="text-2xl font-extrabold text-[#ff6b85]">
-                  Asegura tus Datos para Activación Inmediata
-                </h3>
-                <p className="text-xs text-[#c29da5] mt-1 leading-relaxed">
-                  Completa tus datos para enviarte los kits por correo y coordinar alertas de nuevos lanzamientos vía WhatsApp. Cero spam, 100% valor técnico aplicable.
-                </p>
-              </div>
 
-              {errorMsg && (
-                <div className="p-3.5 rounded-xl bg-red-950/80 border border-red-800 text-red-200 text-xs flex items-center gap-2">
-                  <AlertCircle size={16} className="shrink-0 text-red-400" />
-                  <span>{errorMsg}</span>
-                </div>
-              )}
-
-              {/* Selector de Promoción */}
-              <div>
-                <label className="block text-xs font-semibold text-[#f5dade] mb-1.5">
-                  Promoción o Beneficio a Reclamar:
-                </label>
-                <select
-                  value={selectedPromo}
-                  onChange={(e) => setSelectedPromo(e.target.value)}
-                  className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-3 text-[#f5dade] text-xs font-medium transition"
-                >
-                  {PROMO_OPTIONS.map((p) => (
-                    <option key={p.id} value={p.value}>
-                      {p.title} ({p.badge})
-                    </option>
-                  ))}
-                  <option value="Acceso Total VIP (Diagnóstico + Kit + Pase Preventa)">
-                    ⭐️ Acceso Total VIP (Diagnóstico + Kit Python + Pase Preventa Tienda)
-                  </option>
-                </select>
-              </div>
-
-              {/* Nombre */}
-              <div>
-                <label htmlFor="promo-name" className="block text-xs font-semibold text-[#f5dade] mb-1.5">
-                  Nombre Completo o Empresa *
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9e8e97]">
-                    <UserCheck size={16} />
-                  </div>
-                  <input
-                    id="promo-name"
-                    required
-                    type="text"
-                    placeholder="Ej. Rodrigo San Martín / Transportes del Sur"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-2.5 text-[#f5dade] placeholder-[#9e8e97] text-sm transition"
-                  />
-                </div>
-              </div>
-
-              {/* Email (Email Marketing) */}
-              <div>
-                <label htmlFor="promo-email" className="block text-xs font-semibold text-[#f5dade] mb-1.5">
-                  Correo Electrónico Corporativo * (Para entrega de informes y kits)
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9e8e97]">
-                    <Mail size={16} />
-                  </div>
-                  <input
-                    id="promo-email"
-                    required
-                    type="email"
-                    placeholder="contacto@tuempresa.cl"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-2.5 text-[#ffffff] placeholder-[#dcd0d5] text-sm transition"
-                  />
-                </div>
-              </div>
-
-              {/* WhatsApp (WhatsApp Marketing) */}
-              <div>
-                <label htmlFor="promo-phone" className="block text-xs font-semibold text-[#f5dade] mb-1.5">
-                  WhatsApp Móvil * (Para alertas preventa y soporte técnico directo)
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#dcd0d5]">
-                    <Smartphone size={16} />
-                  </div>
-                  <input
-                    id="promo-phone"
-                    required
-                    type="text"
-                    placeholder="+56 9 1234 5678"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl pl-10 pr-3.5 py-2.5 text-[#ffffff] placeholder-[#dcd0d5] text-sm font-mono transition"
-                  />
-                </div>
-              </div>
-
-              {/* Consentimiento de Marketing */}
-              <div className="flex items-start gap-2.5 pt-1">
-                <input
-                  id="promo-consent"
-                  type="checkbox"
-                  checked={subscribedMarketing}
-                  onChange={(e) => setSubscribedMarketing(e.target.checked)}
-                  className="mt-1 w-4 h-4 rounded border-[#615362] bg-[#362f37] text-[#721828] focus:ring-[#b82d46] cursor-pointer"
-                />
-                <label htmlFor="promo-consent" className="text-[11px] text-[#c29da5] leading-snug cursor-pointer">
-                  Acepto recibir el diagnóstico o material solicitado, análisis de casos de éxito y notificaciones preferenciales por Email y WhatsApp sobre el lanzamiento de la tienda virtual multi-producto.
-                </label>
-              </div>
-
-              {/* Botón de Enviar */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-4 px-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] hover:opacity-95 active:scale-[0.99] transition shadow-[0_4px_25px_rgba(184,45,70,0.5)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-              >
-                {loading ? (
-                  <span>Registrando tu beneficio en PostgreSQL...</span>
-                ) : (
-                  <>
-                    <Zap size={16} className="text-[#f2cf6b]" />
-                    <span>Activar Promoción & Reservar Cupo Preventa</span>
-                  </>
+            {/* Contenedor de Llamados a la Acción (Dual) */}
+            <div id="hero-cta" className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row">
+              <a
+                href={whatsappLink(
+                  "Hola Pablo, quiero agendar un diagnóstico de 15 minutos para mi negocio."
                 )}
-              </button>
-            </form>
-          )}
-        </div>
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative overflow-hidden inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-[#1E2430] bg-[#1E2430] px-8 py-4 font-mono text-sm font-bold text-white shadow-[0_4px_16px_rgba(30,36,48,0.25)] transition-all duration-300 hover:border-[#25D366] hover:bg-[#25D366] hover:text-[#111827] hover:shadow-[0_8px_24px_rgba(37,211,102,0.4)] hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98]"
+              >
+                {/* Destello reflectivo al hover */}
+                <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full" />
+                <MessageCircle
+                  className="h-4 w-4 text-[#25D366] transition-colors group-hover:text-[#111827]"
+                  aria-hidden="true"
+                />
+                <span>Agendar Diagnóstico 15 min (Sin costo)</span>
+              </a>
 
-        {/* Anticipación / Preview de la Futura Tienda Virtual Multi-Productos (6 cols) */}
-        <div className="lg:col-span-6 bg-[#423943] border border-[#615362] rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-3 pb-3 border-b border-[#615362]">
-              <div className="flex items-center gap-2">
-                <ShoppingBag size={18} className="text-[#f2cf6b]" />
-                <span className="text-xs font-mono font-bold text-[#f2cf6b] uppercase">
-                  Próximo Lanzamiento Oficial
-                </span>
-              </div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#721828]/60 text-[#f2cf6b] border border-[#721828] font-bold">
-                Tienda Virtual Multi-SaaS
-              </span>
+              <a
+                href="#catalogo"
+                className="inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-[#526072]/25 bg-white/95 px-8 py-4 font-mono text-sm font-bold text-[#111827] shadow-sm backdrop-blur-md transition-all hover:bg-white hover:border-[#1E2430]/50 hover:-translate-y-1 hover:shadow-md active:scale-[0.99]"
+              >
+                <span>Ver Qué Hacemos & Demos</span>
+                <ArrowDown className="h-4 w-4 text-[#526072]" aria-hidden="true" />
+              </a>
             </div>
 
-            <h3 className="text-xl sm:text-2xl font-bold text-[#ff6b85] mb-2">
-              Catálogo de Productos y Soluciones Listas para Conectar
-            </h3>
-            <p className="text-xs text-[#c29da5] leading-relaxed mb-6">
-              Estamos consolidando nuestras herramientas más exitosas en paquetes modulares de software accesible para PYMEs chilenas. Al contratar servicios hoy o registrarte en la preventa, aseguras <strong>tarifas congeladas con hasta 30% OFF vitalicio</strong>.
-            </p>
+            {/* Micro-Garantías Inmediatas */}
+            <div id="hero-guarantees" className="flex flex-wrap items-center justify-center gap-6 pt-2 font-mono text-xs font-semibold text-[#111827]">
+              <div className="flex items-center gap-2 rounded-full bg-white/90 px-3.5 py-1.5 shadow-xs backdrop-blur-sm border border-[#526072]/20">
+                <Check className="h-4 w-4 text-[#25D366]" />
+                <span>Propuesta formal de 1 página</span>
+              </div>
+              <div className="flex items-center gap-2 rounded-full bg-white/90 px-3.5 py-1.5 shadow-xs backdrop-blur-sm border border-[#526072]/20">
+                <Check className="h-4 w-4 text-[#25D366]" />
+                <span>Pruebas en Staging privado</span>
+              </div>
+              <div className="flex items-center gap-2 rounded-full bg-white/90 px-3.5 py-1.5 shadow-xs backdrop-blur-sm border border-[#526072]/20">
+                <Check className="h-4 w-4 text-[#25D366]" />
+                <span>Entregables 100% transferibles</span>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            {/* Listado de 4 Productos de la Tienda con Fuentes Grandes y Legibles */}
-            <div className="grid sm:grid-cols-2 gap-4" role="region" aria-label="Productos en preventa">
-              {UPCOMING_PRODUCTS.map((prod, pIdx) => (
-                <article
-                  key={pIdx}
-                  className="p-4 rounded-xl bg-[#362f37] border border-[#615362] hover:border-[#b82d46]/70 transition flex flex-col justify-between space-y-2.5 shadow-sm"
+        {/* 3. Carrusel Interactivo de Clientes en Producción */}
+        <section id="ticker-section" className="w-full overflow-hidden border-y border-[#526072]/15 bg-white/40 py-5 backdrop-blur-xs">
+          <div className="flex flex-col items-center gap-3">
+            <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[#526072]">
+              Clientes en Producción & Capacidades Operativas Verificadas
+            </span>
+            <ClientTickerCarousel />
+          </div>
+        </section>
+
+        {/* 4. Ventajas del Modelo Directo (Por Proyecto Cerrado) */}
+        <section
+          id="ventajas"
+          className="w-full bg-transparent py-20 lg:py-28"
+        >
+          <div className="mx-auto flex w-full max-w-7xl flex-col gap-14 px-5 lg:px-10">
+            <SectionHeader
+              eyebrow="POR QUÉ ELEGIR ESTE MODELO"
+              title="Resultados de ingeniería sin la burocracia de una agencia"
+              id="ventajas-heading"
+              description="Elimina costos de intermediación, ejecutivos de cuentas y meses de espera. Trato directo de profesional a dueño de empresa."
+              centered
+            />
+
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {perks.map((perk) => {
+                const Icon = perk.icon;
+                return (
+                  <div
+                    key={perk.title}
+                    className="perk-card gsap-reveal flex flex-col justify-between rounded-2xl border border-[#526072]/20 bg-white/90 p-7 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#1E2430]/40 hover:-translate-y-1.5 hover:shadow-xl hover:bg-white"
+                  >
+                    <div className="flex flex-col gap-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#1E2430] text-[#25D366] shadow-sm">
+                        <Icon className="h-6 w-6" aria-hidden="true" />
+                      </div>
+                      <h3 className="text-lg font-bold text-[#111827]">
+                        {perk.title}
+                      </h3>
+                      <p className="text-sm leading-relaxed text-[#526072]">
+                        {perk.description}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* 5. Catálogo Extendido y Filtros de Productos (Commerce UI) */}
+        <section
+          id="catalogo"
+          className="w-full border-t border-[#526072]/15 bg-transparent py-20 lg:py-28"
+        >
+          {/* Anclajes de compatibilidad para la suite de pruebas */}
+          <div id="soluciones" className="sr-only" aria-hidden="true" />
+          <div id="que-hacemos" className="sr-only" aria-hidden="true" />
+          <div id="servicios" className="sr-only" aria-hidden="true" />
+          <div id="promociones" className="sr-only" aria-hidden="true" />
+
+          <div className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-5 lg:px-10">
+            <SectionHeader
+              eyebrow="QUÉ HACEMOS"
+              title="¿Qué problema necesitas resolver hoy en tu negocio?"
+              id="catalogo-heading"
+              description="Navega por las soluciones y servicios más solicitados. Filtra por categoría o busca por palabra clave para cotizar a medida o arrendar SaaS."
+              centered
+            />
+
+            <InteractiveCatalog />
+          </div>
+        </section>
+
+        {/* 6. Metodología de Trabajo (Escudo Operativo en 4 Pasos) */}
+        <section
+          id="metodologia"
+          className="w-full border-t border-[#526072]/15 bg-transparent py-20 lg:py-28"
+        >
+          <div id="filosofia-testing" className="sr-only" aria-hidden="true" />
+          <div className="mx-auto flex w-full max-w-7xl flex-col gap-14 px-5 lg:px-10">
+            <SectionHeader
+              eyebrow="CÓMO FUNCIONA"
+              title="De la consulta a la entrega sin sorpresas financieras"
+              id="metodologia-heading"
+              description="Cada etapa está respaldada formalmente para proteger tus tiempos y garantizar entregables funcionales."
+              centered
+            />
+
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {steps.map((step) => {
+                const Icon = step.icon;
+                return (
+                  <div
+                    key={step.number}
+                    className="method-step-card gsap-reveal relative flex flex-col justify-between rounded-2xl border border-[#526072]/20 bg-white/90 p-7 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#1E2430]/40 hover:-translate-y-1 hover:shadow-lg hover:bg-white"
+                  >
+                    <div className="flex flex-col gap-4">
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-3xl font-black text-[#1E2430]">
+                          {step.number}
+                        </span>
+                        <Icon
+                          className="h-5 w-5 text-[#25D366]"
+                          aria-hidden="true"
+                        />
+                      </div>
+                      <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#526072]">
+                        {step.label}
+                      </span>
+                      <h3 className="text-base font-bold text-[#111827]">
+                        {step.title}
+                      </h3>
+                      <p className="text-xs leading-relaxed text-[#526072]">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Aviso de Términos y Condiciones y Garantía */}
+            <div id="metodologia-disclaimer" className="mx-auto max-w-3xl text-center rounded-2xl border border-[#526072]/20 bg-white/80 p-5 shadow-xs backdrop-blur-sm">
+              <p className="font-mono text-xs text-[#526072]">
+                * Todo servicio, desarrollo a medida o arriendo de software está{" "}
+                <strong className="text-[#111827]">
+                  sujeto a nuestros Términos y Condiciones de Alcance Cerrado
+                </strong>{" "}
+                y cuenta con garantía post-entrega estipulada formalmente en la propuesta.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 7. Clientes en Producción */}
+        <section
+          id="proyectos"
+          className="w-full border-t border-[#526072]/15 bg-transparent py-20 lg:py-28"
+        >
+          {/* Anclajes de compatibilidad para la suite de pruebas */}
+          <div id="clientes" className="sr-only" aria-hidden="true" />
+          <div id="casos-de-estudio" className="sr-only" aria-hidden="true" />
+          <div id="portafolio" className="sr-only" aria-hidden="true" />
+
+          <div className="mx-auto flex w-full max-w-7xl flex-col gap-12 px-5 lg:px-10">
+            <SectionHeader
+              eyebrow="CLIENTES"
+              title="Empresas que confían en Naxo Resuelve"
+              id="proyectos-heading"
+              description="Proyectos desarrollados bajo ingeniería moderna, testeados con rigor y funcionando activamente para clientes en producción."
+              centered
+            />
+
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+              {clients.map((client) => (
+                <div
+                  key={client.name}
+                  className="client-project-card gsap-reveal flex flex-col justify-between rounded-2xl border border-[#526072]/20 bg-white/95 p-8 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#1E2430]/40 hover:-translate-y-1.5 hover:shadow-xl"
                 >
-                  <div>
-                    <div className="flex items-center justify-between text-xs font-mono text-[#f2cf6b] mb-1 font-bold">
-                      <span>{prod.badge}</span>
-                      <span className="text-emerald-400 font-bold">Preventa</span>
+                  <div className="flex flex-col gap-5">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#1E2430]">
+                        {client.category}
+                      </span>
+                      <span className="rounded-full border border-[#526072]/20 bg-[#FAF8F5] px-3 py-0.5 font-mono text-[11px] font-bold text-[#526072]">
+                        {client.year}
+                      </span>
                     </div>
-                    <h4 className="text-sm sm:text-base font-bold text-[#ffffff]">{prod.name}</h4>
-                    <p className="text-xs sm:text-sm text-[#dcd0d5] line-clamp-2 mt-1.5 leading-relaxed font-normal">
-                      {prod.desc}
+                    <h3 className="text-2xl font-black text-[#111827]">
+                      {client.name}
+                    </h3>
+                    <p className="text-sm leading-relaxed text-[#526072]">
+                      {client.description}
                     </p>
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      {client.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-lg border border-[#526072]/20 bg-[#FAF8F5] px-3 py-1 font-mono text-[11px] font-semibold text-[#111827]"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
 
-                  <div className="pt-2.5 border-t border-[#615362]">
-                    <div className="text-xs text-[#9e8e97] line-through font-mono">
-                      {prod.price}
-                    </div>
-                    <div className="text-sm sm:text-base font-bold font-mono text-[#f2cf6b]">
-                      {prod.discountPrice}
-                    </div>
+                  <div className="pt-8">
+                    <a
+                      href={client.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-xl bg-[#1E2430]/10 px-4 py-2 font-mono text-xs font-bold text-[#1E2430] transition-colors hover:bg-[#1E2430] hover:text-white"
+                    >
+                      <span>Visitar sitio en vivo</span>
+                      <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                    </a>
                   </div>
-                </article>
+                </div>
               ))}
             </div>
           </div>
+        </section>
 
-          {/* Banner de Visión y Reinversión */}
-          <div className="mt-6 p-4 rounded-2xl bg-gradient-to-r from-[#721828]/30 via-[#141824] to-[#07080c] border border-[#721828] text-xs space-y-2">
-            <div className="flex items-center gap-2 text-[#f2cf6b] font-bold font-mono text-[11px]">
-              <Sparkles size={14} />
-              <span>Modelo de Reinversión & Escalamiento</span>
-            </div>
-            <p className="text-[#f5dade] text-[11px] leading-relaxed">
-              Cada consultoría, automatización y reserva de preventa financia directamente la infraestructura, pasarelas de pago y servidores de nuestra tienda virtual chilena, garantizando un ecosistema digital soberano y de máxima velocidad.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+        {/* 8. Respaldo Profesional y Marca Personal */}
+        <section
+          id="autor"
+          className="w-full border-t border-[#526072]/15 bg-transparent py-20 lg:py-28"
+        >
+          <div className="mx-auto flex w-full max-w-7xl flex-col gap-12 px-5 lg:px-10">
+            <SectionHeader
+              eyebrow="DESARROLLADOR PRINCIPAL"
+              title="Trato directo con el especialista. Cero intermediarios."
+              id="autor-heading"
+              description="Naxo Resuelve es un estudio de ingeniería de software operado por Pablo Valdés Sandoval. La misma persona que escucha tu requerimiento es la que diseña la arquitectura, escribe el código y valida la seguridad."
+              centered
+            />
 
-/* ------------------------------------------------------------------ */
-/*  Filosofía de Pruebas Rudas                                         */
-/* ------------------------------------------------------------------ */
-
-function TestingPhilosophySection() {
-  const steps = [
-    {
-      step: "01",
-      title: "Pruebas de Estrés & Límite (Stress Testing)",
-      desc: "Inundamos los endpoints y motores de ingesta con sobrecargas de 50.000+ filas simultáneas para certificar que el servidor no tiene fugas de memoria (memory leaks) ni timeouts.",
-    },
-    {
-      step: "02",
-      title: "Inyección de Datos Sucios (Fuzz Testing)",
-      desc: "Forzamos registros incompletos, caracteres prohibidos, códigos nulos y fechas corruptas para garantizar que las reglas de negocio detengan el error antes de tocar la base de datos.",
-    },
-    {
-      step: "03",
-      title: "Integridad Atómica & Prevención de Duplicidad",
-      desc: "Simulamos escrituras simultáneas en el mismo microsegundo. Si no pasa la verificación de unicidad o falla una consulta, el rollback atómico deja la base intacta.",
-    },
-    {
-      step: "04",
-      title: "Automatización en CI/CD con Pytest / E2E",
-      desc: "Ningún cambio sube al servidor si falla una sola prueba automatizada. Cada versión cuenta con cobertura estricta de validación y telemetría.",
-    },
-  ];
-
-  return (
-    <section id="filosofia-testing" className="py-20 px-4 sm:px-6 bg-[#362f37] border-y border-[#615362]">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#721828]/50 border border-[#cba135]/40 text-xs font-bold text-[#f2cf6b] uppercase">
-            <ShieldCheck size={14} />
-            Metodología de Validación Extrema
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#ff6b85]">
-            ¿Por qué un sistema no es un éxito sin testing rudo?
-          </h2>
-          <p className="text-sm sm:text-base text-[#c29da5]">
-            En desarrollo de software, la mayoría de los problemas ocurren después de cobrar, cuando el cliente carga sus datos reales. Nosotros probamos bajo condiciones extremas antes de entregar.
-          </p>
-        </div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" role="region" aria-label="Pilares de testing riguroso">
-          {steps.map((st) => (
-            <article
-              key={st.step}
-              className="bg-[#423943] border border-[#615362] rounded-2xl p-6 relative overflow-hidden shadow-md flex flex-col justify-between"
-            >
-              <div>
-                <div className="text-4xl font-black font-mono text-[#ff859b]/80 mb-3" aria-hidden="true">
-                  {st.step}
+            <div id="autor-card" className="gsap-reveal mx-auto max-w-4xl rounded-3xl border border-[#526072]/20 bg-white/95 p-8 shadow-sm backdrop-blur-md sm:p-12">
+              <div className="flex flex-col gap-8 md:flex-row md:items-center">
+                {/* Fotografía Formal */}
+                <div id="autor-photo" className="shrink-0 flex flex-col items-center gap-3">
+                  <div className="relative h-36 w-36 sm:h-44 sm:w-44 overflow-hidden rounded-3xl border-2 border-[#526072]/30 shadow-xl bg-[#FAF8F5]">
+                    <Image
+                      src={PROFILE_IMAGE}
+                      alt="Pablo Valdés Sandoval — Analista Programador"
+                      fill
+                      sizes="(max-width: 640px) 144px, 176px"
+                      className="object-cover"
+                      priority
+                    />
+                  </div>
+                  <span className="font-mono text-xs font-bold text-[#1E2430]">
+                    Atención 100% Remota
+                  </span>
                 </div>
-                <h3 className="text-lg sm:text-xl font-bold text-[#ff859b] mb-2 leading-snug">{st.title}</h3>
-                <p className="text-sm sm:text-base text-[#ffffff] leading-relaxed font-normal">{st.desc}</p>
+
+                <div className="flex flex-col gap-5">
+                  <div className="flex flex-col gap-1">
+                    <h3 className="text-3xl font-black text-[#111827]">
+                      Pablo Valdés Sandoval
+                    </h3>
+                    <p className="font-mono text-sm font-bold text-[#526072]">
+                      Analista Programador (Técnico de Nivel Superior, CFT San Agustín)
+                    </p>
+                  </div>
+
+                  <blockquote className="rounded-2xl border-l-4 border-[#1E2430] bg-[#FAF8F5] p-5 text-sm italic leading-relaxed text-[#111827] shadow-xs">
+                    “Como Analista Programador, garantizo código estructurado bajo buenas prácticas de ingeniería y soluciones probadas en producción. Cero automatizaciones de Inteligencia Artificial a ciegas o código inestable sin auditar.”
+                  </blockquote>
+
+                  <div className="grid grid-cols-1 gap-2.5 pt-1 sm:grid-cols-3">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-[#526072]">
+                      <MapPin className="h-4 w-4 text-[#1E2430]" aria-hidden="true" />
+                      <span>Atención 100% Remota a Todo Chile</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs font-semibold text-[#526072]">
+                      <FileText className="h-4 w-4 text-[#1E2430]" aria-hidden="true" />
+                      <span>Propuesta Formal</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs font-semibold text-[#526072]">
+                      <ShieldCheck className="h-4 w-4 text-[#25D366]" aria-hidden="true" />
+                      <span>Garantía Post-Entrega</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-2">
+                    <a
+                      href={whatsappLink(
+                        "Hola Pablo, quiero conversar directamente sobre un requerimiento para mi negocio."
+                      )}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl border border-[#1E2430] bg-[#1E2430] px-6 py-3 font-mono text-xs font-bold text-white shadow-sm transition-all duration-300 hover:border-[#25D366] hover:bg-[#25D366] hover:text-[#111827]"
+                    >
+                      <MessageCircle className="h-4 w-4 text-[#25D366]" />
+                      <span>Hablar Directo con Pablo</span>
+                    </a>
+                  </div>
+                </div>
               </div>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
+            </div>
+          </div>
+        </section>
 
-/* ------------------------------------------------------------------ */
-/*  Portafolio Directo & Credenciales                                 */
-/* ------------------------------------------------------------------ */
+        {/* 9. Preguntas Frecuentes (FAQ) */}
+        <section
+          id="faq"
+          className="w-full border-t border-[#526072]/15 bg-transparent py-20 lg:py-28"
+        >
+          <div className="mx-auto flex w-full max-w-4xl flex-col gap-12 px-5 lg:px-10">
+            <SectionHeader
+              eyebrow="PREGUNTAS FRECUENTES"
+              title="Todo lo que necesitas saber antes de empezar"
+              id="faq-heading"
+              description="Respuestas directas a las dudas habituales sobre plazos, arriendos de SaaS y propiedad de los entregables."
+              centered
+            />
 
-function PortfolioSection() {
-  return (
-    <section id="portafolio" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full">
-      <div className="bg-gradient-to-br from-[#0e111a] via-[#141824] to-[#07080c] border border-[#b82d46]/50 rounded-3xl p-8 sm:p-12 shadow-2xl">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
-          <div className="space-y-4 max-w-2xl">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#f2cf6b] font-bold">
-              Portafolio Oficial & Trayectoria
+            <div className="flex flex-col gap-4">
+              {faqs.map((faq) => (
+                <details
+                  key={faq.question}
+                  className="faq-item gsap-reveal group rounded-2xl border border-[#526072]/20 bg-white/90 p-6 shadow-sm backdrop-blur-md transition-all hover:border-[#1E2430]/40 hover:bg-white"
+                >
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-bold text-base text-[#111827] [&::-webkit-details-marker]:hidden">
+                    <span className="flex items-center gap-2.5">
+                      <HelpCircle className="h-4 w-4 text-[#1E2430]" />
+                      {faq.question}
+                    </span>
+                    <ChevronDown className="h-5 w-5 text-[#526072] transition-transform duration-200 group-open:rotate-180" />
+                  </summary>
+                  <p className="mt-4 border-t border-[#526072]/15 pt-4 text-sm leading-relaxed text-[#526072]">
+                    {faq.answer}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 10. Final Call-to-Action Banner */}
+        <section id="final-cta-section" className="w-full border-t border-[#526072]/20 bg-[#1E2430] py-20 text-white shadow-2xl">
+          <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-6 px-5 text-center lg:px-10">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-4 py-1 font-mono text-xs font-bold uppercase tracking-widest text-[#25D366]">
+              Empieza Hoy Mismo
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#ff6b85]">
-              Naxo Resuelve — Arquitectura Backend, Automatización & Testing Rudo
+            <h2 className="text-balance text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl text-white">
+              Sube el estándar tecnológico de tu negocio sin fricción.
             </h2>
-            <p className="text-sm sm:text-base text-[#f5dade] leading-relaxed">
-              Especializado en Python, FastAPI y PostgreSQL. Resuelvo problemas de lógica, persistencia y arquitectura limpia con un enfoque analítico riguroso. Puedes explorar los desarrollos en renkaidev o revisar el código fuente en GitHub.
+            <p className="max-w-2xl text-pretty text-base text-white/80 sm:text-lg">
+              Evaluemos la viabilidad técnica de tu proyecto en 15 minutos sin costo.
+              Recibe una propuesta formal de 1 página antes de pagar un solo peso.
             </p>
-            <div className="flex flex-wrap gap-3 pt-2">
+            <div className="flex flex-col gap-4 sm:flex-row pt-4">
               <a
-                href={PORTFOLIO_URL}
+                href={whatsappLink(
+                  "Hola Pablo, quiero agendar mi diagnóstico de 15 minutos sin costo."
+                )}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#721828] to-[#9e233b] hover:from-[#9e233b] hover:to-[#cba135] transition-all flex items-center gap-2 shadow-md border border-[#cba135]/40"
+                className="group relative overflow-hidden inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-[#25D366] bg-[#25D366] px-8 py-4 font-mono text-xs font-bold text-[#111827] shadow-xl transition-all duration-300 hover:scale-105 hover:bg-white hover:shadow-[0_10px_30px_rgba(37,211,102,0.5)] focus:ring-4 focus:ring-[#25D366]/40 focus:outline-none active:scale-95"
               >
-                <span>Explorar renkaidev.workers.dev</span>
-                <span className="sr-only"> (se abre en una nueva pestaña)</span>
-                <ExternalLink size={14} aria-hidden="true" />
+                <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full" />
+                <MessageCircle className="h-4 w-4 text-[#111827]" aria-hidden="true" />
+                <span>Agendar por WhatsApp (15 min)</span>
               </a>
               <a
-                href={GITHUB_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#f5dade] hover:text-[#f2cf6b] bg-[#423943] border border-[#615362] transition-colors flex items-center gap-2"
+                href="#catalogo"
+                className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-white/20 bg-transparent px-8 py-4 font-mono text-xs font-bold text-white transition-all hover:bg-white/10"
               >
-                <GithubIcon className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>GitHub Oficial (naxo16)</span>
-                <span className="sr-only"> (se abre en una nueva pestaña)</span>
-              </a>
-              <a
-                href={`tel:+${PHONE_NUMBER}`}
-                className="px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-[#f5dade] hover:text-[#f2cf6b] bg-[#423943] border border-[#615362] transition-colors flex items-center gap-2"
-              >
-                <Smartphone size={14} className="text-[#f2cf6b]" />
-                <span>Llamada Directa</span>
+                <span>Revisar Catálogo</span>
+                <ArrowUpRight className="h-4 w-4 text-[#25D366]" />
               </a>
             </div>
           </div>
+        </section>
+      </main>
 
-          {/* Tarjeta de Resumen Técnico */}
-          <div className="w-full lg:w-80 bg-[#362f37] border border-[#615362] rounded-2xl p-6 space-y-4 text-xs font-mono">
-            <div className="flex items-center justify-between pb-3 border-b border-[#615362]">
-              <span className="text-[#c29da5]">Estado Profesional:</span>
-              <span className="text-emerald-400 font-bold flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-ping" />
-                Disponible
+      {/* 11. Botón Flotante Permanente con Tooltip */}
+      <aside
+        aria-label="Contacto directo por WhatsApp"
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-3 select-none"
+      >
+        <a
+          href={whatsappLink("Hola Pablo, tengo una consulta técnica sobre mi negocio.")}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center gap-3 focus:outline-none"
+          aria-label="Contactar por WhatsApp: Respuesta en menos de 15 minutos"
+        >
+          {/* Tooltip visible en hover */}
+          <div className="hidden sm:flex items-center gap-2.5 rounded-2xl border border-[#526072]/20 bg-white/95 px-4 py-2.5 shadow-[0_8px_30px_rgba(17,24,39,0.12)] backdrop-blur-md transition-all duration-300 group-hover:border-[#25D366]/50 group-hover:shadow-[0_8px_30px_rgba(37,211,102,0.25)]">
+            <span className="relative flex h-2.5 w-2.5 shrink-0">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#25D366] opacity-75" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#25D366]" />
+            </span>
+            <div className="flex flex-col text-left">
+              <span className="font-mono text-[10px] font-bold text-[#1E2430] uppercase tracking-wider group-hover:text-emerald-700 transition-colors">
+                Respuesta en &lt; 15 min
+              </span>
+              <span className="text-xs font-bold text-[#111827]">
+                Hablar directo con Pablo
               </span>
             </div>
-            <div className="flex items-center justify-between pb-3 border-b border-[#615362]">
-              <span className="text-[#c29da5]">Core Stack:</span>
-              <span className="text-[#f2cf6b]">FastAPI · Python · PostgreSQL</span>
-            </div>
-            <div className="flex items-center justify-between pb-3 border-b border-[#615362]">
-              <span className="text-[#c29da5]">Teléfono Directo:</span>
-              <a href={`tel:+${PHONE_NUMBER}`} className="text-[#ff6b85] hover:text-[#f2cf6b] font-bold">
-                +{PHONE_NUMBER}
-              </a>
-            </div>
-            <div className="flex items-center justify-between pb-3 border-b border-[#615362]">
-              <span className="text-[#c29da5]">Contacto Directo:</span>
-              <a href={`mailto:${EMAIL_DIRECT}`} className="text-[#f5dade] hover:text-[#f2cf6b]">
-                {EMAIL_DIRECT}
-              </a>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-[#c29da5]">Ubicación:</span>
-              <span className="text-[#f5dade]">Chile (Remoto / Presencial)</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export function normalizeContactService(rawTopic?: string): string {
-  if (!rawTopic) return "Automatizaciones / Excel";
-  const s = rawTopic.toLowerCase().trim();
-
-  if (s.includes("carga") || s.includes("masiva") || s.includes("pipeline") || s.includes("streaming")) {
-    return "Carga Masiva";
-  }
-  if (s.includes("excel") || s.includes("macro") || s.includes("planilla")) {
-    return "Automatizaciones / Excel";
-  }
-  if (s.includes("arduino") || s.includes("iot") || s.includes("electrónica") || s.includes("electronica")) {
-    return "Electronica / Arduino";
-  }
-  if (s.includes("domotica") || s.includes("domótica") || s.includes("camara") || s.includes("cámara") || s.includes("cctv")) {
-    return "Domotica / Camaras";
-  }
-  if (s.includes("reparacion") || s.includes("reparación") || s.includes("notebook") || s.includes("computador") || s.includes("hardware") || s.includes("celular")) {
-    return "Reparacion Hardware";
-  }
-  if (s.includes("fiscalis") || s.includes("terreno") || s.includes("inspeccion") || s.includes("inspección")) {
-    return "Fiscalis / Terreno";
-  }
-  if (s.includes("duplicidad") || s.includes("clonad") || s.includes("repetid")) {
-    return "Duplicidad de Datos";
-  }
-  if (s.includes("base de datos") || s.includes("postgresql") || s.includes("sql") || s.includes("3fn")) {
-    return "Base de Datos";
-  }
-  if (s.includes("dashboard") || s.includes("bi") || s.includes("telemetr")) {
-    return "Dashboards";
-  }
-  if (s.includes("arriendo") || s.includes("arrendamiento") || s.includes("saas")) {
-    return "Arriendo SaaS";
-  }
-  if (s.includes("maps") || s.includes("ads") || s.includes("google")) {
-    return "Google Maps / Ads";
-  }
-
-  return "Automatizaciones / Excel";
-}
-
-function ContactSection({
-  onOpenAudit,
-  selectedService,
-}: {
-  onOpenAudit: (topic: string) => void;
-  selectedService?: string;
-}) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [serviceType, setServiceType] = useState(() => normalizeContactService(selectedService));
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
-  useEffect(() => {
-    if (selectedService) {
-      setServiceType(normalizeContactService(selectedService));
-    }
-  }, [selectedService]);
-
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setErrorMsg("");
-
-    const fullMessage = `[Servicio: ${serviceType}]\n${message}`;
-
-    try {
-      const res = await fetch(`${API_URL}/leads`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          message: fullMessage,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error("No se pudo enviar el mensaje a la API. Puedes escribir directamente al WhatsApp.");
-      }
-
-      setSuccess(true);
-      setName("");
-      setEmail("");
-      setMessage("");
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Error de comunicación con el servidor.";
-      setErrorMsg(msg);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <section id="contacto" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full">
-      <div className="grid lg:grid-cols-2 gap-12 items-start">
-        {/* Columna Izquierda */}
-        <div className="space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#721828]/50 border border-[#cba135]/40 text-xs font-bold text-[#f2cf6b] uppercase">
-            Iniciemos con un análisis serio
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#ff6b85]">
-            Explícame tu cuello de botella y te entrego una solución técnica probada
-          </h2>
-          <p className="text-[#f5dade] text-sm sm:text-base leading-relaxed">
-            Ya sea una macro en Excel que no para de fallar, una base de datos que tarda una eternidad, o la necesidad de contar con un software propio en modalidad de arriendo: conversemos sin compromiso.
-          </p>
-
-          <div className="space-y-3 pt-2">
-            <div className="flex items-center gap-3 text-sm text-[#f5dade]">
-              <CheckCircle2 size={18} className="text-[#f2cf6b]" />
-              <span>Respuesta técnica directa por Naxo Resuelve en menos de 24 horas.</span>
-            </div>
-            <div className="flex items-center gap-3 text-sm text-[#f5dade]">
-              <CheckCircle2 size={18} className="text-[#f2cf6b]" />
-              <span>Propuesta con alcance claro, estimación y protocolo de testing riguroso.</span>
-            </div>
-            <div className="flex items-center gap-3 text-sm text-[#f5dade]">
-              <CheckCircle2 size={18} className="text-[#f2cf6b]" />
-              <span>Atención telefónica directa al: <strong className="text-[#ff6b85]">+{PHONE_NUMBER}</strong></span>
-            </div>
           </div>
 
-          <div className="pt-4 flex flex-col sm:flex-row gap-3">
-            <button
-              onClick={() => onOpenAudit("duplicidad")}
-              className="text-xs font-bold uppercase tracking-wider text-[#f2cf6b] hover:text-[#ff6b85] underline underline-offset-4 cursor-pointer text-left"
+          {/* Botón Circular Carbón Pizarra -> Verde WhatsApp */}
+          <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/20 bg-[#1E2430] text-[#25D366] shadow-[0_6px_25px_rgba(30,36,48,0.4)] transition-all duration-300 group-hover:scale-110 group-hover:border-[#25D366] group-hover:bg-[#25D366] group-hover:text-[#111827] group-hover:shadow-[0_8px_30px_rgba(37,211,102,0.5)] group-focus:border-[#25D366] group-focus:bg-[#25D366] group-focus:text-[#111827] group-focus:ring-4 group-focus:ring-[#25D366]/50 active:scale-95">
+            <MessageCircle className="h-7 w-7 transition-colors duration-300" aria-hidden="true" />
+          </div>
+        </a>
+      </aside>
+
+      {/* 12. Footer Corporativo Formal */}
+      <footer id="contacto" className="relative z-10 w-full border-t border-[#526072]/20 bg-white/70 py-12 backdrop-blur-md">
+        <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-6 px-5 sm:flex-row lg:px-10">
+          <div className="flex flex-col items-center gap-1 sm:items-start">
+            <span className="text-base font-black text-[#111827]">Naxo Resuelve</span>
+            <p className="font-mono text-xs text-[#526072]">
+              © 2026 Naxo Resuelve — Pablo Valdés Sandoval. Soluciones de Software y TI.
+            </p>
+            <p className="font-mono text-[11px] text-[#526072]">
+              Atención 100% remota a todo Chile desde Maule.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-6 font-mono text-xs text-[#526072]">
+            <a href="#catalogo" className="transition-colors hover:text-[#1E2430]">
+              Términos de Alcance Cerrado
+            </a>
+            <a href="#metodologia" className="transition-colors hover:text-[#1E2430]">
+              Privacidad
+            </a>
+            <a
+              href={whatsappLink("Hola Pablo, quiero hacer una consulta directa.")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-[#1E2430]"
             >
-              ¿Prefieres el asistente de diagnóstico rápido? Haz clic aquí.
-            </button>
+              Contacto directo
+            </a>
           </div>
         </div>
-
-        {/* Columna Derecha: Formulario */}
-        <div className="bg-[#423943] border border-[#615362] rounded-2xl p-6 sm:p-8 shadow-xl">
-          {success ? (
-            <div role="status" aria-live="polite" className="py-12 text-center space-y-4">
-              <CheckCircle2 className="w-16 h-16 text-[#f2cf6b] mx-auto animate-bounce" />
-              <h3 className="text-2xl font-bold text-[#ff6b85]">¡Mensaje Recibido!</h3>
-              <p className="text-sm text-[#ffffff] max-w-sm mx-auto">
-                Tu requerimiento fue ingresado exitosamente en nuestra base de datos. Naxo Resuelve lo revisará a la brevedad.
-              </p>
-              <button
-                type="button"
-                onClick={() => setSuccess(false)}
-                className="mt-4 px-6 py-2.5 rounded-xl text-xs font-bold text-[#f5dade] hover:text-[#f2cf6b] bg-[#362f37] border border-[#615362] cursor-pointer min-h-[44px]"
-              >
-                Enviar otro mensaje
-              </button>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4 text-sm">
-              <h3 className="text-xl font-bold text-[#ff6b85] mb-1">
-                Formulario de Consulta Técnica
-              </h3>
-              <p className="text-xs text-[#c29da5] mb-4">
-                Todos los campos son procesados de forma confidencial.
-              </p>
-
-              {errorMsg && (
-                <div role="alert" aria-live="assertive" className="p-3.5 rounded-xl bg-red-950/90 border border-red-800 text-red-100 text-xs sm:text-sm font-medium flex items-center gap-2">
-                  <AlertCircle size={18} className="shrink-0 text-red-300" />
-                  <span>{errorMsg}</span>
-                </div>
-              )}
-
-              <div>
-                <label htmlFor="contact-name" className="block text-xs font-semibold text-[#f5dade] mb-1">
-                  Nombre o Empresa *
-                </label>
-                <input
-                  id="contact-name"
-                  required
-                  type="text"
-                  placeholder="Tu nombre o empresa"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#ffffff] placeholder-[#dcd0d5] text-sm transition"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="contact-email" className="block text-xs font-semibold text-[#f5dade] mb-1">
-                  Correo Electrónico *
-                </label>
-                <input
-                  id="contact-email"
-                  required
-                  type="email"
-                  placeholder="ejemplo@empresa.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#ffffff] placeholder-[#dcd0d5] text-sm transition"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="contact-service" className="block text-xs font-semibold text-[#f5dade] mb-1">
-                  Área de Interés Principal
-                </label>
-                <select
-                  id="contact-service"
-                  value={serviceType}
-                  onChange={(e) => setServiceType(e.target.value)}
-                  className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2.5 text-[#ffffff] text-sm transition"
-                >
-                  <option value="Fiscalis / Terreno">Fiscalis (Inspección y Seguridad en Terreno)</option>
-                  <option value="Automatizaciones / Excel">Automatización en Excel / Macros</option>
-                  <option value="Electronica / Arduino">Electrónica General &amp; Arduino IoT (Consultoría $15.000 CLP)</option>
-                  <option value="Domotica / Camaras">Domótica &amp; Cámaras de Seguridad CCTV/IP</option>
-                  <option value="Reparacion Hardware">Reparación Computadores, Notebooks &amp; Celulares ($15.000 CLP)</option>
-                  <option value="Carga Masiva">Carga Masiva de Archivos y Pipelines</option>
-                  <option value="Duplicidad de Datos">Reducción de Duplicidad e Inconsistencias</option>
-                  <option value="Base de Datos">Diseño &amp; Optimización de Base de Datos</option>
-                  <option value="Dashboards">Dashboards Personalizados &amp; Analítica</option>
-                  <option value="Arriendo SaaS">Arrendamiento de Software SaaS</option>
-                  <option value="Google Maps / Ads">Posicionamiento Google Maps &amp; Google Ads</option>
-                  <option value="Consultoria">Consultoría &amp; Rescate de Software</option>
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="contact-message" className="block text-xs font-semibold text-[#f5dade] mb-1">
-                  Describe tu necesidad o problema *
-                </label>
-                <textarea
-                  id="contact-message"
-                  required
-                  rows={4}
-                  placeholder="Detalla qué volumen manejas, cuántas personas sufren el problema o qué objetivo buscas cumplir..."
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-2 text-[#ffffff] placeholder-[#dcd0d5] text-sm transition resize-none"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-3.5 px-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-[#721828] via-[#9e233b] to-[#cba135] hover:opacity-95 active:scale-[0.99] transition shadow-[0_4px_25px_rgba(184,45,70,0.5)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-              >
-                {loading ? (
-                  <span>Enviando requerimiento...</span>
-                ) : (
-                  <>
-                    <Send size={16} />
-                    <span>Enviar Consulta a Naxo Resuelve</span>
-                  </>
-                )}
-              </button>
-            </form>
-          )}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Footer                                                             */
-/* ------------------------------------------------------------------ */
-
-function Footer() {
-  return (
-    <footer className="border-t border-[#615362] bg-[#362f37] py-10 px-4 sm:px-6 text-[#c29da5] text-xs">
-      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div>
-          <span className="font-bold text-[#ff6b85] tracking-tight">Naxo Resuelve</span> · naxoresuelve / renkaidev
-          <div className="text-[11px] text-[#c29da5] mt-0.5">
-            Ingeniería de software, persistencia en PostgreSQL, FastAPI y testing riguroso.
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-5">
-          <a
-            href={PORTFOLIO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-white transition flex items-center gap-1 text-[#f2cf6b]"
-          >
-            <span>renkaidev.workers.dev</span>
-            <ExternalLink size={11} />
-          </a>
-          <a
-            href={`tel:+${PHONE_NUMBER}`}
-            className="hover:text-[#f2cf6b] transition flex items-center gap-1 text-[#f5dade]"
-          >
-            <span>+{PHONE_NUMBER}</span>
-          </a>
-          <a
-            href={GITHUB_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-[#ff6b85] transition flex items-center gap-1"
-          >
-            <span>GitHub</span>
-            <GithubIcon className="w-3 h-3" />
-          </a>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
-function GithubIcon({ className = "w-4 h-4" }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-      />
-    </svg>
+      </footer>
+    </div>
   );
 }

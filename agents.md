@@ -1,128 +1,106 @@
-# 🤖 AGENTS.md — Protocolo Canónico para Agentes Autónomos y Pair Programming de IA
+# 🤖 AGENTS.md — Protocolo Operativo y Canónico de Ingeniería para Agentes de IA
 
-> **Mandato Supremo del Proyecto naxoresuelve:**  
-> *"Ningún cambio se considera concluido sin validación automatizada al 100%. Las pruebas no son negociables: si un test falla, la tarea está incompleta. Si no existen pruebas para la nueva funcionalidad, la tarea no ha comenzado."*
-
----
-
-## 📌 1. Directivas Operativas Obligatorias
-
-Todo agente de IA (Antigravity, Gemini, Copilot o subagentes autónomos) que opere en este repositorio debe acatar estrictamente las siguientes reglas:
-
-1. **Suite de Pruebas Siempre en Verde:**
-   - Antes de dar por finalizada cualquier intervención en el backend, se DEBE ejecutar `pytest` y obtener un resultado **100% aprobado** (cero fallos).
-   - **Prohibición absoluta:** Jamás comentes, desactives, modifiques aserciones ni degrades pruebas existentes para disimular un fallo de implementación. Si una prueba falla, la solución reside en corregir el código o ajustar el contrato previa explicación técnica al usuario.
-
-2. **Gobernanza de Git y Control de Versiones:**
-   - **PROHIBICIÓN ESTRICTA:** **NUNCA ejecutes `git push` hacia repositorios remotos sin la confirmación y solicitud explícita del usuario.** Todos los commits deben permanecer en el repositorio local hasta que el usuario ordene su publicación.
-   - Todo commit debe seguir el estándar *Conventional Commits*:
-     - `feat: ...` (nuevas características)
-     - `fix: ...` (corrección de errores)
-     - `test: ...` (adición o mejora de pruebas)
-     - `refactor: ...` (cambios de diseño sin alterar comportamiento externo)
-     - `docs: ...` (documentación o arquitectura)
-
-3. **Preservación de Documentación y Comentarios:**
-   - Conserva la integridad de todos los comentarios, docstrings y explicaciones arquitectónicas existentes en el código base.
-
-4. **Transparencia en Decisiones Arquitectónicas:**
-   - Cuando debas elegir entre dos enfoques, prioriza la **solidez transaccional**, la **simplicidad determinista** y el **estándar abierto** por encima de dependencias pesadas o magia de frameworks.
+> **Mandato Supremo:**  
+> *"Ninguna tarea se considera finalizada sin validación automatizada al 100%. Las pruebas no son negociables: si un test falla, la tarea está incompleta. Si no existen pruebas para el cambio, la tarea no ha comenzado."*
 
 ---
 
-## 🛠️ 2. Stack Tecnológico & Reglas de Implementación
+## 1. Directivas Operativas Obligatorias
+
+Todo agente de IA (Antigravity, OpenCode, Aider, Gemini CLI o subagentes autónomos) debe acatar estrictamente:
+
+1. **Gobernanza Git (Regla Inquebrantable):**
+   - **PROHIBIDO ejecutar `git push` a repositorios remotos.** Todo commit debe permanecer localmente hasta que el usuario lo ordene explícitamente.
+   - Usar *Conventional Commits*: `feat:`, `fix:`, `test:`, `refactor:`, `docs:`.
+2. **Suite de Pruebas Intacta:**
+   - Prohibido comentar, debilitar o saltarse pruebas existentes para disimular un fallo. El código debe arreglarse hasta que `pytest` pase al 100%.
+3. **Preservación de Documentación:**
+   - Mantener intactos los comentarios, docstrings y explicaciones arquitectónicas en el código.
+
+---
+
+## 2. Reglas de Implementación Técnica
 
 ### Backend (`apps/api`)
-- **Runtime:** Python 3.12+
-- **Framework:** FastAPI con arquitectura modular (monolito modular con dominios explícitos).
-- **Validación:** **Pydantic v2** estricto:
-  - Uso obligatorio de anotaciones de tipo modernas (`int | None`, `list[str]`).
-  - Validación de campos con `Field(min_length=..., max_length=...)`.
-  - Sanitización en fronteras: uso de `EmailStr` para validar correos contra RFC 5322.
-- **Acceso a Datos:** **`asyncpg`** con consultas SQL puras y parametrizadas (`$1`, `$2`).
-  - **REGLA DE SEGURIDAD CRÍTICA (OWASP A03):** Queda estrictamente vetado el uso de concatenación de cadenas, `.format()` o f-strings para construir sentencias SQL. Todas las variables deben transmitirse como argumentos del driver.
+- **FastAPI + Python 3.12+:** Arquitectura modular desacoplada.
+- **Pydantic v2 Estricto:** Anotaciones modernas (`int | None`, `list[str]`), validación con `Field(min_length=..., max_length=...)` y tipos estrictos como `EmailStr`.
+- **Persistencia con `asyncpg`:** Consultas SQL puras y parametrizadas (`$1`, `$2`).
+  - **OWASP A03 (Veto Absoluto):** Queda terminantemente prohibido usar f-strings, `.format()` o concatenación para armar sentencias SQL.
 - **Criptografía:**
-  - Contraseñas: PBKDF2-HMAC-SHA256 con 100.000 iteraciones y salting aleatorio criptográfico de 16 bytes.
-  - Verificación de passwords: `hmac.compare_digest` para neutralizar ataques de canal lateral / timing attacks.
-  - Tokens: JWT firmado con HMAC-SHA256 y expiración obligatoria (`exp`).
-- **Resiliencia Operativa:**
-  - Los endpoints que dependan de la base de datos deben comprobar la existencia del pool de conexiones (`if pool is None: raise HTTPException(status_code=503, ...)`).
-  - Nunca permitir que una falla de conexión a base de datos provoque un crasheo del proceso o una respuesta `500 Internal Server Error` sin formato.
+  - Passwords: PBKDF2-HMAC-SHA256 (100.000 iteraciones) con salt aleatorio de 16 bytes.
+  - Verificación: `hmac.compare_digest` obligatorio para neutralizar timing attacks.
+  - JWT: Expiración obligatoria (`exp`), algoritmo simétrico seguro.
+- **Resiliencia Operativa:** Endpoints dependientes de base de datos deben validar la existencia del pool (`if pool is None: raise HTTPException(status_code=503, detail="...")`). Nunca exponer trazas de error 500 no controladas.
 
 ### Frontend (`apps/web`)
-- **Framework:** Next.js 16 (App Router, Turbopack, Server/Client Components explícitos).
-- **Lenguaje:** TypeScript 5 en modo estricto (`strict: true`).
-- **Estilos:** Tailwind CSS con variables de diseño personalizadas.
-- **Accesibilidad & UI:** Contraste AAA (Blanco puro `#ffffff` sobre fondos oscuros `#0a0c10` / `#141822`, acentos vino tinto `#721828` y dorados `#cba135`).
+- **Next.js 16 (App Router) + TypeScript 5:** Tipado estricto (`strict: true`), componentes de servidor y cliente explícitos.
+- **Tailwind CSS:** Respetar la paleta canónica (fondos `#0a0c10` / `#141822`, textos `#ffffff`, acentos `#721828` y dorados `#cba135`).
+- **Build sin Advertencias:** `npm run build` y `npm run lint` deben pasar con cero errores bloqueantes.
 
 ### Base de Datos (`PostgreSQL 16+`)
-- **Esquema Maestro:** [NAXORESUELVE_SQL_MAESTRO_POSTGRESQL.sql](file:///C:/Apache64/Apache24/htdocs/naxoresuelve/apps/api/NAXORESUELVE_SQL_MAESTRO_POSTGRESQL.sql).
-- **12 Esquemas Lógicos:** `core`, `crm`, `identity`, `privacy`, `catalog`, `marketing`, `commerce`, `inventory`, `promotions`, `gamification`, `integrations`, `governance`.
-- **Privacidad por Diseño:** Los endpoints de contacto personales se indexan con hash HMAC determinista (`endpoint_hmac BYTEA NOT NULL CHECK (OCTET_LENGTH(endpoint_hmac) = 32)`). La clave secreta vive en variables de entorno fuera de PostgreSQL.
-- **Principio de Menor Privilegio:** Separar roles entre `naxoresuelve_owner` (DDL), `naxoresuelve_app` (DML) y `naxoresuelve_readonly` (solo SELECT).
+- Esquema referencial: `apps/api/NAXORESUELVE_SQL_MAESTRO_POSTGRESQL.sql`.
+- **Valores Monetarios:** Uso estricto de `NUMERIC(14,2)` o enteros en centavos. Prohibido usar `FLOAT` o `REAL`.
+- **Privacidad:** Datos de contacto personales indexados exclusivamente mediante HMAC-SHA256 (`endpoint_hmac BYTEA CHECK (OCTET_LENGTH(endpoint_hmac) = 32)`). La clave secreta vive fuera de la base de datos.
 
 ---
 
-## 🧪 3. Protocolo de Pruebas Rudas y Verificación de Calidad
+## 3. Mitigación de Seguridad OWASP Top 10
 
-Antes de presentar un entregable, el agente debe ejecutar localmente y verificar:
-
-### 1. Pruebas Unitarias, de Fuzzing y de Concurrencia
-```powershell
-pytest -v
-```
-- Cobertura mínima obligatoria:
-  - Fuzzing de cargas corruptas (HTTP 422 en payloads vacíos, cadenas gigantes, inyecciones SQL y tipos mutados).
-  - Resiliencia y tolerancia a fallos (HTTP 503 controlado sin pool de base de datos).
-  - Liveness inmune a caídas externas (HTTP 200).
-  - Concurrencia (ráfagas de consultas simultáneas sin degradación de memoria).
-  - Batería OWASP Top 10 completa (`tests/test_owasp_security.py`).
-
-### 2. Verificación de Compilación Frontend
-```powershell
-cd apps\web
-npm run build
-```
-- Debe compilar sin errores de TypeScript ni advertencias bloqueantes de ESLint.
+1. **A01: Broken Access Control:** Validación RBAC explícita en endpoints protegidos. Bloquear escalaciones de privilegios hacia `admin` desde proveedores externos.
+2. **A02: Cryptographic Failures:** Prohibido almacenar hashes débiles (MD5, SHA1). Prohibido devolver hashes o sales en esquemas Pydantic de salida (`UserOut`).
+3. **A03: Injection:** Toda entrada validada con Pydantic; toda consulta SQL parametrizada con `$1`, `$2`.
+4. **A04: Insecure Design & Anti-DoS:** Limitar el tamaño de buffers en payloads (`max_length=5000` en mensajes de contacto).
+5. **A05: Security Misconfiguration:** Cabeceras de seguridad activas en middleware (`X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `HSTS`, `X-XSS-Protection`).
+6. **A07: Identification Failures:** Invalidar tokens nulos y rechazar algoritmos `none` en JWT.
+7. **A08: Software Integrity:** Proteger contra *Mass Assignment*; Pydantic debe descartar campos inyectados como `role`, `id` o `is_admin`.
+8. **A10: SSRF:** Rechazar peticiones dirigidas a rangos RFC 1918 y direcciones locales (`127.0.0.1`, `localhost`, `169.254.169.254`).
 
 ---
 
-## 📋 4. Lista de Autoverificación para el Agente (Definition of Done)
+## 4. Marco Legal Chileno (Ley 19.628, Ley 21.719 y Ley 21.663)
 
-Antes de reportar a Pablo Valdés (usuario) que una tarea está completada, el agente debe verificar mentalmente cada punto:
-
-- [ ] ¿El cambio satisface con precisión el requerimiento expresado por el usuario?
-- [ ] ¿Se ejecutó `pytest` y pasaron **el 100%** de las pruebas sin advertencias no controladas?
-- [ ] ¿Se mantuvieron las cabeceras de seguridad OWASP (HSTS, nosniff, DENY frame options)?
-- [ ] ¿Las consultas SQL están 100% parametrizadas sin interpolación de strings?
-- [ ] ¿Se mantuvieron los principios de diseño transaccional y normalización relacional?
-- [ ] ¿Se protegió la privacidad del usuario según la normativa de protección de datos personales (Ley 19.628 / 21.719)?
-- [ ] ¿Los flujos de autenticación cumplen con las pautas de ciberseguridad (tokens SHA-256 de 15 min, contraseñas PBKDF2, casillas sin pre-marcar)?
-- [ ] ¿Se conservaron los comentarios y docstrings existentes?
-- [ ] ¿Se evitó realizar `git push` al servidor remoto?
+1. **Consentimiento Informado:**
+   - La casilla de Términos y Condiciones y Privacidad es obligatoria (`accept_terms: true`).
+   - **PROHIBIDO pre-marcar casillas de consentimiento en el frontend.**
+   - La casilla de comunicaciones de marketing debe ser independiente y estar desmarcada por defecto.
+2. **Recuperación de Contraseñas:**
+   - Tokens generados exclusivamente con `secrets.token_urlsafe(32)`.
+   - En base de datos (`password_resets`), almacenar únicamente el hash SHA-256 (`token_hash`), jamás el token en texto claro.
+   - Expiración estricta de 15 minutos (`expires_at = NOW() + INTERVAL '15 minutes'`) y de un único uso (`is_used = TRUE`).
+   - `POST /auth/forgot-password` debe retornar una respuesta uniforme para evitar la enumeración de correos.
 
 ---
 
-## 🔐 5. Protocolo de Identidad, Autenticación y Cumplimiento Normativo (Chile)
+## 5. Protocolo de Testing y Verificación de Calidad
 
-Todo agente que implemente o modifique flujos de autenticación debe acatar estas directivas legales y técnicas:
+Antes de considerar una tarea completada, el agente debe ejecutar:
 
-1. **Registro con Consentimiento Informado (Ley 19.628 y Ley 21.719 de Chile):**
-   - La casilla de Términos y Condiciones y Política de Privacidad es **obligatoria** y debe enviarse explícitamente (`accept_terms: true`).
-   - **PROHIBICIÓN ESTRICTA:** Queda terminantemente prohibido utilizar casillas de consentimiento pre-marcadas en el frontend o inferir aceptación tácita en el backend.
-   - Las comunicaciones comerciales son optativas: la casilla de marketing debe ser opcional y estar desmarcada por defecto.
+1. **Testing Backend:**
+   ```powershell
+   pytest -v
 
-2. **Recuperación Segura de Contraseñas (OWASP A07 & Ley 21.663 Marco de Ciberseguridad):**
-   - Los tokens de recuperación se generan exclusivamente con `secrets.token_urlsafe(32)`.
-   - **NUNCA almacenar tokens en texto claro:** En la base de datos (`password_resets`) solo se almacena el hash SHA-256 (`token_hash`).
-   - Los tokens expiran estrictamente en **15 minutos** y son de un único uso (`is_used = TRUE` tras ser canjeados).
-   - Para prevenir la enumeración de usuarios registrados, el endpoint `POST /auth/forgot-password` debe retornar una respuesta uniforme y segura independientemente de si el correo existe o no.
+    Debe pasar el 100% de las pruebas (fuzzing, inyecciones SQL simuladas, resiliencia 503 y concurrencia).
 
-3. **Federación Social OAuth 2.0 / OIDC (Google/Gmail, Facebook, Instagram, Microsoft):**
-   - El almacenamiento de cuentas vinculadas se realiza en `external_accounts` enlazadas a `users.id`.
-   - Los registros creados vía OAuth adquieren únicamente el rol `client`. Ningún proveedor externo puede otorgar privilegios de `admin`.
-   - Los scopes solicitados deben limitarse al mínimo necesario (`openid`, `email`, `profile`).
+    Compilación Frontend:
+    PowerShell
 
----
+    cd apps\web
+    npm run build
 
-*Documento de Gobernanza Canónica para Agentes de IA — naxoresuelve 2026.*
+        Debe compilar sin errores de TypeScript ni fallos de ESLint.
+
+6. Checklist de Definición de Terminado (Definition of Done)
+
+    [ ] ¿El requerimiento del usuario está completamente implementado?
+
+    [ ] ¿pytest se ejecutó y pasó el 100% de las pruebas?
+
+    [ ] ¿Se respetó el principio de consultas SQL parametrizadas ($1, $2) sin concatenación?
+
+    [ ] ¿Las cabeceras de seguridad OWASP están presentes?
+
+    [ ] ¿Los flujos de autenticación cumplen con la normativa chilena (tokens SHA-256 de 15 min, casillas sin pre-marcar)?
+
+    [ ] ¿npm run build en apps/web compila de forma limpia?
+
+    [ ] ¿Se evitó realizar git push al repositorio remoto?

@@ -11,7 +11,6 @@ import {
   X,
   Settings,
   Sparkles,
-  RotateCcw,
   Info,
 } from "lucide-react";
 
@@ -70,40 +69,41 @@ export function AccessibilityToolbar() {
   // Estados de lectura en voz alta
   const [isReading, setIsReading] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [, setCurrentStepIndex] = useState(0);
   const [statusMessage, setStatusMessage] = useState("");
 
   const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const activeHighlightedElement = useRef<HTMLElement | null>(null);
 
-  // Cargar preferencias guardadas
-  useEffect(() => {
-    try {
-      const savedScale = localStorage.getItem("naxoresuelve_text_scale") as TextScale;
-      if (savedScale && ["normal", "large", "xlarge"].includes(savedScale)) {
-        setTextScale(savedScale);
-        applyTextScale(savedScale);
-      }
-
-      const savedContrast = localStorage.getItem("naxoresuelve_high_contrast") === "true";
-      if (savedContrast) {
-        setIsHighContrast(true);
-        document.documentElement.classList.add("high-contrast");
-      }
-    } catch {
-      // LocalStorage fallback
-    }
-  }, []);
-
-  const applyTextScale = (scale: TextScale) => {
+  const applyTextScale = useCallback((scale: TextScale) => {
     document.documentElement.classList.remove("text-scale-large", "text-scale-xlarge");
     if (scale === "large") {
       document.documentElement.classList.add("text-scale-large");
     } else if (scale === "xlarge") {
       document.documentElement.classList.add("text-scale-xlarge");
     }
-  };
+  }, []);
+
+  // Cargar preferencias guardadas
+  useEffect(() => {
+    try {
+      const savedScale = localStorage.getItem("naxoresuelve_text_scale") as TextScale;
+      const savedContrast = localStorage.getItem("naxoresuelve_high_contrast") === "true";
+      queueMicrotask(() => {
+        if (savedScale && ["normal", "large", "xlarge"].includes(savedScale)) {
+          setTextScale(savedScale);
+          applyTextScale(savedScale);
+        }
+        if (savedContrast) {
+          setIsHighContrast(true);
+          document.documentElement.classList.add("high-contrast");
+        }
+      });
+    } catch {
+      // LocalStorage fallback
+    }
+  }, [applyTextScale]);
 
   const handleScaleChange = (scale: TextScale) => {
     setTextScale(scale);
@@ -156,6 +156,8 @@ export function AccessibilityToolbar() {
     announceStatus("Lectura en voz alta detenida.");
   }, []);
 
+  const readStepRef = useRef<(index: number) => void>(() => {});
+
   // Leer un elemento específico por índice
   const readStep = useCallback(
     (index: number) => {
@@ -185,7 +187,7 @@ export function AccessibilityToolbar() {
 
       if (!textToRead.trim()) {
         // Saltar al siguiente si está vacío
-        readStep(index + 1);
+        readStepRef.current(index + 1);
         return;
       }
 
@@ -214,7 +216,7 @@ export function AccessibilityToolbar() {
       utterance.onend = () => {
         clearHighlight();
         // Avanzar automáticamente al siguiente bloque
-        readStep(index + 1);
+        readStepRef.current(index + 1);
       };
 
       utterance.onerror = (e) => {
@@ -229,6 +231,10 @@ export function AccessibilityToolbar() {
     },
     [stopReading]
   );
+
+  useEffect(() => {
+    readStepRef.current = readStep;
+  });
 
   const startReading = () => {
     announceStatus("Iniciando lectura en voz alta del contenido principal...");
@@ -293,6 +299,7 @@ export function AccessibilityToolbar() {
 
     window.addEventListener("keydown", handleGlobalKey);
     return () => window.removeEventListener("keydown", handleGlobalKey);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, isReading, isPaused, stopReading]);
 
   // Manejo de foco al abrir panel

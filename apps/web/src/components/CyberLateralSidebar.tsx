@@ -12,7 +12,6 @@ import {
   Tag,
   ShieldCheck,
   Lock,
-  Download,
   Send,
   ExternalLink,
   ChevronRight,
@@ -267,6 +266,7 @@ export function CyberLateralSidebar({
   isOpen: controlledIsOpen,
   onClose,
   onOpenAudit,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   cvUrl,
   portfolioUrl,
   linkedinUrl,

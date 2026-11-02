@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { ClientProviders } from "@/components/ClientProviders";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -56,7 +57,7 @@ export default function RootLayout({
       lang="es"
       className={`${outfit.variable} ${jetbrainsMono.variable} h-full antialiased scroll-smooth`}
     >
-      <body className="min-h-full flex flex-col bg-[#3a3640] text-[#ffffff] font-round selection:bg-[#80182a] selection:text-[#f2cf6b]">
+      <body className="min-h-full flex flex-col bg-[#FAF8F5] text-[#111827] font-round selection:bg-[#1E2430] selection:text-white">
         {/* Enlace accesible para lectores de pantalla y navegación por teclado (WCAG 2.1) */}
         <a
           href="#main-content"
@@ -71,7 +72,7 @@ export default function RootLayout({
         >
           Ir a herramientas de accesibilidad, lectura en voz alta y contraste (Atajo: Alt + A)
         </a>
-        {children}
+        <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
   );

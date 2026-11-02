@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import {
   Sparkles,
   ArrowRight,
@@ -34,12 +34,12 @@ export function ServicesQuickModal({
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     onClose();
     if (previousFocusRef.current) {
       previousFocusRef.current.focus();
     }
-  };
+  }, [onClose]);
 
   useEffect(() => {
     if (isOpen) {
@@ -93,7 +93,7 @@ export function ServicesQuickModal({
         window.removeEventListener("keydown", handleKeyDown);
       };
     }
-  }, [isOpen]);
+  }, [isOpen, handleClose]);
 
   if (!isOpen) return null;
 

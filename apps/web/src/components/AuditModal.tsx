@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, type FormEvent } from "react";
+import { useState, useEffect, useRef, useCallback, type FormEvent } from "react";
 import { X, Send, CheckCircle2, ShieldCheck, AlertCircle } from "lucide-react";
 
 interface AuditModalProps {
@@ -70,17 +70,19 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     onClose();
     if (previousFocusRef.current) {
       previousFocusRef.current.focus();
     }
-  };
+  }, [onClose]);
 
   useEffect(() => {
     if (preselectedTopic) {
       const normalized = normalizeAuditTopic(preselectedTopic);
-      setTopic(normalized);
+      queueMicrotask(() => {
+        setTopic(normalized);
+      });
     }
   }, [preselectedTopic, isOpen]);
 
@@ -139,7 +141,7 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
         window.removeEventListener("keydown", handleKeyDown);
       };
     }
-  }, [isOpen]);
+  }, [isOpen, handleClose]);
 
   if (!isOpen) return null;
 

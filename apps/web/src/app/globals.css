@@ -1,34 +1,42 @@
 @import "tailwindcss";
 
 :root {
+  /* Paleta Canónica Naxo Resuelve (Fase 1 & Fase 2) */
+  --text: #111827;
+  --background: #FAF8F5;
+  --primary: #1E2430;
+  --secondary: #526072;
+  --accent: #25D366;
+
+  --surface: #FFFFFF;
+  --border: rgba(82, 96, 114, 0.2);
+  --text-muted: #526072;
+
   /* Fondo 25% claro (charcoal aterciopelado con sutil matiz platino/blanco de 25% de luminosidad) */
   --bg-dark: #3a3640;
-  --bg-surface: #45404d;
-  --bg-card: #45404d;
-  --bg-card-hover: #504a58;
-  --bg-inner: #302c36;
+  --bg-surface: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #FAF8F5;
+  --bg-inner: #FAF8F5;
 
-  /* Tonos Vino Tinto, Rubí y Borgoña de alta visibilidad */
-  --color-vino: #80182a;
-  --color-vino-dark: #4d0c17;
-  --color-vino-light: #b82d46;
-  --color-vino-text: #e2556e;
-  --color-vino-text-bright: #ff6b85;
-  --color-vino-text-soft: #f2cfd6;
-  --color-vino-glow: rgba(226, 85, 110, 0.35);
+  --color-vino: #526072;
+  --color-vino-dark: #1E2430;
+  --color-vino-light: #6B7B91;
+  --color-vino-text: #1E2430;
+  --color-vino-text-bright: #25D366;
+  --color-vino-text-soft: #526072;
+  --color-vino-glow: rgba(37, 211, 102, 0.35);
 
-  /* Acentos Dorado / Oro Champagne */
-  --color-gold: #cba135;
-  --color-gold-light: #f2cf6b;
-  --color-gold-dark: #96741f;
-  --color-gold-glow: rgba(203, 161, 53, 0.35);
+  --color-gold: #526072;
+  --color-gold-light: #25D366;
+  --color-gold-dark: #1E2430;
+  --color-gold-glow: rgba(37, 211, 102, 0.35);
 
-  /* Texto base blanco puro y cálido de alto contraste AAA */
-  --color-text-main: #ffffff;
-  --color-text-muted: #dcd0d5;
-  --color-border: #6d6475;
-  --color-border-gold: rgba(203, 161, 53, 0.45);
-  --color-border-vino: rgba(184, 45, 70, 0.5);
+  --color-text-main: #111827;
+  --color-text-muted: #526072;
+  --color-border: rgba(30, 36, 48, 0.12);
+  --color-border-gold: rgba(82, 96, 114, 0.35);
+  --color-border-vino: rgba(30, 36, 48, 0.3);
 }
 
 @theme inline {
@@ -55,8 +63,8 @@ html {
 }
 
 body {
-  background-color: var(--bg-dark);
-  color: var(--color-text-main);
+  background-color: var(--background);
+  color: var(--text);
   font-family: var(--font-outfit), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-weight: 400;
   overflow-x: hidden;
@@ -298,5 +306,35 @@ html.high-contrast button {
   border-radius: 8px !important;
   transition: all 0.2s ease-in-out;
 }
+
+/* ========================================================
+   DesignJoy Style Infinite Marquee & Glassmorphism
+   ======================================================== */
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 25s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(21, 23, 28, 0.08);
+}
+
 
 
