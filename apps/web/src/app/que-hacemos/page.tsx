@@ -54,6 +54,7 @@ export default function QueHacemosPage() {
           <div className="flex items-center justify-between">
             <Link
               href="/"
+              prefetch={false}
               className="inline-flex items-center gap-2 rounded-xl border border-[#526072]/20 bg-white/90 px-4 py-2 font-mono text-xs font-bold text-[#1E2430] shadow-xs backdrop-blur-md transition-all hover:bg-white hover:border-[#1E2430]/40 hover:-translate-x-1"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
@@ -171,7 +172,7 @@ export default function QueHacemosPage() {
             </p>
           </div>
           <div className="flex items-center gap-6 font-mono text-xs text-[#526072]">
-            <Link href="/" className="transition-colors hover:text-[#1E2430]">
+            <Link href="/" prefetch={false} className="transition-colors hover:text-[#1E2430]">
               Portada
             </Link>
             <a

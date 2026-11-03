@@ -121,6 +121,7 @@ export function Header() {
         <div className="flex items-center gap-3">
           <Link
             href="/"
+            prefetch={false}
             className="flex items-center gap-3 group transition-transform duration-200 hover:scale-102"
           >
             <Image
@@ -153,6 +154,7 @@ export function Header() {
               <Link
                 key={link.id}
                 href={link.href}
+                prefetch={false}
                 onClick={(e) => handleNavClick(e, link.href, link.id)}
                 className={`group relative flex items-center gap-1.5 py-1 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-200 ${
                   isActive

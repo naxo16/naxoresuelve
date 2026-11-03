@@ -293,7 +293,7 @@ export default function Home() {
                 <span>Agendar Diagnóstico 15 min (Sin costo)</span>
               </a>
 
-              <Link href="/que-hacemos" className="inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-[#526072]/25 bg-white/95 px-8 py-4 font-mono text-sm font-bold text-[#111827] shadow-sm backdrop-blur-md transition-all hover:bg-white hover:border-[#1E2430]/50 hover:-translate-y-1 hover:shadow-md active:scale-[0.99]">
+              <Link href="/que-hacemos" prefetch={false} className="inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-[#526072]/25 bg-white/95 px-8 py-4 font-mono text-sm font-bold text-[#111827] shadow-sm backdrop-blur-md transition-all hover:bg-white hover:border-[#1E2430]/50 hover:-translate-y-1 hover:shadow-md active:scale-[0.99]">
                 <span>Ver Qué Hacemos & Demos</span>
                 <ArrowRight className="h-4 w-4 text-[#526072]" aria-hidden="true" />
               </Link>
@@ -409,6 +409,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row items-center gap-4">
                 <Link
                   href="/que-hacemos"
+                  prefetch={false}
                   className="group relative inline-flex items-center justify-center gap-3 rounded-2xl border border-[#1E2430] bg-[#1E2430] px-8 py-4 font-mono text-sm font-bold text-white shadow-xl transition-all duration-300 hover:border-[#25D366] hover:bg-[#25D366] hover:text-[#111827] hover:scale-105 active:scale-95"
                 >
                   <span>Ir a Productos (Ver Catálogo de 12 Soluciones)</span>
@@ -706,7 +707,7 @@ export default function Home() {
                 <MessageCircle className="h-4 w-4 text-[#111827]" aria-hidden="true" />
                 <span>Agendar por WhatsApp (15 min)</span>
               </a>
-              <Link href="/que-hacemos" className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-white/20 bg-transparent px-8 py-4 font-mono text-xs font-bold text-white transition-all hover:bg-white/10">
+              <Link href="/que-hacemos" prefetch={false} className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-white/20 bg-transparent px-8 py-4 font-mono text-xs font-bold text-white transition-all hover:bg-white/10">
                 <span>Revisar Catálogo</span>
                 <ArrowUpRight className="h-4 w-4 text-[#25D366]" />
               </Link>
@@ -764,8 +765,8 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-6 font-mono text-xs text-[#526072]">
-            <Link href="/como-funciona" className="transition-colors hover:text-[#1E2430]">Términos de Alcance Cerrado</Link>
-            <Link href="/como-funciona" className="transition-colors hover:text-[#1E2430]">Privacidad</Link>
+            <Link href="/como-funciona" prefetch={false} className="transition-colors hover:text-[#1E2430]">Términos de Alcance Cerrado</Link>
+            <Link href="/como-funciona" prefetch={false} className="transition-colors hover:text-[#1E2430]">Privacidad</Link>
             <a
               href={whatsappLink("Hola Pablo, quiero hacer una consulta directa.")}
               target="_blank"
