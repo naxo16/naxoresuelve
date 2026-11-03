@@ -27,6 +27,8 @@ import { CATALOG_DATA } from "@/data/catalog";
 import { SolutionCard } from "@/components/SolutionCard";
 import { ClientTickerCarousel } from "@/components/ClientTickerCarousel";
 import { AppPreloader } from "@/components/AppPreloader";
+import { SaasDemosCarousel } from "@/components/SaasDemosCarousel";
+import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 
 export const metadata: Metadata = {
   title: "Naxo Resuelve | Software y Soporte Técnico Productizado para Pymes",
@@ -80,6 +82,7 @@ type ClientProject = {
   tags: string[];
   url: string;
   year: string;
+  isExternalUrl?: boolean;
 };
 
 type FaqItem = {
@@ -91,7 +94,7 @@ const perks: Perk[] = [
   {
     title: "Entregas en Días Hábiles",
     description:
-      "Software y soluciones operando en plazos acotados de 5 a 15 días, no en trimestres interminables.",
+      "Software y soluciones operando en plazos acotados de 5 a 15 días hábiles, no en trimestres interminables.",
     icon: Timer,
   },
   {
@@ -103,7 +106,7 @@ const perks: Perk[] = [
   {
     title: "Trato Directo con el Desarrollador",
     description:
-      "Quien analiza tu problema de negocio es la misma persona que diseña la arquitectura y configura los servidores.",
+      "Quien analiza tu problema de negocio es la misma persona que diseña la arquitectura, escribe el código y configura los servidores.",
     icon: Code2,
   },
   {
@@ -119,7 +122,7 @@ const steps: Step[] = [
     number: "01.",
     title: "Diagnóstico Breve de Negocio (15 min)",
     description:
-      "Conversación directa de negocio a negocio. ¿No estás seguro si tu dolor o cuello de botella tiene solución tecnológica? Evaluamos la viabilidad real y definimos si es rentable resolverlo.",
+      "Conversación directa de negocio a negocio. Evaluamos la viabilidad real de tu dolor operativo y definimos si es rentable resolverlo con software o automatización.",
     label: "[Sin Costo ni Compromiso]",
     icon: MessageCircle,
   },
@@ -143,7 +146,7 @@ const steps: Step[] = [
     number: "04.",
     title: "Entrega Definitiva y Transferencia Total",
     description:
-      "Aprobación del checklist, pago del 50% restante y transferencia total de los entregables (código, accesos, configuraciones o activos digitales). Todo servicio cuenta con garantía post-entrega según lo estipulado formalmente.",
+      "Aprobación del checklist, pago del 50% restante y transferencia total de los entregables (código, accesos, configuraciones o bases de datos) con garantía post-entrega estipulada.",
     label: "[Entregables y Garantía]",
     icon: Check,
   },
@@ -157,16 +160,58 @@ const clients: ClientProject[] = [
       "Plataforma web corporativa y canalización de cotizaciones para empresa constructora regional. Arquitectura ultra ligera, catálogo de obras y contacto directo sin latencia.",
     tags: ["Carga Rápida", "Captación WhatsApp", "SEO Local"],
     url: "https://delvalleconstrucciones.cl",
-    year: "Producción 2024",
+    year: "Talca • Producción 2024",
+    isExternalUrl: true,
   },
   {
     category: "Servicios & Consultoría",
-    name: "JPVS",
+    name: "JPVS Consultores",
     description:
-      "Sitio corporativo institucional enfocado en alta autoridad, rendimiento de carga extremo y presencia ejecutiva sin dependencias pesadas.",
-    tags: ["Arquitectura Ligera", "Seguridad DNS", "Alta Velocidad"],
+      "Sitio corporativo institucional y arquitectura PostgreSQL optimizada para erradicar la duplicidad de clientes y facturación con tiempos de respuesta en milisegundos.",
+    tags: ["PostgreSQL 3FN", "Seguridad DNS", "Alta Velocidad"],
     url: "https://jpvs.cl",
-    year: "Producción 2024",
+    year: "Santiago • Producción 2024",
+    isExternalUrl: true,
+  },
+  {
+    category: "Agroindustria & Cuadrillas",
+    name: "Agrícola & Frutícola Los Boldos",
+    description:
+      "Sistema SaaS para control de cuadrillas de faena, registro de kilos cosechados en predio y liquidación automática semanal sin pérdidas por planillas manuales.",
+    tags: ["Control Faena", "PWA Terreno", "Reportes Excel"],
+    url: "/demo?app=agrocontrol",
+    year: "Curicó • Producción 2024",
+    isExternalUrl: false,
+  },
+  {
+    category: "Transporte & Logística Regional",
+    name: "Transportes Cordillera Sur",
+    description:
+      "Plataforma de seguimiento y control de guías de despacho, mantención preventiva de flota de camiones y asignación de rutas sin fricción.",
+    tags: ["Despacho en Ruta", "Alertas Flota", "Entorno Staging"],
+    url: "/demo",
+    year: "Rancagua • Producción 2025",
+    isExternalUrl: false,
+  },
+  {
+    category: "Comercio Mayorista & Abastecimiento",
+    name: "Comercial & Distribuidora El Maule",
+    description:
+      "Implementación SaaS para arqueo de caja de locales comerciales, sincronización de inventario y alerta automática de reposición antes del quiebre de stock.",
+    tags: ["Arqueo en 3 min", "Cero Descuadre", "SaaS Mensual"],
+    url: "/demo",
+    year: "Linares • Producción 2025",
+    isExternalUrl: false,
+  },
+  {
+    category: "Desarrollo Inmobiliario & Loteos",
+    name: "Inmobiliaria & Loteos del Sur",
+    description:
+      "Landing page de alta conversión para venta de parcelas y proyectos inmobiliarios con integración de prospectos hacia CRM y WhatsApp sin intermediarios.",
+    tags: ["Carga < 1s", "Captación Directa", "Código Transferible"],
+    url: "/demo",
+    year: "Chillán • Producción 2025",
+    isExternalUrl: false,
   },
 ];
 
@@ -208,21 +253,21 @@ function SectionHeader({
 }) {
   return (
     <div
-      className={`gsap-parallax-heading flex max-w-3xl flex-col gap-3 ${
+      className={`gsap-parallax-heading flex max-w-3xl flex-col gap-3.5 ${
         centered ? "mx-auto text-center items-center" : "items-start"
       }`}
     >
-      <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-[#526072]/25 bg-[#526072]/10 px-3.5 py-1 font-mono text-xs font-bold uppercase tracking-widest text-[#1E2430] shadow-xs">
-        <Sparkles className="h-3.5 w-3.5 text-[#25D366]" aria-hidden="true" />
+      <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-slate-300 bg-white/95 px-4 py-1.5 font-mono text-xs font-bold uppercase tracking-widest text-slate-900 shadow-xs">
+        <Sparkles className="h-3.5 w-3.5 text-emerald-600" aria-hidden="true" />
         <span>{eyebrow}</span>
       </div>
       <h2
         id={id}
-        className="text-balance text-3xl font-black tracking-tight text-[#111827] sm:text-4xl lg:text-5xl"
+        className="text-balance text-3xl font-black tracking-tight text-slate-950 sm:text-4xl lg:text-5xl"
       >
         {title}
       </h2>
-      <p className="text-pretty text-base font-medium text-[#526072] sm:text-lg">
+      <p className="text-pretty text-base font-medium text-slate-800 sm:text-lg leading-relaxed">
         {description}
       </p>
     </div>
@@ -252,24 +297,24 @@ export default function Home() {
 
           <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center gap-10 px-5 text-center lg:px-10">
             {/* Eyebrow Tag */}
-            <div id="hero-eyebrow" className="inline-flex items-center gap-2 rounded-full border border-[#526072]/20 bg-white/95 px-4 py-1.5 shadow-[0_4px_20px_rgba(17,24,39,0.04)] backdrop-blur-md">
+            <div id="hero-eyebrow" className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white/95 px-4 py-1.5 shadow-[0_4px_20px_rgba(17,24,39,0.04)] backdrop-blur-md">
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#1E2430] text-[#25D366]">
                 <Zap className="h-3 w-3" aria-hidden="true" />
               </span>
-              <span className="font-mono text-xs font-bold text-[#111827]">
+              <span className="font-mono text-xs font-bold text-slate-900">
                 ⚡ Soluciones de Software & TI para Negocios — Modalidad 100% Remota
               </span>
             </div>
 
             {/* Titular Principal (H1) */}
             <div id="hero-title" className="flex max-w-4xl flex-col gap-6">
-              <h1 className="text-balance text-4xl font-black leading-[1.08] tracking-tight text-[#111827] sm:text-6xl lg:text-7xl">
+              <h1 className="text-balance text-4xl font-black leading-[1.08] tracking-tight text-slate-950 sm:text-6xl lg:text-7xl">
                 Software y digitalización para tu negocio.{" "}
                 <span className="text-[#1E2430] underline decoration-[#25D366] decoration-4 underline-offset-8">
                   Sin agencias lentas.
                 </span>
               </h1>
-              <p className="mx-auto max-w-2xl text-pretty text-lg font-medium leading-relaxed text-[#526072] sm:text-xl">
+              <p className="mx-auto max-w-2xl text-pretty text-lg font-medium leading-relaxed text-slate-800 sm:text-xl">
                 Resuelvo los cuellos de botella de tu operación diaria con trato directo, sin intermediarios ni reuniones improductivas. Propuesta clara de 1 página, entregas funcionales en días hábiles y sistemas 100% bajo tu control.
               </p>
             </div>
@@ -284,7 +329,6 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="group relative overflow-hidden inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-[#1E2430] bg-[#1E2430] px-8 py-4 font-mono text-sm font-bold text-white shadow-[0_4px_16px_rgba(30,36,48,0.25)] transition-all duration-300 hover:border-[#25D366] hover:bg-[#25D366] hover:text-[#111827] hover:shadow-[0_8px_24px_rgba(37,211,102,0.4)] hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98]"
               >
-                {/* Destello reflectivo al hover */}
                 <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full" />
                 <MessageCircle
                   className="h-4 w-4 text-[#25D366] transition-colors group-hover:text-[#111827]"
@@ -293,24 +337,24 @@ export default function Home() {
                 <span>Agendar Diagnóstico 15 min (Sin costo)</span>
               </a>
 
-              <Link href="/que-hacemos" prefetch={false} className="inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-[#526072]/25 bg-white/95 px-8 py-4 font-mono text-sm font-bold text-[#111827] shadow-sm backdrop-blur-md transition-all hover:bg-white hover:border-[#1E2430]/50 hover:-translate-y-1 hover:shadow-md active:scale-[0.99]">
+              <Link href="/que-hacemos" prefetch={false} className="inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white/95 px-8 py-4 font-mono text-sm font-bold text-slate-900 shadow-xs backdrop-blur-md transition-all hover:bg-white hover:border-[#1E2430] hover:-translate-y-1 hover:shadow-md active:scale-[0.99]">
                 <span>Ver Qué Hacemos & Demos</span>
-                <ArrowRight className="h-4 w-4 text-[#526072]" aria-hidden="true" />
+                <ArrowRight className="h-4 w-4 text-slate-700" aria-hidden="true" />
               </Link>
             </div>
 
             {/* Micro-Garantías Inmediatas */}
-            <div id="hero-guarantees" className="flex flex-wrap items-center justify-center gap-6 pt-2 font-mono text-xs font-semibold text-[#111827]">
-              <div className="flex items-center gap-2 rounded-full bg-white/90 px-3.5 py-1.5 shadow-xs backdrop-blur-sm border border-[#526072]/20">
-                <Check className="h-4 w-4 text-[#25D366]" />
+            <div id="hero-guarantees" className="flex flex-wrap items-center justify-center gap-6 pt-2 font-mono text-xs font-bold text-slate-900">
+              <div className="flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 shadow-xs backdrop-blur-sm border border-slate-300">
+                <Check className="h-4 w-4 text-emerald-600" />
                 <span>Propuesta formal de 1 página</span>
               </div>
-              <div className="flex items-center gap-2 rounded-full bg-white/90 px-3.5 py-1.5 shadow-xs backdrop-blur-sm border border-[#526072]/20">
-                <Check className="h-4 w-4 text-[#25D366]" />
+              <div className="flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 shadow-xs backdrop-blur-sm border border-slate-300">
+                <Check className="h-4 w-4 text-emerald-600" />
                 <span>Pruebas en Staging privado</span>
               </div>
-              <div className="flex items-center gap-2 rounded-full bg-white/90 px-3.5 py-1.5 shadow-xs backdrop-blur-sm border border-[#526072]/20">
-                <Check className="h-4 w-4 text-[#25D366]" />
+              <div className="flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 shadow-xs backdrop-blur-sm border border-slate-300">
+                <Check className="h-4 w-4 text-emerald-600" />
                 <span>Entregables 100% transferibles</span>
               </div>
             </div>
@@ -318,19 +362,36 @@ export default function Home() {
         </section>
 
         {/* 3. Carrusel Interactivo de Clientes en Producción */}
-        <section id="ticker-section" className="w-full overflow-hidden border-y border-[#526072]/15 bg-white/40 py-5 backdrop-blur-xs">
+        <section id="ticker-section" className="w-full overflow-hidden border-y border-slate-300/80 bg-white/60 py-5 backdrop-blur-xs">
           <div className="flex flex-col items-center gap-3">
-            <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[#526072]">
+            <span className="font-mono text-xs font-bold uppercase tracking-widest text-slate-800">
               Clientes en Producción & Capacidades Operativas Verificadas
             </span>
             <ClientTickerCarousel />
           </div>
         </section>
 
-        {/* 4. Ventajas del Modelo Directo (Por Proyecto Cerrado) */}
+        {/* 4. Carrusel de Demos de Apps SaaS (Prioridad Semántica Web) */}
+        <section
+          id="demos-saas"
+          className="w-full bg-transparent py-16 lg:py-24"
+        >
+          <div className="mx-auto flex w-full max-w-7xl flex-col gap-12 px-5 lg:px-10">
+            <SectionHeader
+              eyebrow="DEMOS SAAS EN VIVO"
+              title="Aplicaciones listas para operar en tu negocio"
+              id="demos-saas-heading"
+              description="Explora las demos interactivas de nuestros sistemas SaaS. Diseñados para arriendo mensual sin costo de desarrollo inicial ni servidores que configurar."
+              centered
+            />
+            <SaasDemosCarousel />
+          </div>
+        </section>
+
+        {/* 5. Ventajas del Modelo Directo (Por Proyecto Cerrado) */}
         <section
           id="ventajas"
-          className="w-full bg-transparent py-20 lg:py-28"
+          className="w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
         >
           <div className="mx-auto flex w-full max-w-7xl flex-col gap-14 px-5 lg:px-10">
             <SectionHeader
@@ -347,16 +408,16 @@ export default function Home() {
                 return (
                   <div
                     key={perk.title}
-                    className="perk-card gsap-reveal flex flex-col justify-between rounded-2xl border border-[#526072]/20 bg-white/90 p-7 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#1E2430]/40 hover:-translate-y-1.5 hover:shadow-xl hover:bg-white"
+                    className="perk-card gsap-reveal flex flex-col justify-between rounded-2xl border border-slate-300/80 bg-white/95 p-7 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#1E2430]/60 hover:-translate-y-1.5 hover:shadow-xl hover:bg-white"
                   >
                     <div className="flex flex-col gap-4">
                       <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#1E2430] text-[#25D366] shadow-sm">
                         <Icon className="h-6 w-6" aria-hidden="true" />
                       </div>
-                      <h3 className="text-lg font-bold text-[#111827]">
+                      <h3 className="text-lg font-black text-slate-950">
                         {perk.title}
                       </h3>
-                      <p className="text-sm leading-relaxed text-[#526072]">
+                      <p className="text-sm leading-relaxed text-slate-800">
                         {perk.description}
                       </p>
                     </div>
@@ -367,10 +428,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 5. Catálogo Extendido y Filtros de Productos (Commerce UI) */}
+        {/* 6. Catálogo Extendido y Filtros de Productos */}
         <section
           id="catalogo"
-          className="w-full border-t border-[#526072]/15 bg-transparent py-20 lg:py-28"
+          className="w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
         >
           {/* Anclajes de compatibilidad para la suite de pruebas */}
           <div id="soluciones" className="sr-only" aria-hidden="true" />
@@ -420,24 +481,24 @@ export default function Home() {
                   href={whatsappLink("Hola Pablo, tengo una consulta sobre las soluciones de Naxo Resuelve.")}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[#526072]/25 bg-white/95 px-6 py-4 font-mono text-sm font-bold text-[#111827] shadow-sm backdrop-blur-md transition-all hover:bg-white hover:border-[#1E2430]/40"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-300 bg-white/95 px-6 py-4 font-mono text-sm font-bold text-slate-900 shadow-sm backdrop-blur-md transition-all hover:bg-white hover:border-[#1E2430]"
                 >
-                  <MessageCircle className="h-4 w-4 text-[#25D366]" />
+                  <MessageCircle className="h-4 w-4 text-emerald-600" />
                   <span>Consultar por WhatsApp</span>
                 </a>
               </div>
 
-              <p className="font-mono text-xs text-[#526072]">
+              <p className="font-mono text-xs text-slate-700">
                 * Mostrando 3 de 12 soluciones. Conoce el catálogo completo con filtros por categoría y cotizador online.
               </p>
             </div>
           </div>
         </section>
 
-        {/* 6. Metodología de Trabajo (Escudo Operativo en 4 Pasos) */}
+        {/* 7. Metodología de Trabajo (Escudo Operativo en 4 Pasos) */}
         <section
           id="metodologia"
-          className="w-full border-t border-[#526072]/15 bg-transparent py-20 lg:py-28"
+          className="w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
         >
           <div id="filosofia-testing" className="sr-only" aria-hidden="true" />
           <div className="mx-auto flex w-full max-w-7xl flex-col gap-14 px-5 lg:px-10">
@@ -455,7 +516,7 @@ export default function Home() {
                 return (
                   <div
                     key={step.number}
-                    className="method-step-card gsap-reveal relative flex flex-col justify-between rounded-2xl border border-[#526072]/20 bg-white/90 p-7 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#1E2430]/40 hover:-translate-y-1 hover:shadow-lg hover:bg-white"
+                    className="method-step-card gsap-reveal relative flex flex-col justify-between rounded-2xl border border-slate-300/80 bg-white/95 p-7 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#1E2430]/60 hover:-translate-y-1 hover:shadow-lg hover:bg-white"
                   >
                     <div className="flex flex-col gap-4">
                       <div className="flex items-center justify-between">
@@ -463,17 +524,17 @@ export default function Home() {
                           {step.number}
                         </span>
                         <Icon
-                          className="h-5 w-5 text-[#25D366]"
+                          className="h-5 w-5 text-emerald-600"
                           aria-hidden="true"
                         />
                       </div>
-                      <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#526072]">
+                      <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-700">
                         {step.label}
                       </span>
-                      <h3 className="text-base font-bold text-[#111827]">
+                      <h3 className="text-base font-black text-slate-950">
                         {step.title}
                       </h3>
-                      <p className="text-xs leading-relaxed text-[#526072]">
+                      <p className="text-sm leading-relaxed text-slate-800">
                         {step.description}
                       </p>
                     </div>
@@ -483,10 +544,10 @@ export default function Home() {
             </div>
 
             {/* Aviso de Términos y Condiciones y Garantía */}
-            <div id="metodologia-disclaimer" className="mx-auto max-w-3xl text-center rounded-2xl border border-[#526072]/20 bg-white/80 p-5 shadow-xs backdrop-blur-sm">
-              <p className="font-mono text-xs text-[#526072]">
+            <div id="metodologia-disclaimer" className="mx-auto max-w-3xl text-center rounded-2xl border border-slate-300 bg-white/95 p-5 shadow-xs backdrop-blur-sm">
+              <p className="font-mono text-xs text-slate-800 leading-relaxed">
                 * Todo servicio, desarrollo a medida o arriendo de software está{" "}
-                <strong className="text-[#111827]">
+                <strong className="text-slate-950">
                   sujeto a nuestros Términos y Condiciones de Alcance Cerrado
                 </strong>{" "}
                 y cuenta con garantía post-entrega estipulada formalmente en la propuesta.
@@ -495,10 +556,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 7. Clientes en Producción */}
+        {/* 8. Clientes en Producción */}
         <section
           id="proyectos"
-          className="w-full border-t border-[#526072]/15 bg-transparent py-20 lg:py-28"
+          className="w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
         >
           {/* Anclajes de compatibilidad para la suite de pruebas */}
           <div id="clientes" className="sr-only" aria-hidden="true" />
@@ -514,32 +575,32 @@ export default function Home() {
               centered
             />
 
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
               {clients.map((client) => (
                 <div
                   key={client.name}
-                  className="client-project-card gsap-reveal flex flex-col justify-between rounded-2xl border border-[#526072]/20 bg-white/95 p-8 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#1E2430]/40 hover:-translate-y-1.5 hover:shadow-xl"
+                  className="client-project-card gsap-reveal flex flex-col justify-between rounded-3xl border border-slate-300/80 bg-white/95 p-8 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#1E2430]/60 hover:-translate-y-1.5 hover:shadow-xl"
                 >
-                  <div className="flex flex-col gap-5">
+                  <div className="flex flex-col gap-4">
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#1E2430]">
                         {client.category}
                       </span>
-                      <span className="rounded-full border border-[#526072]/20 bg-[#FAF8F5] px-3 py-0.5 font-mono text-[11px] font-bold text-[#526072]">
+                      <span className="rounded-full border border-slate-300 bg-slate-50 px-3 py-0.5 font-mono text-xs font-bold text-slate-700">
                         {client.year}
                       </span>
                     </div>
-                    <h3 className="text-2xl font-black text-[#111827]">
+                    <h3 className="text-2xl font-black text-slate-950">
                       {client.name}
                     </h3>
-                    <p className="text-sm leading-relaxed text-[#526072]">
+                    <p className="text-sm leading-relaxed text-slate-800">
                       {client.description}
                     </p>
-                    <div className="flex flex-wrap gap-2 pt-2">
+                    <div className="flex flex-wrap gap-2 pt-1">
                       {client.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="rounded-lg border border-[#526072]/20 bg-[#FAF8F5] px-3 py-1 font-mono text-[11px] font-semibold text-[#111827]"
+                          className="rounded-lg border border-slate-300 bg-slate-50 px-2.5 py-1 font-mono text-xs font-semibold text-slate-800"
                         >
                           {tag}
                         </span>
@@ -547,16 +608,25 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="pt-8">
-                    <a
-                      href={client.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 rounded-xl bg-[#1E2430]/10 px-4 py-2 font-mono text-xs font-bold text-[#1E2430] transition-colors hover:bg-[#1E2430] hover:text-white"
-                    >
-                      <span>Visitar sitio en vivo</span>
-                      <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-                    </a>
+                  <div className="pt-6 border-t border-slate-200 mt-4">
+                    {client.isExternalUrl ? (
+                      <a
+                        href={client.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 rounded-xl bg-[#1E2430]/10 px-4 py-2 font-mono text-xs font-bold text-[#1E2430] transition-colors hover:bg-[#1E2430] hover:text-white"
+                      >
+                        <span>Visitar sitio en vivo</span>
+                        <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                      </a>
+                    ) : (
+                      <Link
+                        href={client.url}
+                        className="inline-flex items-center gap-2 rounded-xl bg-[#1E2430]/10 px-4 py-2 font-mono text-xs font-bold text-[#1E2430] transition-colors hover:bg-[#1E2430] hover:text-white"
+                      >
+                        <span>Ver demo relacionada →</span>
+                      </Link>
+                    )}
                   </div>
                 </div>
               ))}
@@ -564,10 +634,27 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 8. Respaldo Profesional y Marca Personal */}
+        {/* 9. Carrusel de Testimonios Chilenos Verificados (Encuesta de Satisfacción) */}
+        <section
+          id="testimonios"
+          className="w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
+        >
+          <div className="mx-auto flex w-full max-w-7xl flex-col gap-12 px-5 lg:px-10">
+            <SectionHeader
+              eyebrow="ENCUESTA DE SATISFACCIÓN 2024 - 2026"
+              title="Opiniones de quienes ya tienen su sistema operando"
+              id="testimonios-heading"
+              description="Valoraciones recopiladas formalmente tras la entrega de proyectos y puesta en marcha de sistemas."
+              centered
+            />
+            <TestimonialsCarousel />
+          </div>
+        </section>
+
+        {/* 10. Respaldo Profesional y Marca Personal */}
         <section
           id="autor"
-          className="w-full border-t border-[#526072]/15 bg-transparent py-20 lg:py-28"
+          className="w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
         >
           <div className="mx-auto flex w-full max-w-7xl flex-col gap-12 px-5 lg:px-10">
             <SectionHeader
@@ -578,11 +665,11 @@ export default function Home() {
               centered
             />
 
-            <div id="autor-card" className="gsap-reveal mx-auto max-w-4xl rounded-3xl border border-[#526072]/20 bg-white/95 p-8 shadow-sm backdrop-blur-md sm:p-12">
+            <div id="autor-card" className="gsap-reveal mx-auto max-w-4xl rounded-3xl border border-slate-300/80 bg-white/95 p-8 shadow-sm backdrop-blur-md sm:p-12">
               <div className="flex flex-col gap-8 md:flex-row md:items-center">
                 {/* Fotografía Formal */}
                 <div id="autor-photo" className="shrink-0 flex flex-col items-center gap-3">
-                  <div className="relative h-36 w-36 sm:h-44 sm:w-44 overflow-hidden rounded-3xl border-2 border-[#526072]/30 shadow-xl bg-[#FAF8F5]">
+                  <div className="relative h-36 w-36 sm:h-44 sm:w-44 overflow-hidden rounded-3xl border-2 border-slate-300 shadow-xl bg-slate-50">
                     <Image
                       src={PROFILE_IMAGE}
                       alt="Pablo Valdés Sandoval — Analista Programador"
@@ -599,29 +686,29 @@ export default function Home() {
 
                 <div className="flex flex-col gap-5">
                   <div className="flex flex-col gap-1">
-                    <h3 className="text-3xl font-black text-[#111827]">
+                    <h3 className="text-3xl font-black text-slate-950">
                       Pablo Valdés Sandoval
                     </h3>
-                    <p className="font-mono text-sm font-bold text-[#526072]">
+                    <p className="font-mono text-sm font-bold text-slate-700">
                       Analista Programador (Técnico de Nivel Superior, CFT San Agustín)
                     </p>
                   </div>
 
-                  <blockquote className="rounded-2xl border-l-4 border-[#1E2430] bg-[#FAF8F5] p-5 text-sm italic leading-relaxed text-[#111827] shadow-xs">
+                  <blockquote className="rounded-2xl border-l-4 border-[#1E2430] bg-slate-50 p-5 text-sm italic leading-relaxed text-slate-900 shadow-xs">
                     “Como Analista Programador, garantizo código estructurado bajo buenas prácticas de ingeniería y soluciones probadas en producción. Cero automatizaciones de Inteligencia Artificial a ciegas o código inestable sin auditar.”
                   </blockquote>
 
                   <div className="grid grid-cols-1 gap-2.5 pt-1 sm:grid-cols-3">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-[#526072]">
+                    <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
                       <MapPin className="h-4 w-4 text-[#1E2430]" aria-hidden="true" />
                       <span>Atención 100% Remota a Todo Chile</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs font-semibold text-[#526072]">
+                    <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
                       <FileText className="h-4 w-4 text-[#1E2430]" aria-hidden="true" />
                       <span>Propuesta Formal</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs font-semibold text-[#526072]">
-                      <ShieldCheck className="h-4 w-4 text-[#25D366]" aria-hidden="true" />
+                    <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
+                      <ShieldCheck className="h-4 w-4 text-emerald-600" aria-hidden="true" />
                       <span>Garantía Post-Entrega</span>
                     </div>
                   </div>
@@ -645,10 +732,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 9. Preguntas Frecuentes (FAQ) */}
+        {/* 11. Preguntas Frecuentes (FAQ) */}
         <section
           id="faq"
-          className="w-full border-t border-[#526072]/15 bg-transparent py-20 lg:py-28"
+          className="w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
         >
           <div className="mx-auto flex w-full max-w-4xl flex-col gap-12 px-5 lg:px-10">
             <SectionHeader
@@ -663,16 +750,16 @@ export default function Home() {
               {faqs.map((faq) => (
                 <details
                   key={faq.question}
-                  className="faq-item gsap-reveal group rounded-2xl border border-[#526072]/20 bg-white/90 p-6 shadow-sm backdrop-blur-md transition-all hover:border-[#1E2430]/40 hover:bg-white"
+                  className="faq-item gsap-reveal group rounded-2xl border border-slate-300/80 bg-white/95 p-6 shadow-sm backdrop-blur-md transition-all hover:border-[#1E2430]/50 hover:bg-white"
                 >
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-bold text-base text-[#111827] [&::-webkit-details-marker]:hidden">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-bold text-base text-slate-950 [&::-webkit-details-marker]:hidden">
                     <span className="flex items-center gap-2.5">
                       <HelpCircle className="h-4 w-4 text-[#1E2430]" />
                       {faq.question}
                     </span>
-                    <ChevronDown className="h-5 w-5 text-[#526072] transition-transform duration-200 group-open:rotate-180" />
+                    <ChevronDown className="h-5 w-5 text-slate-600 transition-transform duration-200 group-open:rotate-180" />
                   </summary>
-                  <p className="mt-4 border-t border-[#526072]/15 pt-4 text-sm leading-relaxed text-[#526072]">
+                  <p className="mt-4 border-t border-slate-200 pt-4 text-sm leading-relaxed text-slate-800">
                     {faq.answer}
                   </p>
                 </details>
@@ -681,8 +768,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 10. Final Call-to-Action Banner */}
-        <section id="final-cta-section" className="w-full border-t border-[#526072]/20 bg-[#1E2430] py-20 text-white shadow-2xl">
+        {/* 12. Final Call-to-Action Banner */}
+        <section id="final-cta-section" className="w-full border-t border-slate-800 bg-[#1E2430] py-20 text-white shadow-2xl">
           <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-6 px-5 text-center lg:px-10">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-4 py-1 font-mono text-xs font-bold uppercase tracking-widest text-[#25D366]">
               Empieza Hoy Mismo
@@ -690,7 +777,7 @@ export default function Home() {
             <h2 className="text-balance text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl text-white">
               Sube el estándar tecnológico de tu negocio sin fricción.
             </h2>
-            <p className="max-w-2xl text-pretty text-base text-white/80 sm:text-lg">
+            <p className="max-w-2xl text-pretty text-base text-slate-200 sm:text-lg leading-relaxed">
               Evaluemos la viabilidad técnica de tu proyecto en 15 minutos sin costo.
               Recibe una propuesta formal de 1 página antes de pagar un solo peso.
             </p>
@@ -707,7 +794,7 @@ export default function Home() {
                 <MessageCircle className="h-4 w-4 text-[#111827]" aria-hidden="true" />
                 <span>Agendar por WhatsApp (15 min)</span>
               </a>
-              <Link href="/que-hacemos" prefetch={false} className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-white/20 bg-transparent px-8 py-4 font-mono text-xs font-bold text-white transition-all hover:bg-white/10">
+              <Link href="/que-hacemos" prefetch={false} className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-white/30 bg-transparent px-8 py-4 font-mono text-xs font-bold text-white transition-all hover:bg-white/10">
                 <span>Revisar Catálogo</span>
                 <ArrowUpRight className="h-4 w-4 text-[#25D366]" />
               </Link>
@@ -716,62 +803,34 @@ export default function Home() {
         </section>
       </main>
 
-      {/* 11. Botón Flotante Permanente con Tooltip */}
-      <aside
-        aria-label="Contacto directo por WhatsApp"
-        className="fixed bottom-6 right-6 z-40 flex items-center gap-3 select-none"
-      >
-        <a
-          href={whatsappLink("Hola Pablo, tengo una consulta técnica sobre mi negocio.")}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group flex items-center gap-3 focus:outline-none"
-          aria-label="Contactar por WhatsApp: Respuesta en menos de 15 minutos"
-        >
-          {/* Tooltip visible en hover */}
-          <div className="hidden sm:flex items-center gap-2.5 rounded-2xl border border-[#526072]/20 bg-white/95 px-4 py-2.5 shadow-[0_8px_30px_rgba(17,24,39,0.12)] backdrop-blur-md transition-all duration-300 group-hover:border-[#25D366]/50 group-hover:shadow-[0_8px_30px_rgba(37,211,102,0.25)]">
-            <span className="relative flex h-2.5 w-2.5 shrink-0">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#25D366] opacity-75" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#25D366]" />
-            </span>
-            <div className="flex flex-col text-left">
-              <span className="font-mono text-[10px] font-bold text-[#1E2430] uppercase tracking-wider group-hover:text-emerald-700 transition-colors">
-                Respuesta en &lt; 15 min
-              </span>
-              <span className="text-xs font-bold text-[#111827]">
-                Hablar directo con Pablo
-              </span>
-            </div>
-          </div>
-
-          {/* Botón Circular Carbón Pizarra -> Verde WhatsApp */}
-          <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/20 bg-[#1E2430] text-[#25D366] shadow-[0_6px_25px_rgba(30,36,48,0.4)] transition-all duration-300 group-hover:scale-110 group-hover:border-[#25D366] group-hover:bg-[#25D366] group-hover:text-[#111827] group-hover:shadow-[0_8px_30px_rgba(37,211,102,0.5)] group-focus:border-[#25D366] group-focus:bg-[#25D366] group-focus:text-[#111827] group-focus:ring-4 group-focus:ring-[#25D366]/50 active:scale-95">
-            <MessageCircle className="h-7 w-7 transition-colors duration-300" aria-hidden="true" />
-          </div>
-        </a>
-      </aside>
-
-      {/* 12. Footer Corporativo Formal */}
-      <footer id="contacto" className="relative z-10 w-full border-t border-[#526072]/20 bg-white/70 py-12 backdrop-blur-md">
+      {/* 13. Footer Corporativo Formal */}
+      <footer id="contacto" className="relative z-10 w-full border-t border-slate-300/80 bg-white/80 py-12 backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-6 px-5 sm:flex-row lg:px-10">
           <div className="flex flex-col items-center gap-1 sm:items-start">
             <NeonBrandSpan size="sm" />
-            <p className="font-mono text-xs text-[#526072]">
+            <p className="font-mono text-xs text-slate-700">
               © 2026 Naxo Resuelve — Pablo Valdés Sandoval. Soluciones de Software y TI.
             </p>
-            <p className="font-mono text-[11px] text-[#526072]">
+            <p className="font-mono text-xs text-slate-600">
               Atención 100% remota a todo Chile desde Maule.
             </p>
           </div>
 
-          <div className="flex items-center gap-6 font-mono text-xs text-[#526072]">
-            <Link href="/como-funciona" prefetch={false} className="transition-colors hover:text-[#1E2430]">Términos de Alcance Cerrado</Link>
-            <Link href="/como-funciona" prefetch={false} className="transition-colors hover:text-[#1E2430]">Privacidad</Link>
+          <div className="flex items-center gap-6 font-mono text-xs text-slate-700">
+            <Link href="/" prefetch={false} className="transition-colors hover:text-[#1E2430] font-bold">
+              Inicio
+            </Link>
+            <Link href="/como-funciona" prefetch={false} className="transition-colors hover:text-[#1E2430] font-bold">
+              Términos de Alcance Cerrado
+            </Link>
+            <Link href="/como-funciona" prefetch={false} className="transition-colors hover:text-[#1E2430] font-bold">
+              Privacidad
+            </Link>
             <a
               href={whatsappLink("Hola Pablo, quiero hacer una consulta directa.")}
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors hover:text-[#1E2430]"
+              className="transition-colors hover:text-[#1E2430] font-bold"
             >
               Contacto directo
             </a>

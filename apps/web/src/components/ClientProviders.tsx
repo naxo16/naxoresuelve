@@ -5,6 +5,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { CartDrawer } from "@/components/CartDrawer";
 import { AuthModal } from "@/components/AuthModal";
 import { TransferModal } from "@/components/TransferModal";
+import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 
 export function ClientProviders({ children }: { children: React.ReactNode }) {
   return (
@@ -14,6 +15,7 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
         <CartDrawer />
         <TransferModal />
         <AuthModal />
+        <FloatingWhatsApp />
       </CartProvider>
     </AuthProvider>
   );

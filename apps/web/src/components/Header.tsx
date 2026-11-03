@@ -14,6 +14,7 @@ const BRAND_IMAGE = "/images/naxoresuelve.webp";
 const WHATSAPP_URL = "https://wa.me/56957286145";
 
 const HOME_SECTION_MAP = [
+  { id: "inicio", elementId: "hero-title" },
   { id: "como-funciona", elementId: "metodologia" },
   { id: "clientes", elementId: "clientes" },
   { id: "sobre-pablo", elementId: "autor" },
@@ -30,15 +31,21 @@ export function Header() {
   const isClientes = pathname === "/clientes";
   const isSobrePablo = pathname === "/sobre-pablo" || pathname === "/autor";
 
-  const [scrollSection, setScrollSection] = useState<string>("que-hacemos");
+  const [scrollSection, setScrollSection] = useState<string>("inicio");
 
   let activeSection = scrollSection;
   if (isQueHacemos) activeSection = "que-hacemos";
   else if (isComoFunciona) activeSection = "como-funciona";
   else if (isClientes) activeSection = "clientes";
   else if (isSobrePablo) activeSection = "sobre-pablo";
+  else if (isHome && scrollSection === "inicio") activeSection = "inicio";
 
   const navLinks = [
+    {
+      href: "/",
+      label: "Inicio",
+      id: "inicio",
+    },
     {
       href: "/que-hacemos",
       label: "Qué Hacemos",
@@ -66,11 +73,17 @@ export function Header() {
     if (!isHome) return;
 
     const handleScroll = () => {
-      const scrollPos = window.scrollY + 120;
-      for (const section of HOME_SECTION_MAP) {
+      const scrollPos = window.scrollY;
+
+      if (scrollPos < 280) {
+        setScrollSection("inicio");
+        return;
+      }
+
+      for (const section of HOME_SECTION_MAP.slice(1)) {
         const el = document.getElementById(section.elementId);
         if (el) {
-          const top = el.getBoundingClientRect().top + window.scrollY;
+          const top = el.getBoundingClientRect().top + window.scrollY - 120;
           const height = el.clientHeight;
           if (scrollPos >= top && scrollPos < top + height) {
             setScrollSection(section.id);
@@ -86,25 +99,37 @@ export function Header() {
 
   // Desplazamiento cinemático suave con realce de atención GSAP en portada sin exponer '#'
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, id: string) => {
-    if (isHome && id !== "que-hacemos") {
-      const section = HOME_SECTION_MAP.find((s) => s.id === id);
-      if (section) {
-        const target = document.getElementById(section.elementId);
-        if (target) {
-          e.preventDefault();
-          setScrollSection(id);
-          const top = target.getBoundingClientRect().top + window.scrollY - 70;
-          window.scrollTo({
-            top,
-            behavior: "smooth",
-          });
+    if (isHome) {
+      if (id === "inicio") {
+        e.preventDefault();
+        setScrollSection("inicio");
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+        return;
+      }
 
-          // Realce de atención: micro-animación en la sección de destino
-          gsap.fromTo(
-            target,
-            { y: 15, opacity: 0.85 },
-            { y: 0, opacity: 1, duration: 0.65, ease: "power2.out" }
-          );
+      if (id !== "que-hacemos") {
+        const section = HOME_SECTION_MAP.find((s) => s.id === id);
+        if (section) {
+          const target = document.getElementById(section.elementId);
+          if (target) {
+            e.preventDefault();
+            setScrollSection(id);
+            const top = target.getBoundingClientRect().top + window.scrollY - 70;
+            window.scrollTo({
+              top,
+              behavior: "smooth",
+            });
+
+            // Realce de atención: micro-animación en la sección de destino
+            gsap.fromTo(
+              target,
+              { y: 15, opacity: 0.85 },
+              { y: 0, opacity: 1, duration: 0.65, ease: "power2.out" }
+            );
+          }
         }
       }
     }
@@ -115,7 +140,7 @@ export function Header() {
   )}`;
 
   return (
-    <header className="fixed top-0 z-40 w-full border-b border-[#526072]/15 bg-[#FAF8F5]/85 shadow-[0_2px_15px_rgba(30,36,48,0.03)] backdrop-blur-xl">
+    <header className="fixed top-0 z-40 w-full border-b border-slate-300/60 bg-[#FAF8F5]/90 shadow-[0_2px_15px_rgba(30,36,48,0.04)] backdrop-blur-xl">
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-5 lg:px-10">
         {/* Identidad de Marca */}
         <div className="flex items-center gap-3">
@@ -134,8 +159,8 @@ export function Header() {
             />
             <NeonBrandSpan size="md" />
           </Link>
-          <span className="hidden items-center gap-1.5 rounded-full border border-[#526072]/30 bg-[#526072]/10 px-2.5 py-0.5 font-mono text-[10px] font-bold text-[#526072] sm:inline-flex">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#25D366] animate-pulse" />
+          <span className="hidden items-center gap-1.5 rounded-full border border-slate-300 bg-white/95 px-3 py-1 font-mono text-xs font-bold text-slate-800 sm:inline-flex shadow-xs">
+            <span className="h-2 w-2 rounded-full bg-[#25D366] animate-pulse" />
             Cupos Disponibles
           </span>
         </div>
@@ -159,7 +184,7 @@ export function Header() {
                 className={`group relative flex items-center gap-1.5 py-1 font-mono text-xs font-bold uppercase tracking-wider transition-all duration-200 ${
                   isActive
                     ? "text-[#1E2430]"
-                    : "text-[#526072] hover:text-[#1E2430]"
+                    : "text-slate-700 hover:text-[#1E2430]"
                 }`}
               >
                 {isActive && (
@@ -183,7 +208,7 @@ export function Header() {
           <button
             type="button"
             onClick={() => setCartOpen(true)}
-            className="relative flex h-10 items-center gap-1.5 rounded-xl border border-[#526072]/20 bg-white/90 px-3 text-[#111827] shadow-sm transition-all duration-200 hover:border-[#1E2430]/40 hover:bg-[#FAF8F5] hover:shadow-md hover:-translate-y-0.5 active:scale-95"
+            className="relative flex h-10 items-center gap-1.5 rounded-xl border border-slate-300 bg-white/95 px-3 text-[#111827] shadow-xs transition-all duration-200 hover:border-[#1E2430]/60 hover:bg-white hover:shadow-md hover:-translate-y-0.5 active:scale-95"
             aria-label={`Ver carrito con ${totalCount} soluciones`}
           >
             <ShoppingCart className="h-4 w-4 text-[#1E2430]" />
@@ -208,10 +233,10 @@ export function Header() {
               }
             }}
             aria-label={user ? `Portal de cliente: ${user.name}` : "Acceso al portal de clientes"}
-            className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-[#526072]/20 bg-white/90 px-3.5 font-mono text-xs font-bold text-[#111827] shadow-sm transition-all duration-200 hover:border-[#1E2430]/40 hover:bg-[#FAF8F5] hover:shadow-md hover:-translate-y-0.5 active:scale-95"
+            className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-slate-300 bg-white/95 px-3.5 font-mono text-xs font-bold text-[#111827] shadow-xs transition-all duration-200 hover:border-[#1E2430]/60 hover:bg-white hover:shadow-md hover:-translate-y-0.5 active:scale-95"
           >
-            <User className="h-3.5 w-3.5 text-[#526072]" aria-hidden="true" />
-            <span className="hidden sm:inline">
+            <User className="h-3.5 w-3.5 text-slate-600" aria-hidden="true" />
+            <span className="hidden sm:inline font-bold">
               {user ? user.name : "Portal Clientes"}
             </span>
           </button>

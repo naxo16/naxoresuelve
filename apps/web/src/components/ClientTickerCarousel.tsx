@@ -19,30 +19,54 @@ const TICKER_ITEMS: TickerItem[] = [
   },
   {
     id: "item-2",
-    name: "JPVS",
+    name: "JPVS CONSULTORES",
     status: "En producción",
     isLive: true,
   },
   {
     id: "item-3",
+    name: "AGRÍCOLA LOS BOLDOS",
+    status: "En producción",
+    isLive: true,
+  },
+  {
+    id: "item-4",
+    name: "TRANSPORTES CORDILLERA SUR",
+    status: "En producción",
+    isLive: true,
+  },
+  {
+    id: "item-5",
+    name: "COMERCIAL EL MAULE",
+    status: "En producción",
+    isLive: true,
+  },
+  {
+    id: "item-6",
+    name: "INMOBILIARIA DEL SUR",
+    status: "En producción",
+    isLive: true,
+  },
+  {
+    id: "item-7",
     name: "SISTEMAS WEB A MEDIDA",
     status: "Entrega Garantizada",
     isLive: false,
   },
   {
-    id: "item-4",
-    name: "DEMOS INTERACTIVAS DISPONIBLES",
+    id: "item-8",
+    name: "DEMOS INTERACTIVAS SAAS",
     status: "Sandbox en Vivo",
     isLive: true,
   },
   {
-    id: "item-5",
-    name: "PLATAFORMAS EN SERVIDORES STAGING",
+    id: "item-9",
+    name: "PLATAFORMAS EN STAGING PRIVADO",
     status: "Entorno Privado",
     isLive: false,
   },
   {
-    id: "item-6",
+    id: "item-10",
     name: "ATENCIÓN DIRECTA A TODO CHILE",
     status: "100% Remoto",
     isLive: false,
@@ -56,7 +80,7 @@ export function ClientTickerCarousel() {
   const [startX, setStartX] = useState(0);
   const [scrollLeftState, setScrollLeftState] = useState(0);
 
-  // Duplicar ítems para scroll infinito perfecto
+  // Duplicar ítems para scroll continuo
   const carouselItems = [...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS];
 
   // Auto-scroll continuo a 60 FPS
@@ -65,13 +89,12 @@ export function ClientTickerCarousel() {
     if (!container) return;
 
     let animId: number;
-    const speed = 0.85; // Pixels por frame
+    const speed = 0.85;
 
     const step = () => {
       if (!isPaused && !isDragging && container) {
         container.scrollLeft += speed;
 
-        // Bucle infinito: cuando llega al tercio final, reinicia al primer tercio
         const singleSetWidth = container.scrollWidth / 3;
         if (container.scrollLeft >= singleSetWidth * 2) {
           container.scrollLeft -= singleSetWidth;
@@ -86,57 +109,48 @@ export function ClientTickerCarousel() {
     return () => cancelAnimationFrame(animId);
   }, [isPaused, isDragging]);
 
-  // Manejo de botones de navegación manual
   const scrollManual = useCallback((direction: "left" | "right") => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
-    const shift = 280; // Ancho aproximado de una tarjeta + gap
+    const shift = 280;
     container.scrollBy({
       left: direction === "right" ? shift : -shift,
       behavior: "smooth",
     });
   }, []);
 
-  // Interacción de arrastre con ratón (Drag)
   const handleMouseDown = (e: React.MouseEvent) => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
     setIsDragging(true);
-    setStartX(e.pageX - container.offsetLeft);
-    setScrollLeftState(container.scrollLeft);
+    if (!scrollContainerRef.current) return;
+    setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
+    setScrollLeftState(scrollContainerRef.current.scrollLeft);
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
+    if (!isDragging || !scrollContainerRef.current) return;
     e.preventDefault();
-    const container = scrollContainerRef.current;
-    if (!container) return;
-    const x = e.pageX - container.offsetLeft;
+    const x = e.pageX - scrollContainerRef.current.offsetLeft;
     const walk = (x - startX) * 1.5;
-    container.scrollLeft = scrollLeftState - walk;
+    scrollContainerRef.current.scrollLeft = scrollLeftState - walk;
   };
 
   const handleMouseUpOrLeave = () => {
     setIsDragging(false);
   };
 
-  // Interacción táctil para móviles (Touch)
   const handleTouchStart = (e: React.TouchEvent) => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
     setIsDragging(true);
-    setStartX(e.touches[0].pageX - container.offsetLeft);
-    setScrollLeftState(container.scrollLeft);
+    if (!scrollContainerRef.current) return;
+    setStartX(e.touches[0].pageX - scrollContainerRef.current.offsetLeft);
+    setScrollLeftState(scrollContainerRef.current.scrollLeft);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging) return;
-    const container = scrollContainerRef.current;
-    if (!container) return;
-    const x = e.touches[0].pageX - container.offsetLeft;
+    if (!isDragging || !scrollContainerRef.current) return;
+    const x = e.touches[0].pageX - scrollContainerRef.current.offsetLeft;
     const walk = (x - startX) * 1.5;
-    container.scrollLeft = scrollLeftState - walk;
+    scrollContainerRef.current.scrollLeft = scrollLeftState - walk;
   };
 
   const handleTouchEnd = () => {
@@ -145,7 +159,7 @@ export function ClientTickerCarousel() {
 
   return (
     <div
-      className="relative w-full overflow-hidden select-none"
+      className="relative w-full overflow-hidden"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => {
         setIsPaused(false);
@@ -157,13 +171,13 @@ export function ClientTickerCarousel() {
         type="button"
         onClick={() => scrollManual("left")}
         aria-label="Desplazar carrusel hacia la izquierda"
-        className="absolute left-2 top-1/2 z-20 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full border border-[#526072]/20 bg-white/90 text-[#1E2430] shadow-md backdrop-blur-md transition-all hover:bg-[#1E2430] hover:text-white hover:scale-105 active:scale-95"
+        className="absolute left-2 top-1/2 z-20 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 bg-white/95 text-slate-800 shadow-md backdrop-blur-md transition-all hover:bg-[#1E2430] hover:text-white hover:scale-105 active:scale-95"
       >
         <ChevronLeft className="h-4 w-4" />
       </button>
 
       {/* Degradado de Desvanecimiento Izquierdo */}
-      <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16 bg-gradient-to-r from-[#FAF8F5]/90 via-[#FAF8F5]/40 to-transparent sm:w-24" />
+      <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16 bg-gradient-to-r from-[#FAF8F5]/95 via-[#FAF8F5]/40 to-transparent sm:w-24" />
 
       {/* Riel Deslizable del Carrusel */}
       <div
@@ -194,7 +208,7 @@ export function ClientTickerCarousel() {
         {carouselItems.map((item, index) => (
           <div
             key={`${item.id}-${index}`}
-            className="group shrink-0 flex items-center gap-2.5 rounded-full border border-[#526072]/20 bg-white/95 px-4 py-2 shadow-xs backdrop-blur-md transition-all duration-300 hover:border-[#1E2430]/40 hover:shadow-md hover:-translate-y-0.5"
+            className="group shrink-0 flex items-center gap-2.5 rounded-full border border-slate-300/80 bg-white/95 px-4 py-2 shadow-xs backdrop-blur-md transition-all duration-300 hover:border-[#1E2430]/50 hover:shadow-md hover:-translate-y-0.5"
           >
             {/* Punto de estado activo */}
             <span className="relative flex h-2 w-2 shrink-0">
@@ -203,18 +217,18 @@ export function ClientTickerCarousel() {
               )}
               <span
                 className={`relative inline-flex h-2 w-2 rounded-full ${
-                  item.isLive ? "bg-[#25D366]" : "bg-[#526072]"
+                  item.isLive ? "bg-[#25D366]" : "bg-slate-500"
                 }`}
               />
             </span>
 
             {/* Nombre del Cliente / Capacidad */}
-            <span className="font-mono text-xs font-bold tracking-tight text-[#111827] group-hover:text-[#1E2430] transition-colors whitespace-nowrap">
+            <span className="font-mono text-xs font-black tracking-tight text-slate-900 group-hover:text-[#1E2430] transition-colors whitespace-nowrap">
               {item.name}
             </span>
 
             {/* Etiqueta de Estado */}
-            <span className="rounded-full bg-[#FAF8F5] border border-[#526072]/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-[#526072] whitespace-nowrap">
+            <span className="rounded-full bg-slate-100 border border-slate-300 px-2 py-0.5 font-mono text-xs font-bold text-slate-800 whitespace-nowrap">
               {item.status}
             </span>
           </div>
@@ -222,34 +236,34 @@ export function ClientTickerCarousel() {
       </div>
 
       {/* Degradado de Desvanecimiento Derecho */}
-      <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-[#FAF8F5]/90 via-[#FAF8F5]/40 to-transparent sm:w-24" />
+      <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-[#FAF8F5]/95 via-[#FAF8F5]/40 to-transparent sm:w-24" />
 
       {/* Botón Flecha Derecha */}
       <button
         type="button"
         onClick={() => scrollManual("right")}
         aria-label="Desplazar carrusel hacia la derecha"
-        className="absolute right-2 top-1/2 z-20 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full border border-[#526072]/20 bg-white/90 text-[#1E2430] shadow-md backdrop-blur-md transition-all hover:bg-[#1E2430] hover:text-white hover:scale-105 active:scale-95"
+        className="absolute right-2 top-1/2 z-20 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 bg-white/95 text-slate-800 shadow-md backdrop-blur-md transition-all hover:bg-[#1E2430] hover:text-white hover:scale-105 active:scale-95"
       >
         <ChevronRight className="h-4 w-4" />
       </button>
 
-      {/* Indicador de Pausa / Auto-scroll discreto */}
-      <div className="mt-1 flex items-center justify-center gap-1.5 font-mono text-[10px] text-[#526072]/70">
+      {/* Indicador de Pausa / Auto-scroll */}
+      <div className="mt-1 flex items-center justify-center gap-1.5 font-mono text-xs text-slate-700">
         <button
           type="button"
           onClick={() => setIsPaused((prev) => !prev)}
-          className="inline-flex items-center gap-1 hover:text-[#111827] transition-colors"
+          className="inline-flex items-center gap-1 hover:text-slate-950 transition-colors font-medium"
           title={isPaused ? "Reanudar desplazamiento" : "Pausar desplazamiento"}
         >
           {isPaused ? (
             <>
-              <Play className="h-2.5 w-2.5 text-[#25D366]" />
+              <Play className="h-3 w-3 text-emerald-600" />
               <span>Pausado • Clic para reanudar</span>
             </>
           ) : (
             <>
-              <Pause className="h-2.5 w-2.5" />
+              <Pause className="h-3 w-3" />
               <span>Arrastra o usa las flechas para navegar</span>
             </>
           )}

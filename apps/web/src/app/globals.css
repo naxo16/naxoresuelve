@@ -10,7 +10,7 @@
 
   --surface: #FFFFFF;
   --border: rgba(82, 96, 114, 0.2);
-  --text-muted: #526072;
+  --text-muted: #334155;
 
   /* Fondo 25% claro (charcoal aterciopelado con sutil matiz platino/blanco de 25% de luminosidad) */
   --bg-dark: #3a3640;
@@ -24,7 +24,7 @@
   --color-vino-light: #6B7B91;
   --color-vino-text: #1E2430;
   --color-vino-text-bright: #25D366;
-  --color-vino-text-soft: #526072;
+  --color-vino-text-soft: #334155;
   --color-vino-glow: rgba(37, 211, 102, 0.35);
 
   --color-gold: #526072;
@@ -33,7 +33,7 @@
   --color-gold-glow: rgba(37, 211, 102, 0.35);
 
   --color-text-main: #111827;
-  --color-text-muted: #526072;
+  --color-text-muted: #334155;
   --color-border: rgba(30, 36, 48, 0.12);
   --color-border-gold: rgba(82, 96, 114, 0.35);
   --color-border-vino: rgba(30, 36, 48, 0.3);
