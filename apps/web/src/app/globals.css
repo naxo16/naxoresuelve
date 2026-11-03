@@ -469,3 +469,51 @@ html.high-contrast button {
 
 
 
+
+/* ========================================================
+   Devil May Cry Flickering Blue Neon (.dmc-neon-span)
+   ======================================================== */
+
+.dmc-neon-span {
+  font-family: var(--font-cinzel), 'Cinzel', serif; /* Fuente con estilo rotulado/gótico DMC */
+  font-weight: 900;
+  color: #cceeff; /* Color base claro del tubo encendido */
+  text-shadow: 
+    0 0 5px #00aaff,
+    0 0 10px #00aaff,
+    0 0 20px #0055ff,
+    0 0 40px #0055ff;
+  filter: drop-shadow(0 1px 3px rgba(0, 30, 80, 0.55));
+  animation: neon-flicker 3s infinite alternate;
+  display: inline-block;
+  letter-spacing: 0.04em;
+  transition: text-shadow 0.25s ease;
+}
+
+/* Animación de parpadeo de tubo de neón */
+@keyframes neon-flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    opacity: 1;
+    text-shadow: 
+      0 0 4px #00aaff,
+      0 0 10px #00aaff,
+      0 0 20px #0055ff,
+      0 0 40px #0055ff,
+      0 0 80px #0022aa;
+  }
+  20%, 24%, 55% {
+    /* Efecto de apagón momentáneo / parpadeo rápido */
+    opacity: 0.2;
+    text-shadow: none;
+  }
+}
+
+.group:hover .dmc-neon-span,
+.dmc-neon-span:hover {
+  text-shadow: 
+    0 0 6px #00d4ff,
+    0 0 12px #00aaff,
+    0 0 24px #0066ff,
+    0 0 48px #0044ff,
+    0 0 85px #0022cc;
+}
