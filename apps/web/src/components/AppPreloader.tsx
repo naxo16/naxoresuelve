@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import { NeonBrandSpan } from "@/components/NeonBrandSpan";
 
 export function AppPreloader() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -110,9 +111,7 @@ export function AppPreloader() {
 
         {/* Título de Marca y Estado */}
         <div className="flex flex-col items-center gap-1.5 text-center">
-          <span className="text-base font-black tracking-tight text-[#111827]">
-            Naxo Resuelve
-          </span>
+          <NeonBrandSpan size="md" />
           <div className="flex items-center gap-2 font-mono text-[11px] font-semibold text-[#526072]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#25D366] animate-ping" />
             <span>Iniciando Entorno de Software</span>

@@ -8,6 +8,7 @@ import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { ShoppingCart, User, MessageCircle } from "lucide-react";
 import { gsap } from "gsap";
+import { NeonBrandSpan } from "@/components/NeonBrandSpan";
 
 const BRAND_IMAGE = "/images/naxoresuelve.jpg";
 const WHATSAPP_URL = "https://wa.me/56957286145";
@@ -118,9 +119,7 @@ export function Header() {
               className="h-9 w-9 rounded-xl object-cover ring-1 ring-[#1E2430]/15 transition-transform group-hover:scale-105"
               priority
             />
-            <span className="text-lg font-black tracking-tight text-[#111827]">
-              Naxo Resuelve
-            </span>
+            <NeonBrandSpan size="md" />
           </Link>
           <span className="hidden items-center gap-1.5 rounded-full border border-[#526072]/30 bg-[#526072]/10 px-2.5 py-0.5 font-mono text-[10px] font-bold text-[#526072] sm:inline-flex">
             <span className="h-1.5 w-1.5 rounded-full bg-[#25D366] animate-pulse" />

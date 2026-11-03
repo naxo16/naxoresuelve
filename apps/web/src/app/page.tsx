@@ -21,6 +21,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Header } from "@/components/Header";
+import { NeonBrandSpan } from "@/components/NeonBrandSpan";
 import { OrganicBackground } from "@/components/OrganicBackground";
 import { ScrollAnimations } from "@/components/ScrollAnimations";
 import { CATALOG_DATA } from "@/data/catalog";
@@ -760,7 +761,7 @@ export default function Home() {
       <footer id="contacto" className="relative z-10 w-full border-t border-[#526072]/20 bg-white/70 py-12 backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-6 px-5 sm:flex-row lg:px-10">
           <div className="flex flex-col items-center gap-1 sm:items-start">
-            <span className="text-base font-black text-[#111827]">Naxo Resuelve</span>
+            <NeonBrandSpan size="sm" />
             <p className="font-mono text-xs text-[#526072]">
               © 2026 Naxo Resuelve — Pablo Valdés Sandoval. Soluciones de Software y TI.
             </p>

@@ -336,5 +336,136 @@ html.high-contrast button {
   border: 1px solid rgba(21, 23, 28, 0.08);
 }
 
+/* ========================================================
+   Devil May Cry & 80s Bar Neon Sign Aesthetics
+   ======================================================== */
+
+.dmc-neon-plate {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.85rem;
+  border-radius: 0.85rem;
+  background: radial-gradient(ellipse at center, #141722 0%, #080a0f 100%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 0 12px rgba(0, 0, 0, 0.95),
+    0 2px 12px rgba(0, 0, 0, 0.4),
+    0 0 18px rgba(255, 42, 109, 0.22),
+    0 0 26px rgba(0, 240, 255, 0.16);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dmc-neon-plate::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 42, 109, 0.7) 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(0, 240, 255, 0.7) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.75;
+  transition: opacity 0.3s ease;
+}
+
+.dmc-neon-plate:hover::before {
+  opacity: 1;
+}
+
+.dmc-neon-plate:hover {
+  box-shadow:
+    inset 0 0 16px rgba(0, 0, 0, 1),
+    0 4px 20px rgba(0, 0, 0, 0.5),
+    0 0 28px rgba(255, 42, 109, 0.45),
+    0 0 45px rgba(0, 240, 255, 0.35);
+  transform: translateY(-1.5px) scale(1.02);
+}
+
+/* Letras Neón "Naxo" — DMC Dante Crimson / Hot Neon Magenta */
+.dmc-neon-naxo {
+  color: #ffffff;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-shadow:
+    0 0 2px #ffffff,
+    0 0 4px #ffffff,
+    0 0 8px #ff2a6d,
+    0 0 16px #ff2a6d,
+    0 0 28px #ff0044,
+    0 0 45px #d40038;
+  animation: dmc-flicker-crimson 4.8s infinite alternate ease-in-out;
+  transition: text-shadow 0.3s ease;
+}
+
+/* Letras Neón "Resuelve" — 80s Bar Electric Cyan / Turquoise Neon */
+.dmc-neon-resuelve {
+  color: #ffffff;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-shadow:
+    0 0 2px #ffffff,
+    0 0 4px #ffffff,
+    0 0 8px #00f0ff,
+    0 0 16px #00f0ff,
+    0 0 28px #00bfff,
+    0 0 45px #0077ff;
+  animation: dmc-flicker-cyan 4.2s infinite alternate ease-in-out;
+  transition: text-shadow 0.3s ease;
+}
+
+/* Intensificación en hover (Sobrecarga de voltaje en los tubos) */
+.group:hover .dmc-neon-naxo,
+.dmc-neon-plate:hover .dmc-neon-naxo {
+  text-shadow:
+    0 0 2px #ffffff,
+    0 0 6px #ffffff,
+    0 0 12px #ff2a6d,
+    0 0 24px #ff2a6d,
+    0 0 42px #ff0044,
+    0 0 68px #ff0044;
+}
+
+.group:hover .dmc-neon-resuelve,
+.dmc-neon-plate:hover .dmc-neon-resuelve {
+  text-shadow:
+    0 0 2px #ffffff,
+    0 0 6px #ffffff,
+    0 0 12px #00f0ff,
+    0 0 24px #00f0ff,
+    0 0 42px #00bfff,
+    0 0 68px #0088ff;
+}
+
+/* Micro-parpadeo orgánico de tubo de gas de alta tensión (DMC & 80s bar style) */
+@keyframes dmc-flicker-crimson {
+  0%, 18.999%, 21.5%, 54.999%, 56.5%, 57.5%, 72.5%, 100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px rgba(255, 42, 109, 0.9));
+  }
+  19%, 21.499%, 55%, 56.499% {
+    opacity: 0.82;
+    filter: drop-shadow(0 0 2px rgba(255, 42, 109, 0.35));
+  }
+}
+
+@keyframes dmc-flicker-cyan {
+  0%, 28.999%, 31.5%, 74.999%, 76.5%, 77.5%, 88.5%, 100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.9));
+  }
+  29%, 31.499%, 75%, 76.499% {
+    opacity: 0.8;
+    filter: drop-shadow(0 0 2px rgba(0, 240, 255, 0.35));
+  }
+}
+
 
 
