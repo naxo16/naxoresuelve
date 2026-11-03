@@ -32,9 +32,18 @@ export function AppPreloader() {
 
     if (!container || !counter || !lineProgress || !logoBox) return;
 
+    // Fallback de seguridad infalible: ante latencia, túneles o StrictMode, liberar la pantalla en máx 750ms
+    const safetyTimer = setTimeout(() => {
+      setIsDone(true);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("appPreloaderDone"));
+      }
+    }, 750);
+
     const countObj = { val: 0 };
     const tl = gsap.timeline({
       onComplete: () => {
+        clearTimeout(safetyTimer);
         setIsDone(true);
         if (typeof window !== "undefined") {
           window.dispatchEvent(new CustomEvent("appPreloaderDone"));
@@ -78,6 +87,7 @@ export function AppPreloader() {
       });
 
     return () => {
+      clearTimeout(safetyTimer);
       tl.kill();
     };
   }, []);
