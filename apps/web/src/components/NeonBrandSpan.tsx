@@ -38,7 +38,7 @@ export function NeonBrandSpan({
         .dmc-neon-active {
           font-family: var(--font-cinzel), 'Cinzel', serif !important;
           font-weight: 900 !important;
-          color: #0c1b33 !important;
+          color: #080f1a !important;
           text-shadow: 
             0 0 5px #00aaff,
             0 0 10px #00aaff,
@@ -46,7 +46,7 @@ export function NeonBrandSpan({
             0 0 40px #0055ff,
             0 0 80px #0022aa !important;
           filter: drop-shadow(0 2px 4px rgba(0, 25, 70, 0.65));
-          -webkit-text-stroke: 0.6px #00d4ff;
+          
           animation: neon-flicker 3s infinite alternate !important;
           display: inline-block;
           letter-spacing: 0.05em;

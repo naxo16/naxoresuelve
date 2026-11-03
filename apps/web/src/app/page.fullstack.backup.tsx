@@ -774,6 +774,7 @@ function CaseStudiesSection({
           return (
             <article
               key={c.id}
+              role="button"
               tabIndex={0}
               aria-labelledby={caseTitleId}
               onClick={() => onSelectCase(c)}
@@ -1141,8 +1142,16 @@ Fecha Solicitud: 2026`;
           return (
             <div
               key={promo.id}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setSelectedPromo(promo.value);
+                }
+              }}
               onClick={() => setSelectedPromo(promo.value)}
-              className={`rounded-2xl p-6 sm:p-7 border transition-all duration-300 cursor-pointer flex flex-col justify-between relative overflow-hidden ${
+              className={`rounded-2xl p-6 sm:p-7 border transition-all duration-300 cursor-pointer flex flex-col justify-between relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#cba135] ${
                 isSelected
                   ? "bg-gradient-to-b from-[#181c28] to-[#0e111a] border-[#cba135] shadow-[0_0_25px_rgba(203,161,53,0.25)] scale-[1.02]"
                   : "bg-[#423943] border-[#615362] hover:border-[#721828]/80 hover:bg-[#362f37]"
@@ -1261,10 +1270,11 @@ Fecha Solicitud: 2026`;
 
               {/* Selector de Promoción */}
               <div>
-                <label className="block text-xs font-semibold text-[#f5dade] mb-1.5">
+                <label htmlFor="selected-promo-select" className="block text-xs font-semibold text-[#f5dade] mb-1.5">
                   Promoción o Beneficio a Reclamar:
                 </label>
                 <select
+                  id="selected-promo-select"
                   value={selectedPromo}
                   onChange={(e) => setSelectedPromo(e.target.value)}
                   className="w-full bg-[#362f37] border border-[#615362] focus:border-[#b82d46] focus:outline-none rounded-xl px-3.5 py-3 text-[#f5dade] text-xs font-medium transition"

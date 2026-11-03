@@ -9,10 +9,10 @@ RUN groupadd -g 1000 appgroup && useradd -u 1000 -g appgroup -m appuser
 WORKDIR /app
 
 # Copy dependency files first (cache layer)
-COPY pyproject.toml ./
+COPY pyproject.toml uv.lock ./
 
-# Install dependencies safely with no-cache (SonarQube docker:S8541)
-RUN uv pip install --no-cache --system -r pyproject.toml
+# Install dependencies safely with no-cache and locked versions (SonarQube docker:S8541, docker:S8544)
+RUN uv pip sync --no-cache --system --only-binary :all: uv.lock
 
 # Copy application code
 COPY apps/ ./apps/

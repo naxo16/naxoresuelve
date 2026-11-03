@@ -168,16 +168,28 @@ export function ClientTickerCarousel() {
       {/* Riel Deslizable del Carrusel */}
       <div
         ref={scrollContainerRef}
+        role="region"
+        aria-label="Carrusel de proyectos y clientes"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            scrollManual("left");
+          } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            scrollManual("right");
+          }
+        }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUpOrLeave}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className={`flex items-center gap-4 overflow-x-auto py-2 px-12 scrollbar-none ${
+        className={`flex items-center gap-4 overflow-x-auto py-2 px-12 scrollbar-none focus:outline-none focus:ring-1 focus:ring-[#1E2430]/30 rounded-xl ${
           isDragging ? "cursor-grabbing" : "cursor-grab"
         }`}
-        style={{ scrollBehavior: isDragging ? "auto" : "auto" }}
+        style={{ scrollBehavior: isDragging ? "auto" : "smooth" }}
       >
         {carouselItems.map((item, index) => (
           <div

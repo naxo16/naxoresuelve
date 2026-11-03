@@ -748,9 +748,11 @@ export function ModernCanvasVideoPlayer() {
 
             {/* 3. Botón Central Play cuando está pausado */}
             {!isPlaying && (
-              <div
+              <button
+                type="button"
                 onClick={togglePlay}
-                className="absolute inset-0 flex flex-col items-center justify-center bg-black/55 backdrop-blur-[2px] cursor-pointer group-hover:bg-black/35 transition-all z-10"
+                aria-label="Reproducir video de demostración"
+                className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-black/55 backdrop-blur-[2px] cursor-pointer group-hover:bg-black/35 transition-all z-10 border-none text-left"
               >
                 <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#721828] via-[#9e233b] to-[#cba135] flex items-center justify-center text-white shadow-[0_0_35px_rgba(184,45,70,0.9)] border-2 border-[#f2cf6b] transform group-hover:scale-110 transition-transform">
                   <Play size={36} className="ml-1 text-white fill-white" />
@@ -758,7 +760,7 @@ export function ModernCanvasVideoPlayer() {
                 <span className="mt-3 px-4 py-1.5 rounded-full bg-black/85 border border-[#cba135]/70 text-xs font-mono font-bold text-[#f2cf6b] tracking-wider uppercase shadow-lg">
                   ▶ Clic aquí para ver la demo
                 </span>
-              </div>
+              </button>
             )}
 
             {/* 4. Barra Superior Flotante con Estado de Audio y Voz */}
@@ -831,6 +833,19 @@ export function ModernCanvasVideoPlayer() {
               
               {/* Scrubbing Bar */}
               <div
+                role="slider"
+                aria-label="Progreso del video"
+                aria-valuenow={Math.round(currentTime)}
+                aria-valuemin={0}
+                aria-valuemax={Math.round(duration) || 100}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'ArrowLeft' && videoRef.current) {
+                    videoRef.current.currentTime = Math.max(0, currentTime - 5);
+                  } else if (e.key === 'ArrowRight' && videoRef.current) {
+                    videoRef.current.currentTime = Math.min(duration, currentTime + 5);
+                  }
+                }}
                 onClick={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
                   const pos = (e.clientX - rect.left) / rect.width;
@@ -838,7 +853,7 @@ export function ModernCanvasVideoPlayer() {
                     videoRef.current.currentTime = pos * duration;
                   }
                 }}
-                className="w-full h-2 bg-[#281a24] rounded-full overflow-hidden cursor-pointer relative group/bar"
+                className="w-full h-2 bg-[#281a24] rounded-full overflow-hidden cursor-pointer relative group/bar focus:outline-none focus:ring-1 focus:ring-[#f2cf6b]"
               >
                 <div
                   style={{ width: `${(currentTime / duration) * 100}%` }}

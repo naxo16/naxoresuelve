@@ -100,9 +100,14 @@ export function OrganicBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const container = containerRef.current;
-    if (!canvas || !container) return;
+    let disposed = false;
+    let cleanupFn: (() => void) | null = null;
+
+    const startWebGL = () => {
+      if (disposed) return;
+      const canvas = canvasRef.current;
+      const container = containerRef.current;
+      if (!canvas || !container) return;
 
     let width = window.innerWidth;
     let height = window.innerHeight;
@@ -311,19 +316,36 @@ export function OrganicBackground() {
       ScrollTrigger.refresh();
     }, 250);
 
-    // 9. Cleanup de recursos WebGL y GSAP
+    // 9. Registrar cleanup
+      cleanupFn = () => {
+        clearTimeout(refreshTimer);
+        cancelAnimationFrame(animationFrameId);
+        window.removeEventListener("resize", handleResize);
+        window.removeEventListener("pointermove", handlePointerMove);
+
+        gsapContext.revert();
+
+        geometry.dispose();
+        material.dispose();
+        texture.dispose();
+        renderer.dispose();
+      };
+    };
+
+    const timer = setTimeout(() => {
+      if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+        (window as unknown as { requestIdleCallback: (cb: () => void) => void }).requestIdleCallback(startWebGL);
+      } else {
+        startWebGL();
+      }
+    }, 80);
+
     return () => {
-      clearTimeout(refreshTimer);
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener("resize", handleResize);
-      window.removeEventListener("pointermove", handlePointerMove);
-
-      gsapContext.revert();
-
-      geometry.dispose();
-      material.dispose();
-      texture.dispose();
-      renderer.dispose();
+      disposed = true;
+      clearTimeout(timer);
+      if (cleanupFn) {
+        cleanupFn();
+      }
     };
   }, []);
 
