@@ -279,19 +279,20 @@ export function OrganicBackground() {
       mesh.geometry = new THREE.PlaneGeometry(
         planeSize.width,
         planeSize.height,
-        64,
-        64
+        32,
+        32
       );
     };
 
     window.addEventListener("resize", handleResize);
 
-    // 8. Loop de animación sincronizado a 60 FPS con GSAP Ticker
+    // 8. Loop de animación optimizado con timing nativo de alto rendimiento (sin deprecación)
     let animationFrameId: number;
-    const clock = new THREE.Clock();
+    let startTime: number | null = null;
 
-    const renderLoop = () => {
-      const elapsedTime = clock.getElapsedTime();
+    const renderLoop = (timestamp: number) => {
+      if (startTime === null) startTime = timestamp;
+      const elapsedTime = (timestamp - startTime) * 0.001;
 
       // Actualizar variables uniformes del shader
       material.uniforms.uTime.value = elapsedTime;
@@ -303,7 +304,7 @@ export function OrganicBackground() {
       animationFrameId = requestAnimationFrame(renderLoop);
     };
 
-    renderLoop();
+    animationFrameId = requestAnimationFrame(renderLoop);
 
     // Sincronizar ScrollTrigger tras el montaje
     const refreshTimer = setTimeout(() => {
