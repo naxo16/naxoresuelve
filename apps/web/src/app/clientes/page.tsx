@@ -135,17 +135,22 @@ export default function ClientesPage() {
   ];
 
   return (
-    <div className="relative min-h-screen bg-transparent font-sans text-[#111827] selection:bg-[#1E2430] selection:text-white">
-      <OrganicBackground />
+    <div className="relative min-h-screen bg-[#FAF8F5] font-sans text-[#111827] selection:bg-[#1E2430] selection:text-white">
       <Header />
 
-      <main id="main-content" tabIndex={-1} className="relative z-10 w-full pt-20 outline-none pb-24">
+      <main id="main-content" tabIndex={-1} className="relative z-10 w-full pt-20 outline-none pb-24 overflow-hidden min-h-screen">
+        {/* Imagen de fondo WebGL al 35% usada únicamente dentro de <main> */}
+        <OrganicBackground
+          className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden select-none opacity-35"
+          opacity={0.35}
+        />
+
         {/* Anclajes de compatibilidad */}
         <div id="clientes" className="sr-only" aria-hidden="true" />
         <div id="casos-de-estudio" className="sr-only" aria-hidden="true" />
         <div id="portafolio" className="sr-only" aria-hidden="true" />
 
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-14 px-5 lg:px-10 pt-6">
+        <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-14 px-5 lg:px-10 pt-6">
           {/* Breadcrumb */}
           <div className="flex items-center justify-between">
             <Link
@@ -167,9 +172,9 @@ export default function ClientesPage() {
             </div>
           </div>
 
-          {/* Encabezado Principal */}
-          <div className="flex flex-col gap-4 text-center sm:text-left max-w-3xl">
-            <div className="inline-flex items-center gap-2 self-center sm:self-start rounded-full border border-slate-300 bg-white/95 px-3.5 py-1 text-xs font-bold text-[#1E2430] shadow-xs backdrop-blur-md">
+          {/* Encabezado Principal con backdrop blur */}
+          <div className="flex flex-col gap-4 text-center sm:text-left max-w-3xl rounded-3xl border border-slate-300/80 bg-white/85 p-6 sm:p-8 shadow-sm backdrop-blur-xl">
+            <div className="inline-flex items-center gap-2 self-center sm:self-start rounded-full border border-slate-300 bg-white/95 px-3.5 py-1 text-xs font-bold text-[#1E2430] shadow-xs">
               <Sparkles className="h-3.5 w-3.5 text-[#25D366]" />
               <span className="font-mono text-xs uppercase tracking-wider">
                 Operaciones Reales en Chile
@@ -188,7 +193,7 @@ export default function ClientesPage() {
             {projects.map((proj) => (
               <div
                 key={proj.name}
-                className="group relative flex flex-col justify-between rounded-3xl border border-slate-300/80 bg-white/95 p-8 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#1E2430]/60 hover:-translate-y-1.5 hover:shadow-xl"
+                className="group relative flex flex-col justify-between rounded-3xl border border-slate-300/80 bg-white/95 backdrop-blur-md p-8 shadow-sm transition-all duration-300 hover:border-[#1E2430]/60 hover:-translate-y-1.5 hover:shadow-xl"
               >
                 <div>
                   <div className="flex items-center justify-between">
@@ -267,7 +272,7 @@ export default function ClientesPage() {
 
           {/* Carrusel de Testimonios Chilenos */}
           <div className="pt-8 border-t border-slate-300/80">
-            <div className="text-center max-w-3xl mx-auto mb-10">
+            <div className="text-center max-w-3xl mx-auto mb-10 rounded-3xl border border-slate-300/80 bg-white/85 p-6 backdrop-blur-xl">
               <span className="font-mono text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 border border-emerald-200 px-3.5 py-1 rounded-full">
                 Encuesta de Satisfacción Post-Entrega
               </span>
@@ -279,7 +284,7 @@ export default function ClientesPage() {
           </div>
 
           {/* Bloque CTA */}
-          <div className="rounded-3xl border border-slate-300 bg-white/95 p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+          <div className="rounded-3xl border border-slate-300 bg-white/95 backdrop-blur-md p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
             <div className="space-y-2 text-center md:text-left">
               <h3 className="text-xl sm:text-2xl font-black text-slate-950">
                 ¿Quieres ver una demo funcional adaptada a tu rubro?

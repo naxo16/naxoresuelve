@@ -41,16 +41,21 @@ export default function SobrePabloPage() {
   ];
 
   return (
-    <div className="relative min-h-screen bg-transparent font-sans text-[#111827] selection:bg-[#1E2430] selection:text-white">
-      <OrganicBackground />
+    <div className="relative min-h-screen bg-[#FAF8F5] font-sans text-[#111827] selection:bg-[#1E2430] selection:text-white">
       <Header />
 
-      <main id="main-content" tabIndex={-1} className="relative z-10 w-full pt-20 outline-none pb-24">
+      <main id="main-content" tabIndex={-1} className="relative z-10 w-full pt-20 outline-none pb-24 overflow-hidden min-h-screen">
+        {/* Fondo Orgánico WebGL al 35% dentro de <main> */}
+        <OrganicBackground
+          className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden select-none opacity-35"
+          opacity={0.35}
+        />
+
         {/* Anclajes de compatibilidad */}
         <div id="autor" className="sr-only" aria-hidden="true" />
         <div id="sobre-pablo" className="sr-only" aria-hidden="true" />
 
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-12 px-5 lg:px-10 pt-6">
+        <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-12 px-5 lg:px-10 pt-6">
           {/* Breadcrumb */}
           <div className="flex items-center justify-between">
             <Link
@@ -72,8 +77,8 @@ export default function SobrePabloPage() {
             </div>
           </div>
 
-          {/* Tarjeta de Perfil Principal */}
-          <div className="rounded-3xl border border-slate-300/80 bg-white/95 p-8 sm:p-12 shadow-sm backdrop-blur-md">
+          {/* Tarjeta de Perfil Principal con backdrop blur */}
+          <div className="rounded-3xl border border-slate-300/80 bg-white/85 p-8 sm:p-12 shadow-sm backdrop-blur-xl">
             <div className="flex flex-col lg:flex-row gap-10 items-center lg:items-start">
               {/* Foto de Perfil */}
               <div className="relative h-48 w-48 sm:h-56 sm:w-56 shrink-0 overflow-hidden rounded-3xl border-2 border-slate-300 shadow-xl bg-slate-50">
@@ -143,7 +148,7 @@ export default function SobrePabloPage() {
               {stack.map((group) => (
                 <div
                   key={group.cat}
-                  className="rounded-2xl border border-slate-300/80 bg-white/95 p-6 shadow-sm backdrop-blur-md"
+                  className="rounded-2xl border border-slate-300/80 bg-white/95 backdrop-blur-md p-6 shadow-sm"
                 >
                   <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#1E2430] block mb-3">
                     {group.cat}

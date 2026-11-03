@@ -67,16 +67,21 @@ export default function ComoFuncionaPage() {
   ];
 
   return (
-    <div className="relative min-h-screen bg-transparent font-sans text-[#111827] selection:bg-[#1E2430] selection:text-white">
-      <OrganicBackground />
+    <div className="relative min-h-screen bg-[#FAF8F5] font-sans text-[#111827] selection:bg-[#1E2430] selection:text-white">
       <Header />
 
-      <main id="main-content" tabIndex={-1} className="relative z-10 w-full pt-20 outline-none pb-24">
+      <main id="main-content" tabIndex={-1} className="relative z-10 w-full pt-20 outline-none pb-24 overflow-hidden min-h-screen">
+        {/* Fondo Orgánico WebGL al 35% dentro de <main> */}
+        <OrganicBackground
+          className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden select-none opacity-35"
+          opacity={0.35}
+        />
+
         {/* Anclajes de compatibilidad */}
         <div id="metodologia" className="sr-only" aria-hidden="true" />
         <div id="filosofia-testing" className="sr-only" aria-hidden="true" />
 
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-12 px-5 lg:px-10 pt-6">
+        <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-12 px-5 lg:px-10 pt-6">
           {/* Breadcrumb */}
           <div className="flex items-center justify-between">
             <Link
@@ -98,9 +103,9 @@ export default function ComoFuncionaPage() {
             </div>
           </div>
 
-          {/* Encabezado Principal */}
-          <div className="flex flex-col gap-4 text-center sm:text-left max-w-3xl">
-            <div className="inline-flex items-center gap-2 self-center sm:self-start rounded-full border border-slate-300 bg-white/95 px-3.5 py-1 text-xs font-bold text-[#1E2430] shadow-xs backdrop-blur-md">
+          {/* Encabezado Principal con backdrop blur */}
+          <div className="flex flex-col gap-4 text-center sm:text-left max-w-3xl rounded-3xl border border-slate-300/80 bg-white/85 p-6 sm:p-8 shadow-sm backdrop-blur-xl">
+            <div className="inline-flex items-center gap-2 self-center sm:self-start rounded-full border border-slate-300 bg-white/95 px-3.5 py-1 text-xs font-bold text-[#1E2430] shadow-xs">
               <Sparkles className="h-3.5 w-3.5 text-[#25D366]" />
               <span className="font-mono text-xs uppercase tracking-wider">
                 Metodología Predictible y Sin Fricción
@@ -119,7 +124,7 @@ export default function ComoFuncionaPage() {
             {steps.map((step) => (
               <div
                 key={step.num}
-                className="group relative flex flex-col justify-between rounded-3xl border border-slate-300/80 bg-white/95 p-8 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#1E2430]/60 hover:-translate-y-1 hover:shadow-xl"
+                className="group relative flex flex-col justify-between rounded-3xl border border-slate-300/80 bg-white/95 backdrop-blur-md p-8 shadow-sm transition-all duration-300 hover:border-[#1E2430]/60 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-3xl font-black text-[#1E2430]/60 group-hover:text-[#1E2430] transition-colors">

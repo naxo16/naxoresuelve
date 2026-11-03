@@ -58,7 +58,7 @@ export function TestimonialsCarousel() {
     >
       {/* Banner de Verificación de Encuesta */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6 px-2">
-        <div className="inline-flex items-center gap-2 rounded-full border border-emerald-600/30 bg-emerald-50/90 px-4 py-1.5 shadow-xs">
+        <div className="inline-flex items-center gap-2 rounded-full border border-emerald-600/30 bg-emerald-50/90 backdrop-blur-md px-4 py-1.5 shadow-xs">
           <span className="flex h-2 w-2 rounded-full bg-emerald-600 animate-pulse" />
           <span className="font-mono text-xs font-bold text-emerald-950">
             Encuesta de Satisfacción Post-Entrega • 100% Clientes Satisfechos
@@ -69,7 +69,7 @@ export function TestimonialsCarousel() {
           <button
             type="button"
             onClick={() => setIsPaused((prev) => !prev)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white/90 px-2.5 py-1 text-slate-700 hover:text-slate-900 transition-colors shadow-xs"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white/90 backdrop-blur-md px-2.5 py-1 text-slate-700 hover:text-slate-900 transition-colors shadow-xs"
             title={isPaused ? "Reanudar auto-avance" : "Pausar auto-avance"}
           >
             {isPaused ? (
@@ -87,8 +87,8 @@ export function TestimonialsCarousel() {
         </div>
       </div>
 
-      {/* Tarjeta Principal de Testimonio */}
-      <div className="relative overflow-hidden rounded-3xl border border-slate-300/80 bg-white p-7 sm:p-10 lg:p-12 shadow-[0_12px_40px_rgba(30,36,48,0.06)] transition-all duration-300">
+      {/* Tarjeta Principal de Testimonio con backdrop blur */}
+      <div className="relative overflow-hidden rounded-3xl border border-slate-300/80 bg-white/95 backdrop-blur-xl p-7 sm:p-10 lg:p-12 shadow-[0_16px_45px_rgba(30,36,48,0.08)] transition-all duration-300">
         {/* Fondo decorativo con comilla translúcida */}
         <Quote className="pointer-events-none absolute right-6 top-6 h-28 w-28 text-slate-100 sm:h-36 sm:w-36 -z-0" />
 
@@ -179,14 +179,14 @@ export function TestimonialsCarousel() {
         </div>
       </div>
 
-      {/* Controles de Navegación del Carrusel */}
+      {/* Controles de Navegación del Carrusel con backdrop blur */}
       <div className="mt-6 flex items-center justify-between px-2">
         {/* Botón Anterior */}
         <button
           type="button"
           onClick={prevSlide}
           aria-label="Ver testimonio anterior"
-          className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-300 bg-white text-slate-800 shadow-sm transition-all hover:bg-[#1E2430] hover:text-white hover:border-[#1E2430] hover:scale-105 active:scale-95"
+          className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-300/80 bg-white/90 backdrop-blur-md text-slate-800 shadow-sm transition-all hover:bg-[#1E2430] hover:text-white hover:border-[#1E2430] hover:scale-105 active:scale-95"
         >
           <ChevronLeft className="h-5 w-5" />
         </button>
@@ -213,7 +213,7 @@ export function TestimonialsCarousel() {
           type="button"
           onClick={nextSlide}
           aria-label="Ver siguiente testimonio"
-          className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-300 bg-white text-slate-800 shadow-sm transition-all hover:bg-[#1E2430] hover:text-white hover:border-[#1E2430] hover:scale-105 active:scale-95"
+          className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-300/80 bg-white/90 backdrop-blur-md text-slate-800 shadow-sm transition-all hover:bg-[#1E2430] hover:text-white hover:border-[#1E2430] hover:scale-105 active:scale-95"
         >
           <ChevronRight className="h-5 w-5" />
         </button>

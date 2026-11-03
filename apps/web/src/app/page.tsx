@@ -253,11 +253,11 @@ function SectionHeader({
 }) {
   return (
     <div
-      className={`gsap-parallax-heading flex max-w-3xl flex-col gap-3.5 ${
+      className={`gsap-parallax-heading flex max-w-3xl flex-col gap-3.5 rounded-3xl border border-slate-300/80 bg-white/85 p-6 sm:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.03)] backdrop-blur-xl ${
         centered ? "mx-auto text-center items-center" : "items-start"
       }`}
     >
-      <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-slate-300 bg-white/95 px-4 py-1.5 font-mono text-xs font-bold uppercase tracking-widest text-slate-900 shadow-xs">
+      <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-slate-300 bg-white px-4 py-1.5 font-mono text-xs font-bold uppercase tracking-widest text-slate-900 shadow-xs">
         <Sparkles className="h-3.5 w-3.5 text-emerald-600" aria-hidden="true" />
         <span>{eyebrow}</span>
       </div>
@@ -276,28 +276,33 @@ function SectionHeader({
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen bg-transparent font-sans text-[#111827] selection:bg-[#1E2430] selection:text-white">
+    <div className="relative min-h-screen bg-[#FAF8F5] font-sans text-[#111827] selection:bg-[#1E2430] selection:text-white">
       {/* Preloader Moderno, Ultra Rápido y Optimizado */}
       <AppPreloader />
 
-      {/* 0. Fondo Orgánico Interactivo con Escultura 3D + GSAP ScrollTrigger & Canvas */}
-      <OrganicBackground />
-      {/* 0.1 Animaciones ScrollTrigger fluidas (tipo seewhateyesee.org) */}
+      {/* Animaciones ScrollTrigger fluidas (tipo seewhateyesee.org) */}
       <ScrollAnimations />
 
-      {/* 1. Header Fijo con Carrito y Disparador de Acceso Clientes */}
+      {/* Header Fijo */}
       <Header />
 
-      <main id="main-content" tabIndex={-1} className="relative z-10 w-full pt-16 outline-none">
-        {/* 2. Hero Section: Propuesta de Valor Clara */}
-        <section className="relative w-full overflow-hidden bg-transparent py-16 lg:py-24">
+      {/* Contenedor Principal: la imagen de fondo WebGL al 35% vive exclusivamente dentro de <main> */}
+      <main id="main-content" tabIndex={-1} className="relative z-10 w-full pt-16 outline-none overflow-hidden min-h-screen">
+        {/* Imagen de Fondo Orgánica 3D WebGL con opacidad al 35% usada únicamente en el main */}
+        <OrganicBackground
+          className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden select-none opacity-35"
+          opacity={0.35}
+        />
+
+        {/* 2. HERO SECTION: Con el carrusel de demos en el Hero y textos con blur y alto contraste */}
+        <section className="relative z-10 w-full overflow-hidden bg-transparent py-14 lg:py-20">
           {/* Anclajes requeridos por la suite de pruebas */}
           <div id="fiscalis-spotlight" className="sr-only" aria-hidden="true" />
           <div id="video-preview" className="sr-only" aria-hidden="true" />
 
           <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center gap-10 px-5 text-center lg:px-10">
-            {/* Eyebrow Tag */}
-            <div id="hero-eyebrow" className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white/95 px-4 py-1.5 shadow-[0_4px_20px_rgba(17,24,39,0.04)] backdrop-blur-md">
+            {/* Eyebrow Tag con blur y alto contraste */}
+            <div id="hero-eyebrow" className="inline-flex items-center gap-2 rounded-full border border-slate-300/80 bg-white/90 px-4 py-1.5 shadow-sm backdrop-blur-md">
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#1E2430] text-[#25D366]">
                 <Zap className="h-3 w-3" aria-hidden="true" />
               </span>
@@ -306,8 +311,8 @@ export default function Home() {
               </span>
             </div>
 
-            {/* Titular Principal (H1) */}
-            <div id="hero-title" className="flex max-w-4xl flex-col gap-6">
+            {/* Titular Principal y Párrafo en contenedor con blur esmerilado y alto contraste */}
+            <div id="hero-title" className="flex max-w-4xl flex-col items-center gap-6 rounded-3xl border border-slate-300/80 bg-white/85 p-8 sm:p-12 shadow-[0_12px_40px_rgba(0,0,0,0.05)] backdrop-blur-xl">
               <h1 className="text-balance text-4xl font-black leading-[1.08] tracking-tight text-slate-950 sm:text-6xl lg:text-7xl">
                 Software y digitalización para tu negocio.{" "}
                 <span className="text-[#1E2430] underline decoration-[#25D366] decoration-4 underline-offset-8">
@@ -317,52 +322,69 @@ export default function Home() {
               <p className="mx-auto max-w-2xl text-pretty text-lg font-medium leading-relaxed text-slate-800 sm:text-xl">
                 Resuelvo los cuellos de botella de tu operación diaria con trato directo, sin intermediarios ni reuniones improductivas. Propuesta clara de 1 página, entregas funcionales en días hábiles y sistemas 100% bajo tu control.
               </p>
+
+              {/* Contenedor de Llamados a la Acción (Dual) */}
+              <div id="hero-cta" className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row pt-2">
+                <a
+                  href={whatsappLink(
+                    "Hola Pablo, quiero agendar un diagnóstico de 15 minutos para mi negocio."
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative overflow-hidden inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-[#1E2430] bg-[#1E2430] px-8 py-4 font-mono text-sm font-bold text-white shadow-[0_4px_16px_rgba(30,36,48,0.25)] transition-all duration-300 hover:border-[#25D366] hover:bg-[#25D366] hover:text-[#111827] hover:shadow-[0_8px_24px_rgba(37,211,102,0.4)] hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full" />
+                  <MessageCircle
+                    className="h-4 w-4 text-[#25D366] transition-colors group-hover:text-[#111827]"
+                    aria-hidden="true"
+                  />
+                  <span>Agendar Diagnóstico 15 min (Sin costo)</span>
+                </a>
+
+                <Link href="/que-hacemos" prefetch={false} className="inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white/95 px-8 py-4 font-mono text-sm font-bold text-slate-900 shadow-xs backdrop-blur-md transition-all hover:bg-white hover:border-[#1E2430] hover:-translate-y-1 hover:shadow-md active:scale-[0.99]">
+                  <span>Ver Catálogo Completo</span>
+                  <ArrowRight className="h-4 w-4 text-slate-700" aria-hidden="true" />
+                </Link>
+              </div>
+
+              {/* Micro-Garantías Inmediatas */}
+              <div id="hero-guarantees" className="flex flex-wrap items-center justify-center gap-4 pt-1 font-mono text-xs font-bold text-slate-900">
+                <div className="flex items-center gap-2 rounded-full bg-white/95 px-3.5 py-1.5 shadow-xs border border-slate-300">
+                  <Check className="h-4 w-4 text-emerald-600" />
+                  <span>Propuesta formal de 1 página</span>
+                </div>
+                <div className="flex items-center gap-2 rounded-full bg-white/95 px-3.5 py-1.5 shadow-xs border border-slate-300">
+                  <Check className="h-4 w-4 text-emerald-600" />
+                  <span>Pruebas en Staging privado</span>
+                </div>
+                <div className="flex items-center gap-2 rounded-full bg-white/95 px-3.5 py-1.5 shadow-xs border border-slate-300">
+                  <Check className="h-4 w-4 text-emerald-600" />
+                  <span>Entregables 100% transferibles</span>
+                </div>
+              </div>
             </div>
 
-            {/* Contenedor de Llamados a la Acción (Dual) */}
-            <div id="hero-cta" className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row">
-              <a
-                href={whatsappLink(
-                  "Hola Pablo, quiero agendar un diagnóstico de 15 minutos para mi negocio."
-                )}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative overflow-hidden inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-[#1E2430] bg-[#1E2430] px-8 py-4 font-mono text-sm font-bold text-white shadow-[0_4px_16px_rgba(30,36,48,0.25)] transition-all duration-300 hover:border-[#25D366] hover:bg-[#25D366] hover:text-[#111827] hover:shadow-[0_8px_24px_rgba(37,211,102,0.4)] hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98]"
-              >
-                <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full" />
-                <MessageCircle
-                  className="h-4 w-4 text-[#25D366] transition-colors group-hover:text-[#111827]"
-                  aria-hidden="true"
-                />
-                <span>Agendar Diagnóstico 15 min (Sin costo)</span>
-              </a>
-
-              <Link href="/que-hacemos" prefetch={false} className="inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white/95 px-8 py-4 font-mono text-sm font-bold text-slate-900 shadow-xs backdrop-blur-md transition-all hover:bg-white hover:border-[#1E2430] hover:-translate-y-1 hover:shadow-md active:scale-[0.99]">
-                <span>Ver Qué Hacemos & Demos</span>
-                <ArrowRight className="h-4 w-4 text-slate-700" aria-hidden="true" />
-              </Link>
-            </div>
-
-            {/* Micro-Garantías Inmediatas */}
-            <div id="hero-guarantees" className="flex flex-wrap items-center justify-center gap-6 pt-2 font-mono text-xs font-bold text-slate-900">
-              <div className="flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 shadow-xs backdrop-blur-sm border border-slate-300">
-                <Check className="h-4 w-4 text-emerald-600" />
-                <span>Propuesta formal de 1 página</span>
+            {/* CARRUSEL DE DEMOS SAAS DENTRO DEL HERO */}
+            <div id="demos-saas" className="w-full pt-8">
+              <div className="text-center max-w-3xl mx-auto mb-6">
+                <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400 bg-emerald-50/90 px-4 py-1.5 font-mono text-xs font-bold text-emerald-950 shadow-xs backdrop-blur-md">
+                  <span className="h-2 w-2 rounded-full bg-emerald-600 animate-pulse" />
+                  <span>EXPLORA LAS DEMOS INTERACTIVAS EN VIVO</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-black text-slate-950 mt-3 tracking-tight">
+                  Sistemas SaaS listos para operar en tu empresa
+                </h2>
+                <p className="text-sm sm:text-base text-slate-800 mt-1 max-w-xl mx-auto">
+                  Prueba las demos en tiempo real con datos simulados. Diseñados para arriendo mensual sin costo de desarrollo inicial ni servidores que configurar.
+                </p>
               </div>
-              <div className="flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 shadow-xs backdrop-blur-sm border border-slate-300">
-                <Check className="h-4 w-4 text-emerald-600" />
-                <span>Pruebas en Staging privado</span>
-              </div>
-              <div className="flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 shadow-xs backdrop-blur-sm border border-slate-300">
-                <Check className="h-4 w-4 text-emerald-600" />
-                <span>Entregables 100% transferibles</span>
-              </div>
+              <SaasDemosCarousel />
             </div>
           </div>
         </section>
 
         {/* 3. Carrusel Interactivo de Clientes en Producción */}
-        <section id="ticker-section" className="w-full overflow-hidden border-y border-slate-300/80 bg-white/60 py-5 backdrop-blur-xs">
+        <section id="ticker-section" className="relative z-10 w-full overflow-hidden border-y border-slate-300/80 bg-white/60 py-5 backdrop-blur-xs">
           <div className="flex flex-col items-center gap-3">
             <span className="font-mono text-xs font-bold uppercase tracking-widest text-slate-800">
               Clientes en Producción & Capacidades Operativas Verificadas
@@ -371,27 +393,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 4. Carrusel de Demos de Apps SaaS (Prioridad Semántica Web) */}
-        <section
-          id="demos-saas"
-          className="w-full bg-transparent py-16 lg:py-24"
-        >
-          <div className="mx-auto flex w-full max-w-7xl flex-col gap-12 px-5 lg:px-10">
-            <SectionHeader
-              eyebrow="DEMOS SAAS EN VIVO"
-              title="Aplicaciones listas para operar en tu negocio"
-              id="demos-saas-heading"
-              description="Explora las demos interactivas de nuestros sistemas SaaS. Diseñados para arriendo mensual sin costo de desarrollo inicial ni servidores que configurar."
-              centered
-            />
-            <SaasDemosCarousel />
-          </div>
-        </section>
-
-        {/* 5. Ventajas del Modelo Directo (Por Proyecto Cerrado) */}
+        {/* 4. Ventajas del Modelo Directo (Por Proyecto Cerrado) */}
         <section
           id="ventajas"
-          className="w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
+          className="relative z-10 w-full bg-transparent py-20 lg:py-28"
         >
           <div className="mx-auto flex w-full max-w-7xl flex-col gap-14 px-5 lg:px-10">
             <SectionHeader
@@ -428,10 +433,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 6. Catálogo Extendido y Filtros de Productos */}
+        {/* 5. Catálogo Extendido y Filtros de Productos */}
         <section
           id="catalogo"
-          className="w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
+          className="relative z-10 w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
         >
           {/* Anclajes de compatibilidad para la suite de pruebas */}
           <div id="soluciones" className="sr-only" aria-hidden="true" />
@@ -495,10 +500,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 7. Metodología de Trabajo (Escudo Operativo en 4 Pasos) */}
+        {/* 6. Metodología de Trabajo (Escudo Operativo en 4 Pasos) */}
         <section
           id="metodologia"
-          className="w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
+          className="relative z-10 w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
         >
           <div id="filosofia-testing" className="sr-only" aria-hidden="true" />
           <div className="mx-auto flex w-full max-w-7xl flex-col gap-14 px-5 lg:px-10">
@@ -556,10 +561,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 8. Clientes en Producción */}
+        {/* 7. Clientes en Producción */}
         <section
           id="proyectos"
-          className="w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
+          className="relative z-10 w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
         >
           {/* Anclajes de compatibilidad para la suite de pruebas */}
           <div id="clientes" className="sr-only" aria-hidden="true" />
@@ -634,10 +639,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 9. Carrusel de Testimonios Chilenos Verificados (Encuesta de Satisfacción) */}
+        {/* 8. Carrusel de Testimonios Chilenos Verificados */}
         <section
           id="testimonios"
-          className="w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
+          className="relative z-10 w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
         >
           <div className="mx-auto flex w-full max-w-7xl flex-col gap-12 px-5 lg:px-10">
             <SectionHeader
@@ -651,10 +656,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 10. Respaldo Profesional y Marca Personal */}
+        {/* 9. Respaldo Profesional y Marca Personal */}
         <section
           id="autor"
-          className="w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
+          className="relative z-10 w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
         >
           <div className="mx-auto flex w-full max-w-7xl flex-col gap-12 px-5 lg:px-10">
             <SectionHeader
@@ -732,10 +737,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 11. Preguntas Frecuentes (FAQ) */}
+        {/* 10. Preguntas Frecuentes (FAQ) */}
         <section
           id="faq"
-          className="w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
+          className="relative z-10 w-full border-t border-slate-300/80 bg-transparent py-20 lg:py-28"
         >
           <div className="mx-auto flex w-full max-w-4xl flex-col gap-12 px-5 lg:px-10">
             <SectionHeader
@@ -768,8 +773,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 12. Final Call-to-Action Banner */}
-        <section id="final-cta-section" className="w-full border-t border-slate-800 bg-[#1E2430] py-20 text-white shadow-2xl">
+        {/* 11. Final Call-to-Action Banner */}
+        <section id="final-cta-section" className="relative z-10 w-full border-t border-slate-800 bg-[#1E2430] py-20 text-white shadow-2xl">
           <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-6 px-5 text-center lg:px-10">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-4 py-1 font-mono text-xs font-bold uppercase tracking-widest text-[#25D366]">
               Empieza Hoy Mismo
@@ -803,7 +808,7 @@ export default function Home() {
         </section>
       </main>
 
-      {/* 13. Footer Corporativo Formal */}
+      {/* 12. Footer Corporativo Formal */}
       <footer id="contacto" className="relative z-10 w-full border-t border-slate-300/80 bg-white/80 py-12 backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-6 px-5 sm:flex-row lg:px-10">
           <div className="flex flex-col items-center gap-1 sm:items-start">

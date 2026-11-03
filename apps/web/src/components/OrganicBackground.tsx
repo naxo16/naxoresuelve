@@ -95,7 +95,13 @@ const fragmentShader = `
   }
 `;
 
-export function OrganicBackground() {
+export function OrganicBackground({
+  className = "absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden select-none opacity-35",
+  opacity = 0.35,
+}: {
+  className?: string;
+  opacity?: number;
+} = {}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -179,7 +185,7 @@ export function OrganicBackground() {
         uResolution: { value: new THREE.Vector2(width, height) },
         uImageResolution: { value: new THREE.Vector2(1920, 1080) },
         uTexture: { value: texture },
-        uOpacity: { value: 0.92 },
+        uOpacity: { value: opacity },
       },
       transparent: true,
       side: THREE.DoubleSide,
@@ -347,13 +353,13 @@ export function OrganicBackground() {
         cleanupFn();
       }
     };
-  }, []);
+  }, [opacity]);
 
   return (
     <div
       ref={containerRef}
       aria-hidden="true"
-      className="fixed inset-0 w-full h-full pointer-events-none z-0 overflow-hidden select-none"
+      className={className}
     >
       {/* Canvas WebGL interactivo Three.js + GSAP Shader */}
       <canvas

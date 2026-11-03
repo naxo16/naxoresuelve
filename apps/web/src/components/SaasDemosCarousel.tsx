@@ -66,7 +66,7 @@ export function SaasDemosCarousel() {
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Selector Superior de Apps (Mini Tabs Interactivas) */}
+      {/* Selector Superior de Apps (Mini Tabs Interactivas con backdrop blur) */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6 px-1">
         <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
           {SAAS_DEMOS_DATA.map((app, idx) => {
@@ -76,10 +76,10 @@ export function SaasDemosCarousel() {
                 key={app.id}
                 type="button"
                 onClick={() => goToSlide(idx)}
-                className={`shrink-0 flex items-center gap-2 rounded-xl px-3.5 py-2 font-mono text-xs font-bold transition-all ${
+                className={`shrink-0 flex items-center gap-2 rounded-xl px-3.5 py-2 font-mono text-xs font-bold transition-all backdrop-blur-md ${
                   isSelected
                     ? "bg-[#1E2430] text-white shadow-md scale-102"
-                    : "bg-white/90 text-slate-700 border border-slate-300 hover:border-[#1E2430]/40 hover:bg-white"
+                    : "bg-white/90 text-slate-700 border border-slate-300/80 hover:border-[#1E2430]/60 hover:bg-white"
                 }`}
               >
                 <span
@@ -93,11 +93,11 @@ export function SaasDemosCarousel() {
           })}
         </div>
 
-        {/* Control Auto-play */}
+        {/* Control Auto-play con backdrop blur */}
         <button
           type="button"
           onClick={() => setIsPaused((prev) => !prev)}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white/90 px-3 py-1.5 font-mono text-xs font-bold text-slate-700 hover:text-slate-900 transition-colors shadow-xs"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300/80 bg-white/90 backdrop-blur-md px-3 py-1.5 font-mono text-xs font-bold text-slate-700 hover:text-slate-900 transition-colors shadow-xs"
           title={isPaused ? "Reanudar auto-avance" : "Pausar auto-avance"}
         >
           {isPaused ? (
@@ -114,8 +114,8 @@ export function SaasDemosCarousel() {
         </button>
       </div>
 
-      {/* Tarjeta Principal del SaaS Demo */}
-      <div className="relative overflow-hidden rounded-3xl border border-slate-300/80 bg-white shadow-[0_16px_50px_rgba(30,36,48,0.08)]">
+      {/* Tarjeta Principal del SaaS Demo con backdrop blur */}
+      <div className="relative overflow-hidden rounded-3xl border border-slate-300/80 bg-white/95 backdrop-blur-xl shadow-[0_20px_60px_rgba(30,36,48,0.1)]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
           {/* Columna Izquierda: Información, Beneficios y CTAs (7 cols) */}
           <div className="p-7 sm:p-10 lg:p-12 lg:col-span-7 flex flex-col justify-between gap-6">
@@ -285,7 +285,7 @@ export function SaasDemosCarousel() {
           type="button"
           onClick={prevSlide}
           aria-label="Ver aplicación SaaS anterior"
-          className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-300 bg-white text-slate-800 shadow-sm transition-all hover:bg-[#1E2430] hover:text-white hover:border-[#1E2430] hover:scale-105 active:scale-95"
+          className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-300/80 bg-white/90 backdrop-blur-md text-slate-800 shadow-sm transition-all hover:bg-[#1E2430] hover:text-white hover:border-[#1E2430] hover:scale-105 active:scale-95"
         >
           <ChevronLeft className="h-5 w-5" />
         </button>
@@ -310,7 +310,7 @@ export function SaasDemosCarousel() {
           type="button"
           onClick={nextSlide}
           aria-label="Ver siguiente aplicación SaaS"
-          className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-300 bg-white text-slate-800 shadow-sm transition-all hover:bg-[#1E2430] hover:text-white hover:border-[#1E2430] hover:scale-105 active:scale-95"
+          className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-300/80 bg-white/90 backdrop-blur-md text-slate-800 shadow-sm transition-all hover:bg-[#1E2430] hover:text-white hover:border-[#1E2430] hover:scale-105 active:scale-95"
         >
           <ChevronRight className="h-5 w-5" />
         </button>

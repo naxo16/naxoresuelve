@@ -35,21 +35,24 @@ export default function QueHacemosPage() {
   )}`;
 
   return (
-    <div className="relative min-h-screen bg-transparent font-sans text-[#111827] selection:bg-[#1E2430] selection:text-white">
-      {/* 0. Fondo Orgánico WebGL 3D Three.js */}
-      <OrganicBackground />
-
+    <div className="relative min-h-screen bg-[#FAF8F5] font-sans text-[#111827] selection:bg-[#1E2430] selection:text-white">
       {/* 1. Header Fijo */}
       <Header />
 
-      <main id="main-content" tabIndex={-1} className="relative z-10 w-full pt-20 outline-none pb-24">
+      <main id="main-content" tabIndex={-1} className="relative z-10 w-full pt-20 outline-none pb-24 overflow-hidden min-h-screen">
+        {/* 0. Fondo Orgánico WebGL 3D al 35% de opacidad dentro de <main> */}
+        <OrganicBackground
+          className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden select-none opacity-35"
+          opacity={0.35}
+        />
+
         {/* Anclajes de compatibilidad para la suite de pruebas */}
         <div id="soluciones" className="sr-only" aria-hidden="true" />
         <div id="que-hacemos" className="sr-only" aria-hidden="true" />
         <div id="servicios" className="sr-only" aria-hidden="true" />
         <div id="promociones" className="sr-only" aria-hidden="true" />
 
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-5 lg:px-10 pt-6">
+        <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-10 px-5 lg:px-10 pt-6">
           {/* Navegación Breadcrumb / Volver */}
           <div className="flex items-center justify-between">
             <Link
@@ -70,9 +73,9 @@ export default function QueHacemosPage() {
             </div>
           </div>
 
-          {/* Encabezado Principal del Catálogo */}
-          <div className="flex flex-col items-center text-center max-w-3xl mx-auto gap-4">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-white/90 px-4 py-1.5 font-mono text-xs font-bold uppercase tracking-widest text-[#1E2430] shadow-xs">
+          {/* Encabezado Principal del Catálogo con backdrop blur */}
+          <div className="flex flex-col items-center text-center max-w-3xl mx-auto gap-4 rounded-3xl border border-slate-300/80 bg-white/85 p-8 sm:p-10 shadow-sm backdrop-blur-xl">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-4 py-1.5 font-mono text-xs font-bold uppercase tracking-widest text-[#1E2430] shadow-xs">
               <Sparkles className="h-3.5 w-3.5 text-[#25D366]" aria-hidden="true" />
               <span>CATÁLOGO COMPLETO DE PRODUCTOS & SERVICIOS</span>
             </div>
@@ -81,7 +84,7 @@ export default function QueHacemosPage() {
               Qué Hacemos: Software y soporte sin agencias lentas.
             </h1>
 
-            <p className="text-pretty text-base font-medium text-slate-800 sm:text-lg">
+            <p className="text-pretty text-base font-medium text-slate-800 sm:text-lg leading-relaxed">
               Explora todas nuestras soluciones tecnológicas diseñadas para erradicar el desorden operativo de tu pyme. Filtra por categoría o busca tu necesidad puntual para cotizar o arrendar.
             </p>
 
@@ -108,7 +111,7 @@ export default function QueHacemosPage() {
           </div>
 
           {/* Bloque de Consulta Personalizada si no encuentran la solución exacta */}
-          <div className="mt-8 rounded-3xl border border-slate-300 bg-white/95 p-8 shadow-sm backdrop-blur-md text-center max-w-3xl mx-auto flex flex-col items-center gap-4">
+          <div className="mt-8 rounded-3xl border border-slate-300 bg-white/95 backdrop-blur-md p-8 shadow-sm text-center max-w-3xl mx-auto flex flex-col items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#1E2430] text-[#25D366]">
               <HelpCircle className="h-6 w-6" />
             </div>
