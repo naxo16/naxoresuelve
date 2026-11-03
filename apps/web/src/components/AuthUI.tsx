@@ -120,7 +120,7 @@ export function AuthUI({ initialTab = "login", onSuccess, className = "" }: Auth
       {activeTab === "login" && (
         <form onSubmit={handleLoginSubmit} className="space-y-4">
           <div>
-            <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-[#111827] mb-1.5">
+            <label htmlFor="login-email-input" className="block font-mono text-[11px] font-bold uppercase tracking-wider text-[#111827] mb-1.5">
               Correo Corporativo
             </label>
             <div className="relative">
@@ -128,6 +128,7 @@ export function AuthUI({ initialTab = "login", onSuccess, className = "" }: Auth
                 <Mail className="h-4 w-4" />
               </div>
               <input
+                id="login-email-input"
                 type="email"
                 required
                 value={loginEmail}
@@ -140,7 +141,7 @@ export function AuthUI({ initialTab = "login", onSuccess, className = "" }: Auth
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-[#111827]">
+              <label htmlFor="login-password-input" className="block font-mono text-[11px] font-bold uppercase tracking-wider text-[#111827]">
                 Contraseña
               </label>
               <button
@@ -158,6 +159,7 @@ export function AuthUI({ initialTab = "login", onSuccess, className = "" }: Auth
                 <Lock className="h-4 w-4" />
               </div>
               <input
+                id="login-password-input"
                 type={showLoginPassword ? "text" : "password"}
                 required
                 value={loginPassword}
@@ -255,7 +257,7 @@ export function AuthUI({ initialTab = "login", onSuccess, className = "" }: Auth
       {activeTab === "register" && (
         <form onSubmit={handleRegisterSubmit} className="space-y-4">
           <div>
-            <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-[#111827] mb-1.5">
+            <label htmlFor="register-company-input" className="block font-mono text-[11px] font-bold uppercase tracking-wider text-[#111827] mb-1.5">
               Nombre de la Empresa o Proyecto
             </label>
             <div className="relative">
@@ -263,6 +265,7 @@ export function AuthUI({ initialTab = "login", onSuccess, className = "" }: Auth
                 <Building className="h-4 w-4" />
               </div>
               <input
+                id="register-company-input"
                 type="text"
                 required
                 value={companyName}
@@ -274,7 +277,7 @@ export function AuthUI({ initialTab = "login", onSuccess, className = "" }: Auth
           </div>
 
           <div>
-            <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-[#111827] mb-1.5">
+            <label htmlFor="register-email-input" className="block font-mono text-[11px] font-bold uppercase tracking-wider text-[#111827] mb-1.5">
               Correo Corporativo
             </label>
             <div className="relative">
@@ -282,6 +285,7 @@ export function AuthUI({ initialTab = "login", onSuccess, className = "" }: Auth
                 <Mail className="h-4 w-4" />
               </div>
               <input
+                id="register-email-input"
                 type="email"
                 required
                 value={registerEmail}
@@ -293,7 +297,7 @@ export function AuthUI({ initialTab = "login", onSuccess, className = "" }: Auth
           </div>
 
           <div>
-            <label className="block font-mono text-[11px] font-bold uppercase tracking-wider text-[#111827] mb-1.5">
+            <label htmlFor="register-password-input" className="block font-mono text-[11px] font-bold uppercase tracking-wider text-[#111827] mb-1.5">
               Contraseña
             </label>
             <div className="relative">
@@ -301,6 +305,7 @@ export function AuthUI({ initialTab = "login", onSuccess, className = "" }: Auth
                 <Lock className="h-4 w-4" />
               </div>
               <input
+                id="register-password-input"
                 type={showRegisterPassword ? "text" : "password"}
                 required
                 minLength={8}

@@ -140,8 +140,8 @@ export function OrganicBackground() {
     const geometry = new THREE.PlaneGeometry(
       planeSize.width,
       planeSize.height,
-      64,
-      64
+      32,
+      32
     );
 
     // 3. Cargar textura de la escultura 3D

@@ -596,8 +596,8 @@ export function CyberLateralSidebar({
           </div>
 
           {/* Enlace: Inicio */}
-          <a
-            href="#"
+          <Link
+            href="/"
             onClick={(e) => handleNavAnchor(e, "#")}
             className="group flex items-center justify-between p-2.5 sm:p-3 rounded-2xl hover:bg-[#423943] border border-transparent hover:border-[#cba135]/50 text-sm font-normal text-[#f5dade] hover:text-[#f2cf6b] transition-all"
           >
@@ -608,7 +608,7 @@ export function CyberLateralSidebar({
               <span className="font-round font-normal group-hover:font-bold transition-all">{t.links.home}</span>
             </span>
             <ChevronRight size={15} className="text-[#615362] group-hover:text-[#f2cf6b] transition-transform group-hover:translate-x-1" />
-          </a>
+          </Link>
 
           {/* Enlace: Fiscalis */}
           <a

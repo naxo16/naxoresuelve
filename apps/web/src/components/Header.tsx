@@ -13,10 +13,10 @@ import { NeonBrandSpan } from "@/components/NeonBrandSpan";
 const BRAND_IMAGE = "/images/naxoresuelve.jpg";
 const WHATSAPP_URL = "https://wa.me/56957286145";
 
-const HOME_SECTION_IDS = [
-  { href: "#metodologia", id: "metodologia" },
-  { href: "#clientes", id: "clientes" },
-  { href: "#autor", id: "autor" },
+const HOME_SECTION_MAP = [
+  { id: "como-funciona", elementId: "metodologia" },
+  { id: "clientes", elementId: "clientes" },
+  { id: "sobre-pablo", elementId: "autor" },
 ];
 
 export function Header() {
@@ -24,10 +24,18 @@ export function Header() {
   const { openAuthModal, user } = useAuth();
   const pathname = usePathname();
   const isHome = pathname === "/";
-  const isQueHacemos = pathname === "/que-hacemos";
+  const isQueHacemos = pathname === "/que-hacemos" || pathname === "/productos" || pathname === "/soluciones";
+  const isComoFunciona = pathname === "/como-funciona" || pathname === "/metodologia";
+  const isClientes = pathname === "/clientes";
+  const isSobrePablo = pathname === "/sobre-pablo" || pathname === "/autor";
 
-  const [scrollSection, setScrollSection] = useState<string>("catalogo");
-  const activeSection = isQueHacemos ? "que-hacemos" : scrollSection;
+  const [scrollSection, setScrollSection] = useState<string>("que-hacemos");
+
+  let activeSection = scrollSection;
+  if (isQueHacemos) activeSection = "que-hacemos";
+  else if (isComoFunciona) activeSection = "como-funciona";
+  else if (isClientes) activeSection = "clientes";
+  else if (isSobrePablo) activeSection = "sobre-pablo";
 
   const navLinks = [
     {
@@ -36,19 +44,19 @@ export function Header() {
       id: "que-hacemos",
     },
     {
-      href: isHome ? "#metodologia" : "/#metodologia",
+      href: "/como-funciona",
       label: "Cómo Funciona",
-      id: "metodologia",
+      id: "como-funciona",
     },
     {
-      href: isHome ? "#clientes" : "/#clientes",
+      href: "/clientes",
       label: "Clientes",
       id: "clientes",
     },
     {
-      href: isHome ? "#autor" : "/#autor",
+      href: "/sobre-pablo",
       label: "Sobre Pablo",
-      id: "autor",
+      id: "sobre-pablo",
     },
   ];
 
@@ -58,8 +66,8 @@ export function Header() {
 
     const handleScroll = () => {
       const scrollPos = window.scrollY + 120;
-      for (const section of HOME_SECTION_IDS) {
-        const el = document.querySelector(section.href);
+      for (const section of HOME_SECTION_MAP) {
+        const el = document.getElementById(section.elementId);
         if (el) {
           const top = el.getBoundingClientRect().top + window.scrollY;
           const height = el.clientHeight;
@@ -75,25 +83,28 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isHome]);
 
-  // Desplazamiento cinemático suave con realce de atención GSAP
+  // Desplazamiento cinemático suave con realce de atención GSAP en portada sin exponer '#'
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, id: string) => {
-    if (href.startsWith("#") && isHome) {
-      e.preventDefault();
-      const target = document.querySelector(href);
-      if (target) {
-        setScrollSection(id);
-        const top = target.getBoundingClientRect().top + window.scrollY - 70;
-        window.scrollTo({
-          top,
-          behavior: "smooth",
-        });
+    if (isHome && id !== "que-hacemos") {
+      const section = HOME_SECTION_MAP.find((s) => s.id === id);
+      if (section) {
+        const target = document.getElementById(section.elementId);
+        if (target) {
+          e.preventDefault();
+          setScrollSection(id);
+          const top = target.getBoundingClientRect().top + window.scrollY - 70;
+          window.scrollTo({
+            top,
+            behavior: "smooth",
+          });
 
-        // Realce de atención: micro-animación en la sección de destino
-        gsap.fromTo(
-          target,
-          { y: 15, opacity: 0.85 },
-          { y: 0, opacity: 1, duration: 0.65, ease: "power2.out" }
-        );
+          // Realce de atención: micro-animación en la sección de destino
+          gsap.fromTo(
+            target,
+            { y: 15, opacity: 0.85 },
+            { y: 0, opacity: 1, duration: 0.65, ease: "power2.out" }
+          );
+        }
       }
     }
   };
@@ -187,9 +198,10 @@ export function Header() {
           <button
             type="button"
             onClick={() => openAuthModal("login")}
+            aria-label={user ? `Portal de cliente: ${user.name}` : "Acceso al portal de clientes"}
             className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-[#526072]/20 bg-white/90 px-3.5 font-mono text-xs font-bold text-[#111827] shadow-sm transition-all duration-200 hover:border-[#1E2430]/40 hover:bg-[#FAF8F5] hover:shadow-md hover:-translate-y-0.5 active:scale-95"
           >
-            <User className="h-3.5 w-3.5 text-[#526072]" />
+            <User className="h-3.5 w-3.5 text-[#526072]" aria-hidden="true" />
             <span className="hidden sm:inline">
               {user ? user.name : "Portal Clientes"}
             </span>

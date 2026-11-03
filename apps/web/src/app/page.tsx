@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
-  ArrowDown,
   ArrowUpRight,
   ArrowRight,
   Check,
@@ -294,13 +293,10 @@ export default function Home() {
                 <span>Agendar Diagnóstico 15 min (Sin costo)</span>
               </a>
 
-              <a
-                href="#catalogo"
-                className="inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-[#526072]/25 bg-white/95 px-8 py-4 font-mono text-sm font-bold text-[#111827] shadow-sm backdrop-blur-md transition-all hover:bg-white hover:border-[#1E2430]/50 hover:-translate-y-1 hover:shadow-md active:scale-[0.99]"
-              >
+              <Link href="/que-hacemos" className="inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-[#526072]/25 bg-white/95 px-8 py-4 font-mono text-sm font-bold text-[#111827] shadow-sm backdrop-blur-md transition-all hover:bg-white hover:border-[#1E2430]/50 hover:-translate-y-1 hover:shadow-md active:scale-[0.99]">
                 <span>Ver Qué Hacemos & Demos</span>
-                <ArrowDown className="h-4 w-4 text-[#526072]" aria-hidden="true" />
-              </a>
+                <ArrowRight className="h-4 w-4 text-[#526072]" aria-hidden="true" />
+              </Link>
             </div>
 
             {/* Micro-Garantías Inmediatas */}
@@ -710,13 +706,10 @@ export default function Home() {
                 <MessageCircle className="h-4 w-4 text-[#111827]" aria-hidden="true" />
                 <span>Agendar por WhatsApp (15 min)</span>
               </a>
-              <a
-                href="#catalogo"
-                className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-white/20 bg-transparent px-8 py-4 font-mono text-xs font-bold text-white transition-all hover:bg-white/10"
-              >
+              <Link href="/que-hacemos" className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-white/20 bg-transparent px-8 py-4 font-mono text-xs font-bold text-white transition-all hover:bg-white/10">
                 <span>Revisar Catálogo</span>
                 <ArrowUpRight className="h-4 w-4 text-[#25D366]" />
-              </a>
+              </Link>
             </div>
           </div>
         </section>
@@ -771,12 +764,8 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-6 font-mono text-xs text-[#526072]">
-            <a href="#catalogo" className="transition-colors hover:text-[#1E2430]">
-              Términos de Alcance Cerrado
-            </a>
-            <a href="#metodologia" className="transition-colors hover:text-[#1E2430]">
-              Privacidad
-            </a>
+            <Link href="/como-funciona" className="transition-colors hover:text-[#1E2430]">Términos de Alcance Cerrado</Link>
+            <Link href="/como-funciona" className="transition-colors hover:text-[#1E2430]">Privacidad</Link>
             <a
               href={whatsappLink("Hola Pablo, quiero hacer una consulta directa.")}
               target="_blank"

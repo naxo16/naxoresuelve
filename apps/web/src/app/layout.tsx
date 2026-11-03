@@ -68,16 +68,9 @@ export default function RootLayout({
         {/* Enlace accesible para lectores de pantalla y navegación por teclado (WCAG 2.1) */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-5 focus:py-3 focus:bg-[#f2cf6b] focus:text-[#1c181f] focus:font-bold focus:rounded-xl focus:shadow-2xl focus:outline-none focus:ring-4 focus:ring-[#ff6b85]"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-5 focus:py-3 focus:bg-[#1E2430] focus:text-white focus:font-bold focus:rounded-xl focus:shadow-2xl focus:outline-none focus:ring-4 focus:ring-[#25D366]"
         >
           Saltar directamente al contenido principal
-        </a>
-        {/* Enlace accesible directo a herramientas de accesibilidad (Atajo: Alt + A) */}
-        <a
-          href="#accessibility-panel"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-16 focus:left-4 focus:z-50 focus:px-5 focus:py-3 focus:bg-[#362f37] focus:text-[#f2cf6b] focus:font-bold focus:rounded-xl focus:shadow-2xl focus:outline-none focus:ring-4 focus:ring-[#f2cf6b] focus:border focus:border-[#cba135]"
-        >
-          Ir a herramientas de accesibilidad, lectura en voz alta y contraste (Atajo: Alt + A)
         </a>
         <ClientProviders>{children}</ClientProviders>
       </body>

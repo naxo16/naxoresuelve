@@ -178,7 +178,7 @@ export function ModernCanvasVideoPlayer() {
         (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       if (!AudioCtx) return;
       const ctx = new AudioCtx();
-      if (ctx.state === "suspended") ctx.resume();
+      if (ctx.state === "suspended") void ctx.resume();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = "sine";
@@ -895,7 +895,7 @@ export function ModernCanvasVideoPlayer() {
                     value={isMuted ? 0 : volume}
                     aria-label="Volumen del video"
                     onChange={(e) => {
-                      const newVol = parseFloat(e.target.value);
+                      const newVol = Number.parseFloat(e.target.value);
                       setVolume(newVol);
                       if (videoRef.current) {
                         videoRef.current.volume = newVol;

@@ -36,9 +36,17 @@ logger = logging.getLogger("naxoresuelve.api")
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
+_db_user = os.getenv("POSTGRES_USER", "naxoresuelve")
+_db_host = os.getenv("POSTGRES_HOST", "127.0.0.1")
+_db_port = os.getenv("POSTGRES_PORT", "5432")
+_db_name = os.getenv("POSTGRES_DB", "naxoresuelve_db")
+_db_password = os.getenv("POSTGRES_PASSWORD", "")
+
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://naxoresuelve:Naxo_85721@127.0.0.1:5432/naxoresuelve_db",
+    f"postgresql://{_db_user}:{_db_password}@{_db_host}:{_db_port}/{_db_name}"
+    if _db_password
+    else f"postgresql://{_db_user}@{_db_host}:{_db_port}/{_db_name}",
 )
 JWT_SECRET = os.getenv("JWT_SECRET", "naxoresuelve-crypto-secret-key-2026-chile")
 JWT_ALGORITHM = "HS256"

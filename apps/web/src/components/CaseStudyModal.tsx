@@ -102,7 +102,6 @@ export function CaseStudyModal({ caseStudy, onClose }: CaseStudyModalProps) {
       <div
         ref={modalRef}
         className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-[#362f37] border border-[#b82d46]/60 rounded-2xl p-6 sm:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.9)] text-[#f5dade]"
-        onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-start justify-between border-b border-[#615362] pb-4 mb-6">

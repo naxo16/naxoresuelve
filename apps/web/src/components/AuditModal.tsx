@@ -25,7 +25,7 @@ export function normalizeAuditTopic(rawTopic?: string): string {
     return "electronica_arduino";
   }
   if (s.includes("cámara") || s.includes("camara") || s.includes("cctv") || s.includes("domótica") || s.includes("domotica") || s.includes("seguridad")) {
-    return s.includes("cámara") || s.includes("camara") || s.includes("cctv") ? "domotica_camaras" : "domotica_camaras";
+    return "domotica_camaras";
   }
   if (s.includes("reparaci") || s.includes("notebook") || s.includes("computador") || s.includes("hardware") || s.includes("celular")) {
     return "reparacion_hardware";
@@ -193,7 +193,6 @@ export function AuditModal({ isOpen, onClose, preselectedTopic }: AuditModalProp
       <div
         ref={modalRef}
         className="relative w-full max-w-lg bg-[#362f37] border border-[#b82d46]/60 rounded-2xl p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.9)] text-[#f5dade]"
-        onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-start justify-between border-b border-[#615362] pb-4 mb-5">

@@ -2,9 +2,9 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: naxoresuelve
-      POSTGRES_PASSWORD: naxoresuelve
-      POSTGRES_DB: naxoresuelve_db
+      POSTGRES_USER: ${POSTGRES_USER:-naxoresuelve}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-}
+      POSTGRES_DB: ${POSTGRES_DB:-naxoresuelve_db}
     ports:
       - "5432:5432"
     volumes:
@@ -26,7 +26,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql://naxoresuelve:naxoresuelve@db:5432/naxoresuelve_db
+      DATABASE_URL: postgresql://${POSTGRES_USER:-naxoresuelve}:${POSTGRES_PASSWORD:-changeme}@db:5432/${POSTGRES_DB:-naxoresuelve_db}
 
 volumes:
   pgdata:

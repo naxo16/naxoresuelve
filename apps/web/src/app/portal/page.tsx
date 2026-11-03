@@ -315,7 +315,7 @@ export default function CustomerPortalPage() {
       }
     }
 
-    fetchDashboard();
+    void fetchDashboard();
   }, []);
 
   /* ------------------------------------------------------------------ */

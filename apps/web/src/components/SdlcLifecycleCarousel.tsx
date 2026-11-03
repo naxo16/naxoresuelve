@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useState, useEffect, useRef, useCallback } from "react";
 import {
   Database,
@@ -314,13 +316,13 @@ export function SdlcLifecycleCarousel() {
 
             {/* Enlace a Detalle de Metodología */}
             <div className="pt-1 flex items-center justify-between text-xs font-mono">
-              <a
-                href="#filosofia-testing"
+              <Link
+                href="/como-funciona"
                 className="text-[#f2cf6b] hover:text-white flex items-center gap-1 font-bold transition group"
               >
                 <span>Inspeccionar batería de pruebas &amp; arquitectura</span>
                 <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
-              </a>
+              </Link>
               <span className="text-[10px] text-[#dcd0d5]">
                 {isPaused ? "⏸ En pausa" : "▶ Autoplay 6s"}
               </span>

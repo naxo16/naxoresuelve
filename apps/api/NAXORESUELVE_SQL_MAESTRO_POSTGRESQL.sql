@@ -78,7 +78,7 @@ CREATE SCHEMA governance;
 -- 1. CORE: catálogos comunes
 -- ---------------------------------------------------------------------------
 CREATE TABLE core.currencies (
-    currency_code CHAR(3) PRIMARY KEY,
+    currency_code VARCHAR(3) PRIMARY KEY,
     currency_name VARCHAR(80) NOT NULL,
     minor_unit SMALLINT NOT NULL DEFAULT 2 CHECK (minor_unit BETWEEN 0 AND 2),
     is_active BOOLEAN NOT NULL DEFAULT TRUE,

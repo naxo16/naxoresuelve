@@ -475,9 +475,9 @@ html.high-contrast button {
    ======================================================== */
 
 .dmc-neon-span {
-  font-family: var(--font-cinzel), 'Cinzel', serif; /* Fuente con estilo rotulado/gótico DMC */
+  font-family: var(--font-cinzel), 'Cinzel', serif !important; /* Fuente con estilo rotulado/gótico DMC */
   font-weight: 900;
-  color: #cceeff; /* Color base claro del tubo encendido */
+  color: #cceeff !important; /* Color base claro del tubo encendido */
   text-shadow: 
     0 0 5px #00aaff,
     0 0 10px #00aaff,

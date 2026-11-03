@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useEffect, useRef, useCallback } from "react";
 import {
   Sparkles,
@@ -178,9 +180,11 @@ export function ServicesQuickModal({
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
     >
       {/* Backdrop con Blur Aterciopelado */}
-      <div
+      <button
+        type="button"
+        aria-label="Cerrar modal"
         onClick={handleClose}
-        className="fixed inset-0 bg-[#1c181f]/80 backdrop-blur-md transition-opacity animate-in fade-in"
+        className="fixed inset-0 bg-[#1c181f]/80 backdrop-blur-md transition-opacity animate-in fade-in cursor-default"
       />
 
       {/* Ventana Modal Popup */}
@@ -297,14 +301,14 @@ export function ServicesQuickModal({
             <span>Validación garantizada con pruebas rudas de calidad antes de entrega.</span>
           </div>
 
-          <a
-            href="#soluciones"
+          <Link
+            href="/que-hacemos"
             onClick={onClose}
             className="px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-gradient-to-r from-[#721828] to-[#9e233b] hover:from-[#9e233b] hover:to-[#cba135] transition flex items-center gap-1.5 shadow-md border border-[#cba135]/40"
           >
             <span>Explorar Todas las Soluciones</span>
             <ArrowRight size={14} />
-          </a>
+          </Link>
         </div>
       </div>
     </div>
