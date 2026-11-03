@@ -10,7 +10,7 @@ import { ShoppingCart, User, MessageCircle } from "lucide-react";
 import { gsap } from "gsap";
 import { NeonBrandSpan } from "@/components/NeonBrandSpan";
 
-const BRAND_IMAGE = "/images/naxoresuelve.jpg";
+const BRAND_IMAGE = "/images/naxoresuelve.webp";
 const WHATSAPP_URL = "https://wa.me/56957286145";
 
 const HOME_SECTION_MAP = [

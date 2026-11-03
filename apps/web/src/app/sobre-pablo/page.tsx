@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   ],
 };
 
-const PROFILE_IMAGE = "/images/naxoresuelve.jpg";
+const PROFILE_IMAGE = "/images/naxoresuelve.webp";
 const WHATSAPP_URL = "https://wa.me/56957286145";
 
 export default function SobrePabloPage() {

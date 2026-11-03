@@ -54,7 +54,7 @@ export const metadata: Metadata = {
 };
 
 const WHATSAPP_URL = "https://wa.me/56957286145";
-const PROFILE_IMAGE = "/images/naxoresuelve.jpg";
+const PROFILE_IMAGE = "/images/naxoresuelve.webp";
 
 const whatsappLink = (message: string) =>
   `${WHATSAPP_URL}?text=${encodeURIComponent(message)}`;
@@ -589,7 +589,7 @@ export default function Home() {
                       fill
                       sizes="(max-width: 640px) 144px, 176px"
                       className="object-cover"
-                      priority
+                      loading="lazy"
                     />
                   </div>
                   <span className="font-mono text-xs font-bold text-[#1E2430]">

@@ -147,7 +147,7 @@ export function OrganicBackground() {
     // 3. Cargar textura de la escultura 3D
     const textureLoader = new THREE.TextureLoader();
     const texture = textureLoader.load(
-      "/images/abstract-3d-bg.jpg",
+      "/images/abstract-3d-bg.webp",
       (loadedTexture) => {
         if (material.uniforms.uImageResolution) {
           material.uniforms.uImageResolution.value.set(
