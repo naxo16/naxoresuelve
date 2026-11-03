@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowDown,
   ArrowUpRight,
+  ArrowRight,
   Check,
   ChevronDown,
   Code2,
@@ -21,7 +23,8 @@ import {
 import { Header } from "@/components/Header";
 import { OrganicBackground } from "@/components/OrganicBackground";
 import { ScrollAnimations } from "@/components/ScrollAnimations";
-import { InteractiveCatalog } from "@/components/InteractiveCatalog";
+import { CATALOG_DATA } from "@/data/catalog";
+import { SolutionCard } from "@/components/SolutionCard";
 import { ClientTickerCarousel } from "@/components/ClientTickerCarousel";
 import { AppPreloader } from "@/components/AppPreloader";
 
@@ -383,11 +386,53 @@ export default function Home() {
               eyebrow="QUÉ HACEMOS"
               title="¿Qué problema necesitas resolver hoy en tu negocio?"
               id="catalogo-heading"
-              description="Navega por las soluciones y servicios más solicitados. Filtra por categoría o busca por palabra clave para cotizar a medida o arrendar SaaS."
+              description="Conoce 3 de nuestras soluciones más demandadas para pymes. O ingresa a nuestro catálogo completo de productos con filtros y buscador."
               centered
             />
 
-            <InteractiveCatalog />
+            {/* Preview de las 3 Soluciones Destacadas */}
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {CATALOG_DATA.slice(0, 3).map((sol) => (
+                <SolutionCard
+                  key={sol.id}
+                  id={sol.id}
+                  number={sol.number}
+                  title={sol.title}
+                  description={sol.description}
+                  price={sol.price}
+                  priceLabel={sol.priceLabel}
+                  type={sol.type}
+                  category={sol.category}
+                />
+              ))}
+            </div>
+
+            {/* Botón Ir a Productos y Catálogo Completo */}
+            <div className="catalogo-cta-box flex flex-col items-center justify-center gap-4 text-center pt-6">
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <Link
+                  href="/que-hacemos"
+                  className="group relative inline-flex items-center justify-center gap-3 rounded-2xl border border-[#1E2430] bg-[#1E2430] px-8 py-4 font-mono text-sm font-bold text-white shadow-xl transition-all duration-300 hover:border-[#25D366] hover:bg-[#25D366] hover:text-[#111827] hover:scale-105 active:scale-95"
+                >
+                  <span>Ir a Productos (Ver Catálogo de 12 Soluciones)</span>
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+
+                <a
+                  href={whatsappLink("Hola Pablo, tengo una consulta sobre las soluciones de Naxo Resuelve.")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[#526072]/25 bg-white/95 px-6 py-4 font-mono text-sm font-bold text-[#111827] shadow-sm backdrop-blur-md transition-all hover:bg-white hover:border-[#1E2430]/40"
+                >
+                  <MessageCircle className="h-4 w-4 text-[#25D366]" />
+                  <span>Consultar por WhatsApp</span>
+                </a>
+              </div>
+
+              <p className="font-mono text-xs text-[#526072]">
+                * Mostrando 3 de 12 soluciones. Conoce el catálogo completo con filtros por categoría y cotizador online.
+              </p>
+            </div>
           </div>
         </section>
 

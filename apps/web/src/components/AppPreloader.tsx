@@ -17,6 +17,9 @@ export function AppPreloader() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       queueMicrotask(() => {
         setIsDone(true);
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("appPreloaderDone"));
+        }
       });
       return;
     }
@@ -32,6 +35,9 @@ export function AppPreloader() {
     const tl = gsap.timeline({
       onComplete: () => {
         setIsDone(true);
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("appPreloaderDone"));
+        }
       },
     });
 

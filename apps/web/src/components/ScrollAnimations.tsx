@@ -10,10 +10,6 @@ if (typeof window !== "undefined") {
 
 export function ScrollAnimations() {
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return;
-    }
-
     const ctx = gsap.context(() => {
       // 1. Barra de progreso de lectura ultra-fina en el tope
       const progressBar = document.getElementById("scroll-progress-bar");
@@ -30,298 +26,546 @@ export function ScrollAnimations() {
         });
       }
 
-      // 2. Animación de Entrada Escalonada del Hero (Stagger Reveal)
-      const heroTl = gsap.timeline({ delay: 0.25 });
-      heroTl
-        .from("#hero-eyebrow", {
-          y: -20,
-          opacity: 0,
-          duration: 0.6,
-          ease: "power3.out",
-        })
-        .from(
-          "#hero-title > *",
-          {
-            y: 35,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: "power3.out",
-          },
-          "-=0.3"
-        )
-        .from(
-          "#hero-cta > *",
-          {
-            y: 20,
-            scale: 0.95,
-            opacity: 0,
-            duration: 0.6,
-            stagger: 0.1,
-            ease: "back.out(1.4)",
-          },
-          "-=0.4"
-        )
-        .from(
-          "#hero-guarantees > *",
-          {
-            y: 15,
-            opacity: 0,
-            duration: 0.5,
-            stagger: 0.08,
-            ease: "power2.out",
-          },
-          "-=0.3"
-        );
+      // 2. Animación de Entrada Escalonada del Hero (Dispara al elevarse la cortina o timeout de 600ms)
+      const playHeroAnimation = () => {
+        const heroTl = gsap.timeline();
+        heroTl
+          .fromTo(
+            "#hero-eyebrow",
+            { y: -30, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.65, ease: "power3.out" }
+          )
+          .fromTo(
+            "#hero-title > *",
+            { y: 40, scale: 0.96, opacity: 0 },
+            { y: 0, scale: 1, opacity: 1, duration: 0.8, stagger: 0.15, ease: "power3.out" },
+            "-=0.3"
+          )
+          .fromTo(
+            "#hero-cta > *",
+            { y: 25, scale: 0.88, opacity: 0 },
+            { y: 0, scale: 1, opacity: 1, duration: 0.65, stagger: 0.12, ease: "back.out(1.8)" },
+            "-=0.4"
+          )
+          .fromTo(
+            "#hero-guarantees > *",
+            { y: 15, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: "power2.out" },
+            "-=0.3"
+          );
+      };
 
-      // 3. Ticker Carousel Section Entrance
+      let heroStarted = false;
+      const onPreloaderDone = () => {
+        if (!heroStarted) {
+          heroStarted = true;
+          playHeroAnimation();
+          ScrollTrigger.refresh();
+        }
+      };
+
+      window.addEventListener("appPreloaderDone", onPreloaderDone);
+      const heroFallbackTimer = setTimeout(onPreloaderDone, 650);
+
+      // 3. Ticker Section: Expansión horizontal y desvanecimiento
       const tickerSection = document.getElementById("ticker-section");
       if (tickerSection) {
-        gsap.from(tickerSection, {
-          scrollTrigger: {
-            trigger: tickerSection,
-            start: "top 92%",
-          },
-          opacity: 0,
-          y: 25,
-          duration: 0.7,
-          ease: "power3.out",
-        });
+        gsap.fromTo(
+          tickerSection,
+          { opacity: 0, y: 35, scale: 0.94 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.75,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: tickerSection,
+              start: "top 90%",
+              end: "bottom 15%",
+              toggleActions: "play reverse play reverse",
+            },
+          }
+        );
       }
 
-      // 4. Sección #ventajas (Por Qué Elegir Este Modelo)
+      // 4. Sección #ventajas: Inclinación Isométrica 3D y Elevación
       const ventajasEl = document.getElementById("ventajas");
       if (ventajasEl) {
-        gsap.from("#ventajas-heading", {
-          scrollTrigger: {
-            trigger: "#ventajas",
-            start: "top 82%",
-          },
-          y: 30,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power3.out",
-        });
+        gsap.fromTo(
+          "#ventajas-heading",
+          { opacity: 0, y: -30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: "#ventajas",
+              start: "top 82%",
+              end: "bottom 15%",
+              toggleActions: "play reverse play reverse",
+            },
+          }
+        );
 
-        gsap.from(".perk-card", {
-          scrollTrigger: {
-            trigger: "#ventajas",
-            start: "top 75%",
-          },
-          y: 40,
-          scale: 0.9,
-          opacity: 0,
-          duration: 0.7,
-          stagger: 0.12,
-          ease: "back.out(1.4)",
-        });
+        const perkCards = document.querySelectorAll(".perk-card");
+        if (perkCards.length > 0) {
+          gsap.fromTo(
+            perkCards,
+            {
+              opacity: 0,
+              y: 50,
+              scale: 0.88,
+              rotateY: -12,
+              transformPerspective: 800,
+            },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              rotateY: 0,
+              duration: 0.7,
+              stagger: 0.12,
+              ease: "back.out(1.5)",
+              scrollTrigger: {
+                trigger: "#ventajas",
+                start: "top 78%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+        }
       }
 
-      // 5. Sección #catalogo (Qué Hacemos)
+      // 5. Sección #catalogo (Qué Hacemos): Desplazamiento Diagonal y Revelado Escalonado
       const catalogoEl = document.getElementById("catalogo");
       if (catalogoEl) {
-        gsap.from("#catalogo-heading", {
-          scrollTrigger: {
-            trigger: "#catalogo",
-            start: "top 82%",
-          },
-          y: 30,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power3.out",
-        });
+        gsap.fromTo(
+          "#catalogo-heading",
+          { opacity: 0, y: -30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: "#catalogo",
+              start: "top 82%",
+              end: "bottom 15%",
+              toggleActions: "play reverse play reverse",
+            },
+          }
+        );
 
-        gsap.from("#catalogo-controls", {
-          scrollTrigger: {
-            trigger: "#catalogo",
-            start: "top 78%",
-          },
-          y: 25,
-          opacity: 0,
-          duration: 0.6,
-          ease: "power3.out",
-        });
+        // Animación individualizada para las 3 tarjetas de soluciones
+        const solCards = document.querySelectorAll(".solution-card-anim");
+        if (solCards.length >= 3) {
+          // Tarjeta 1 (Izquierda): Desliza desde la izquierda
+          gsap.fromTo(
+            solCards[0],
+            { opacity: 0, x: -50, y: 30 },
+            {
+              opacity: 1,
+              x: 0,
+              y: 0,
+              duration: 0.7,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: "#catalogo",
+                start: "top 75%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
 
-        gsap.from(".solution-card-anim", {
-          scrollTrigger: {
-            trigger: "#catalogo",
-            start: "top 72%",
-          },
-          y: 35,
-          opacity: 0,
-          duration: 0.6,
-          stagger: 0.08,
-          ease: "power3.out",
-        });
+          // Tarjeta 2 (Centro): Emerge desde abajo con escala
+          gsap.fromTo(
+            solCards[1],
+            { opacity: 0, y: 55, scale: 0.9 },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.7,
+              ease: "back.out(1.4)",
+              scrollTrigger: {
+                trigger: "#catalogo",
+                start: "top 75%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+
+          // Tarjeta 3 (Derecha): Desliza desde la derecha
+          gsap.fromTo(
+            solCards[2],
+            { opacity: 0, x: 50, y: 30 },
+            {
+              opacity: 1,
+              x: 0,
+              y: 0,
+              duration: 0.7,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: "#catalogo",
+                start: "top 75%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+        } else if (solCards.length > 0) {
+          gsap.fromTo(
+            solCards,
+            { opacity: 0, y: 40, scale: 0.92 },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.65,
+              stagger: 0.1,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: "#catalogo",
+                start: "top 75%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+        }
+
+        // Botón "Ir a Productos"
+        const catalogoCta = document.querySelector(".catalogo-cta-box");
+        if (catalogoCta) {
+          gsap.fromTo(
+            catalogoCta,
+            { opacity: 0, y: 35, scale: 0.88 },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.75,
+              ease: "back.out(1.8)",
+              scrollTrigger: {
+                trigger: "#catalogo",
+                start: "top 68%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+        }
       }
 
-      // 6. Sección #metodologia (Cómo Funciona en 4 Pasos)
+      // 6. Sección #metodologia: Giro y Zoom en 4 Pasos
       const metodologiaEl = document.getElementById("metodologia");
       if (metodologiaEl) {
-        gsap.from("#metodologia-heading", {
-          scrollTrigger: {
-            trigger: "#metodologia",
-            start: "top 82%",
-          },
-          y: 30,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power3.out",
-        });
+        gsap.fromTo(
+          "#metodologia-heading",
+          { opacity: 0, y: -30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: "#metodologia",
+              start: "top 82%",
+              end: "bottom 15%",
+              toggleActions: "play reverse play reverse",
+            },
+          }
+        );
 
-        gsap.from(".method-step-card", {
-          scrollTrigger: {
-            trigger: "#metodologia",
-            start: "top 75%",
-          },
-          scale: 0.85,
-          y: 35,
-          opacity: 0,
-          duration: 0.65,
-          stagger: 0.15,
-          ease: "back.out(1.5)",
-        });
+        const methodCards = document.querySelectorAll(".method-step-card");
+        if (methodCards.length > 0) {
+          gsap.fromTo(
+            methodCards,
+            {
+              opacity: 0,
+              scale: 0.76,
+              rotate: -5,
+              y: 45,
+            },
+            {
+              opacity: 1,
+              scale: 1,
+              rotate: 0,
+              y: 0,
+              duration: 0.65,
+              stagger: 0.15,
+              ease: "back.out(1.6)",
+              scrollTrigger: {
+                trigger: "#metodologia",
+                start: "top 75%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+        }
 
-        gsap.from("#metodologia-disclaimer", {
-          scrollTrigger: {
-            trigger: "#metodologia",
-            start: "top 68%",
-          },
-          y: 20,
-          opacity: 0,
-          duration: 0.6,
-          ease: "power2.out",
-        });
+        const disclaimer = document.getElementById("metodologia-disclaimer");
+        if (disclaimer) {
+          gsap.fromTo(
+            disclaimer,
+            { opacity: 0, y: 25 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: "#metodologia",
+                start: "top 68%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+        }
       }
 
-      // 7. Sección #proyectos (Clientes en Producción)
+      // 7. Sección #proyectos (Clientes): Deslizamiento Dividido Alternado (Izquierda / Derecha)
       const proyectosEl = document.getElementById("proyectos");
       if (proyectosEl) {
-        gsap.from("#proyectos-heading", {
-          scrollTrigger: {
-            trigger: "#proyectos",
-            start: "top 82%",
-          },
-          y: 30,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power3.out",
-        });
+        gsap.fromTo(
+          "#proyectos-heading",
+          { opacity: 0, y: -30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: "#proyectos",
+              start: "top 82%",
+              end: "bottom 15%",
+              toggleActions: "play reverse play reverse",
+            },
+          }
+        );
 
-        gsap.from(".client-project-card", {
-          scrollTrigger: {
-            trigger: "#proyectos",
-            start: "top 75%",
-          },
-          y: 45,
-          scale: 0.95,
-          opacity: 0,
-          duration: 0.75,
-          stagger: 0.18,
-          ease: "power3.out",
-        });
+        const clientCards = document.querySelectorAll(".client-project-card");
+        if (clientCards.length >= 2) {
+          // Cliente 1 (Del Valle): Desliza desde la izquierda
+          gsap.fromTo(
+            clientCards[0],
+            { opacity: 0, x: -70, scale: 0.94 },
+            {
+              opacity: 1,
+              x: 0,
+              scale: 1,
+              duration: 0.8,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: "#proyectos",
+                start: "top 75%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+
+          // Cliente 2 (JPVS): Desliza desde la derecha
+          gsap.fromTo(
+            clientCards[1],
+            { opacity: 0, x: 70, scale: 0.94 },
+            {
+              opacity: 1,
+              x: 0,
+              scale: 1,
+              duration: 0.8,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: "#proyectos",
+                start: "top 75%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+        } else if (clientCards.length > 0) {
+          gsap.fromTo(
+            clientCards,
+            { opacity: 0, y: 45, scale: 0.95 },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.75,
+              stagger: 0.18,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: "#proyectos",
+                start: "top 75%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+        }
       }
 
-      // 8. Sección #autor (Sobre Pablo)
+      // 8. Sección #autor: Perspectiva 3D y Zoom de Fotografía
       const autorEl = document.getElementById("autor");
       if (autorEl) {
-        gsap.from("#autor-heading", {
-          scrollTrigger: {
-            trigger: "#autor",
-            start: "top 82%",
-          },
-          y: 30,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power3.out",
-        });
+        gsap.fromTo(
+          "#autor-heading",
+          { opacity: 0, y: -30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: "#autor",
+              start: "top 82%",
+              end: "bottom 15%",
+              toggleActions: "play reverse play reverse",
+            },
+          }
+        );
 
-        gsap.from("#autor-card", {
-          scrollTrigger: {
-            trigger: "#autor",
-            start: "top 75%",
-          },
-          y: 45,
-          scale: 0.95,
-          opacity: 0,
-          duration: 0.85,
-          ease: "power3.out",
-        });
+        const autorCard = document.getElementById("autor-card");
+        if (autorCard) {
+          gsap.fromTo(
+            autorCard,
+            {
+              opacity: 0,
+              y: 55,
+              scale: 0.93,
+              rotateX: 12,
+              transformPerspective: 900,
+            },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              rotateX: 0,
+              duration: 0.85,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: "#autor",
+                start: "top 75%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+        }
 
-        gsap.from("#autor-photo", {
-          scrollTrigger: {
-            trigger: "#autor",
-            start: "top 75%",
-          },
-          scale: 0.88,
-          opacity: 0,
-          duration: 0.8,
-          delay: 0.1,
-          ease: "back.out(1.3)",
-        });
+        const autorPhoto = document.getElementById("autor-photo");
+        if (autorPhoto) {
+          gsap.fromTo(
+            autorPhoto,
+            { opacity: 0, scale: 0.82, rotate: -4 },
+            {
+              opacity: 1,
+              scale: 1,
+              rotate: 0,
+              duration: 0.85,
+              delay: 0.1,
+              ease: "back.out(1.4)",
+              scrollTrigger: {
+                trigger: "#autor",
+                start: "top 75%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+        }
       }
 
-      // 9. Sección #faq (Preguntas Frecuentes)
+      // 9. Sección #faq: Cascada de Acordeones
       const faqEl = document.getElementById("faq");
       if (faqEl) {
-        gsap.from("#faq-heading", {
-          scrollTrigger: {
-            trigger: "#faq",
-            start: "top 82%",
-          },
-          y: 30,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power3.out",
-        });
+        gsap.fromTo(
+          "#faq-heading",
+          { opacity: 0, y: -30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: "#faq",
+              start: "top 82%",
+              end: "bottom 15%",
+              toggleActions: "play reverse play reverse",
+            },
+          }
+        );
 
-        gsap.from(".faq-item", {
-          scrollTrigger: {
-            trigger: "#faq",
-            start: "top 78%",
-          },
-          y: 25,
-          opacity: 0,
-          duration: 0.5,
-          stagger: 0.08,
-          ease: "power2.out",
-        });
+        const faqItems = document.querySelectorAll(".faq-item");
+        if (faqItems.length > 0) {
+          gsap.fromTo(
+            faqItems,
+            { opacity: 0, y: 35, scale: 0.96 },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.55,
+              stagger: 0.09,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: "#faq",
+                start: "top 78%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+        }
       }
 
-      // 10. Sección Final CTA
+      // 10. Sección Final CTA: Zoom de Pulso Cinemático
       const finalCta = document.getElementById("final-cta-section");
       if (finalCta) {
-        gsap.from(finalCta, {
-          scrollTrigger: {
-            trigger: finalCta,
-            start: "top 85%",
-          },
-          y: 35,
-          scale: 0.98,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power3.out",
-        });
+        gsap.fromTo(
+          finalCta,
+          { opacity: 0, scale: 0.91, y: 40 },
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.85,
+            ease: "back.out(1.3)",
+            scrollTrigger: {
+              trigger: finalCta,
+              start: "top 85%",
+              end: "bottom 10%",
+              toggleActions: "play reverse play reverse",
+            },
+          }
+        );
       }
 
-      // 11. Dinámica de velocidad al scrollear (Inercia y compresión suave)
+      // 11. Dinámica de velocidad al scrollear (Inercia y compresión elástica)
       ScrollTrigger.create({
         trigger: document.documentElement,
         start: "top top",
         end: "bottom bottom",
         onUpdate: (self) => {
           const velocity = self.getVelocity();
-          const normSkew = Math.max(Math.min(velocity / 800, 1.5), -1.5);
+          const normSkew = Math.max(Math.min(velocity / 700, 1.8), -1.8);
 
           gsap.to(".gsap-reveal", {
-            skewY: normSkew * 0.3,
+            skewY: normSkew * 0.35,
             duration: 0.2,
             ease: "power1.out",
             overwrite: "auto",
             onComplete: () => {
               gsap.to(".gsap-reveal", {
                 skewY: 0,
-                duration: 0.5,
+                duration: 0.45,
                 ease: "power2.out",
               });
             },
@@ -329,12 +573,16 @@ export function ScrollAnimations() {
         },
       });
 
-      // Recalibración diferida de ScrollTrigger tras carga completa
-      const timer = setTimeout(() => {
+      // Refresco de sincronización de alturas
+      const refreshTimer = setTimeout(() => {
         ScrollTrigger.refresh();
-      }, 500);
+      }, 700);
 
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(heroFallbackTimer);
+        clearTimeout(refreshTimer);
+        window.removeEventListener("appPreloaderDone", onPreloaderDone);
+      };
     });
 
     return () => {
