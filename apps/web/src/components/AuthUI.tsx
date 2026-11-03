@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import {
   Eye,
@@ -10,6 +11,7 @@ import {
   Building,
   Loader2,
   ShieldCheck,
+  Zap,
 } from "lucide-react";
 
 interface AuthUIProps {
@@ -20,6 +22,7 @@ interface AuthUIProps {
 
 export function AuthUI({ initialTab = "login", onSuccess, className = "" }: AuthUIProps) {
   const { login, register, loginWithProvider } = useAuth();
+  const router = useRouter();
 
   const [activeTab, setActiveTab] = useState<"login" | "register">(initialTab);
 
@@ -70,6 +73,17 @@ export function AuthUI({ initialTab = "login", onSuccess, className = "" }: Auth
     await login(loginEmail, loginPassword);
     setLoading(false);
     onSuccess?.();
+    router.push("/dashboard");
+  };
+
+  const handleQuickDemoLogin = async () => {
+    setLoginEmail("usuario@naxoresuelve.cl");
+    setLoginPassword("usuario123");
+    setLoading(true);
+    await login("usuario@naxoresuelve.cl", "usuario123");
+    setLoading(false);
+    onSuccess?.();
+    router.push("/dashboard");
   };
 
   const handleRegisterSubmit = async (e: React.FormEvent) => {
@@ -79,6 +93,7 @@ export function AuthUI({ initialTab = "login", onSuccess, className = "" }: Auth
     await register(companyName, registerEmail, registerPassword);
     setLoading(false);
     onSuccess?.();
+    router.push("/dashboard");
   };
 
   const handleSSO = async (provider: "google" | "github") => {
@@ -86,6 +101,7 @@ export function AuthUI({ initialTab = "login", onSuccess, className = "" }: Auth
     await loginWithProvider(provider);
     setProviderLoading(null);
     onSuccess?.();
+    router.push("/dashboard");
   };
 
   return (
@@ -119,6 +135,27 @@ export function AuthUI({ initialTab = "login", onSuccess, className = "" }: Auth
       {/* Formulario 1: Iniciar Sesión (Login) */}
       {activeTab === "login" && (
         <form onSubmit={handleLoginSubmit} className="space-y-4">
+          {/* Botón y Callout de Acceso Rápido Demo */}
+          <div className="rounded-2xl border border-[#3de273]/40 bg-[#3de273]/10 p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-2xs">
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#080f1a] text-[#3de273]">
+                <Zap className="h-4 w-4" />
+              </div>
+              <div>
+                <div className="text-xs font-bold text-[#080f1a]">¿Evaluar el panel sin fricción?</div>
+                <div className="font-mono text-[11px] text-[#526071]">usuario@naxoresuelve.cl • usuario123</div>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={handleQuickDemoLogin}
+              disabled={loading}
+              className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-1.5 rounded-xl border border-[#080f1a] bg-[#080f1a] px-3.5 py-2 font-mono text-xs font-bold text-white shadow-xs hover:bg-[#1E2430] active:scale-95 transition"
+            >
+              <span>⚡ Acceso Rápido Demo</span>
+            </button>
+          </div>
+
           <div>
             <label htmlFor="login-email-input" className="block font-mono text-[11px] font-bold uppercase tracking-wider text-[#111827] mb-1.5">
               Correo Corporativo

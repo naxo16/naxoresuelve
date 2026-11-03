@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { ShoppingCart, User, MessageCircle } from "lucide-react";
@@ -22,6 +22,7 @@ const HOME_SECTION_MAP = [
 export function Header() {
   const { totalCount, setIsOpen: setCartOpen } = useCart();
   const { openAuthModal, user } = useAuth();
+  const router = useRouter();
   const pathname = usePathname();
   const isHome = pathname === "/";
   const isQueHacemos = pathname === "/que-hacemos" || pathname === "/productos" || pathname === "/soluciones";
@@ -197,7 +198,13 @@ export function Header() {
           {/* Botón de Acceso Clientes / Portal */}
           <button
             type="button"
-            onClick={() => openAuthModal("login")}
+            onClick={() => {
+              if (user) {
+                router.push("/dashboard");
+              } else {
+                openAuthModal("login");
+              }
+            }}
             aria-label={user ? `Portal de cliente: ${user.name}` : "Acceso al portal de clientes"}
             className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-[#526072]/20 bg-white/90 px-3.5 font-mono text-xs font-bold text-[#111827] shadow-sm transition-all duration-200 hover:border-[#1E2430]/40 hover:bg-[#FAF8F5] hover:shadow-md hover:-translate-y-0.5 active:scale-95"
           >

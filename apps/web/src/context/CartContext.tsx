@@ -19,6 +19,10 @@ interface CartContextType {
   clearCart: () => void;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  isTransferModalOpen: boolean;
+  setIsTransferModalOpen: (open: boolean) => void;
+  openTransferModal: () => void;
+  closeTransferModal: () => void;
   totalCount: number;
   subtotal: number;
   discount: number;
@@ -32,6 +36,7 @@ interface CartContextType {
   removeCoupon: () => void;
   formatCLP: (amount: number) => string;
   getWhatsAppMessage: () => string;
+  getTransferWhatsAppMessage: (uploadedFileName?: string) => string;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -49,6 +54,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [coupon, setCoupon] = useState<string | null>(null);
   const [couponDiscountPercent, setCouponDiscountPercent] = useState<number>(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
   const [couponError, setCouponError] = useState<string | null>(null);
   const [couponSuccess, setCouponSuccess] = useState<string | null>(null);
@@ -185,6 +191,42 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return msg;
   };
 
+  const openTransferModal = () => {
+    setIsTransferModalOpen(true);
+  };
+
+  const closeTransferModal = () => {
+    setIsTransferModalOpen(false);
+  };
+
+  // Generador dinámico de URL y mensaje para transferencia bancaria manual
+  const getTransferWhatsAppMessage = (uploadedFileName?: string): string => {
+    if (items.length === 0) {
+      return "Hola Pablo, acabo de realizar una transferencia bancaria y quiero coordinar la activación.";
+    }
+
+    let msg = `Hola Pablo, acabo de realizar la transferencia bancaria para activar las siguientes soluciones en naxoresuelve.cl:\n\n`;
+    msg += `📋 Resumen del Pedido:\n`;
+    items.forEach((item, index) => {
+      const typeLabel = item.type === "saas_rental" ? "[Arriendo SaaS]" : "[Pago Único]";
+      msg += `${index + 1}. ${item.title} ${typeLabel} — ${formatCLP(item.price)}\n`;
+    });
+
+    msg += `\nSubtotal: ${formatCLP(subtotal)}`;
+    if (coupon && discount > 0) {
+      msg += `\nCupón Aplicado (${coupon}): -${formatCLP(discount)} (15% OFF)`;
+    }
+    msg += `\n💰 Total Transferido: ${formatCLP(totalFinal)}`;
+    if (uploadedFileName) {
+      msg += `\n📎 Comprobante Adjunto: ${uploadedFileName} (listo para envío)`;
+    } else {
+      msg += `\n📎 Comprobante: Te adjunto la captura de la transferencia bancaria a continuación.`;
+    }
+    msg += `\n\n¿Podemos coordinar la validación y emisión de la propuesta formal de 1 página?`;
+
+    return msg;
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -194,6 +236,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         clearCart,
         isOpen,
         setIsOpen,
+        isTransferModalOpen,
+        setIsTransferModalOpen,
+        openTransferModal,
+        closeTransferModal,
         totalCount,
         subtotal,
         discount,
@@ -207,6 +253,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         removeCoupon,
         formatCLP,
         getWhatsAppMessage,
+        getTransferWhatsAppMessage,
       }}
     >
       {children}

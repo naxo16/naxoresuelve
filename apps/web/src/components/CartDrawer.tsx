@@ -14,6 +14,7 @@ import {
   Loader2,
   Server,
   Sparkles,
+  Building2,
 } from "lucide-react";
 
 const WHATSAPP_URL = "https://wa.me/56957286145";
@@ -36,6 +37,7 @@ export function CartDrawer() {
     removeCoupon,
     formatCLP,
     getWhatsAppMessage,
+    openTransferModal,
   } = useCart();
 
   const [couponInput, setCouponInput] = useState("");
@@ -309,17 +311,31 @@ export function CartDrawer() {
                 </div>
               </div>
 
-              {/* Checkout CTA */}
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setIsOpen(false)}
-                className="group flex w-full items-center justify-center gap-2 rounded-xl border border-[#1E2430] bg-[#1E2430] px-5 py-3.5 font-mono text-xs font-bold text-white shadow-md transition-all duration-300 hover:border-[#25D366] hover:bg-[#25D366] hover:text-[#111827] active:scale-[0.99]"
-              >
-                <MessageCircle className="h-4 w-4 text-[#25D366] transition-colors group-hover:text-[#111827]" />
-                <span>Coordinar Pedido por WhatsApp</span>
-              </a>
+              {/* Checkout CTAs: Transferencia Bancaria Manual + WhatsApp Directo */}
+              <div className="space-y-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsOpen(false);
+                    openTransferModal();
+                  }}
+                  className="group flex w-full items-center justify-center gap-2 rounded-xl border border-[#080f1a] bg-[#080f1a] px-5 py-3.5 font-mono text-xs font-bold text-white shadow-md transition-all duration-300 hover:border-[#3de273] hover:bg-[#3de273] hover:text-[#080f1a] active:scale-[0.99]"
+                >
+                  <Building2 className="h-4 w-4 text-[#3de273] transition-colors group-hover:text-[#080f1a]" />
+                  <span>Pagar con Transferencia Bancaria</span>
+                </button>
+
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setIsOpen(false)}
+                  className="group flex w-full items-center justify-center gap-2 rounded-xl border border-[#efeeeb] bg-white px-5 py-2.5 font-mono text-xs font-bold text-[#526071] transition-all hover:bg-[#fbf9f6] hover:text-[#080f1a] hover:border-[#080f1a]/30 active:scale-[0.99]"
+                >
+                  <MessageCircle className="h-4 w-4 text-[#526071] transition-colors group-hover:text-[#080f1a]" />
+                  <span>Coordinar Pedido por WhatsApp</span>
+                </a>
+              </div>
             </div>
           )}
         </div>
