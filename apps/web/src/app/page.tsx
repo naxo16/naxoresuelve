@@ -55,7 +55,7 @@ export const metadata: Metadata = {
 };
 
 const WHATSAPP_URL = "https://wa.me/56957286145";
-const PROFILE_IMAGE = "/images/pablo-profile.jpg";
+const PROFILE_IMAGE = "/images/naxoresuelve.jpg";
 
 const whatsappLink = (message: string) =>
   `${WHATSAPP_URL}?text=${encodeURIComponent(message)}`;
